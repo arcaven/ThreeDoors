@@ -6,6 +6,97 @@
 *token*
 *password*
 
-# Common ignore patterns
+# API Keys and Credentials (keep BMad files, exclude actual secrets)
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+config.json
+.secrets/
+.claude-credentials/
+.windsurf-credentials/
+
+# Go specific
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Dependency directories (remove the comment below to include it)
+# vendor/
+
+# Go workspace file
+go.work
+
+# Go module cache
+go.sum
+
+# IDE and editor files
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.cover
+
+# Build directories
+build/
+dist/
+bin/
+
+# Temporary files
+tmp/
+temp/
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Claude Code specific (keep project files, exclude credentials)
+.claude/api-keys.json
+.claude/credentials/
+.claude/session/
+.claude/cache/
+
+# Windsurf specific (keep project files, exclude credentials)
+.windsurf/api-keys.json
+.windsurf/credentials/
+.windsurf/session/
+.windsurf/cache/
+
+# BMad specific (keep all BMad files - they are not secrets)
+# .bmad-core/ - KEEP
+# .gemini/ - KEEP  
+# .windsurf/workflows/ - KEEP
