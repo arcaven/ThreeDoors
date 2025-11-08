@@ -10,13 +10,19 @@
 
 **TD3:** The system shall display the Three Doors interface showing three tasks selected from the text file
 
-**TD4:** The system shall allow users to select a door (press 1, 2, or 3) to start working on that task
+**TD4:** The system shall allow users to select a door using 'a' or 'left arrow' for the left door, 'w' or 'up arrow' for the center door, and 'd' or 'right arrow' for the right door. Initially, or after re-rolling, no door shall be selected.
 
-**TD5:** The system shall allow users to mark the selected task as complete
+**TD5:** The system shall provide a refresh mechanism using 's' or 'down arrow' to generate a new set of three doors.
 
-**TD6:** The system shall track and display task completion count for the current session
+**TD6:** The system shall display the three doors with dynamic width adjustment based on the terminal size.
 
-**TD7:** The system shall provide a refresh mechanism (press R) to generate a new set of three doors
+**TD7:** The system shall respond to the following keystrokes for task management, with functionality to be implemented in future stories:
+    *   'c': Mark selected task as complete.
+    *   'b': Mark selected task as blocked.
+    *   'i': Mark selected task as in progress.
+    *   'e': Expand selected task (into more tasks).
+    *   'f': Fork selected task (clone/split).
+    *   'p': Procrastinate/avoid selected task.
 
 **TD8:** The system shall embed "progress over perfection" messaging in the interface
 

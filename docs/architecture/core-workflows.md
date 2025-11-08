@@ -32,7 +32,7 @@ sequenceDiagram
     DS->>DS: Random selection (3 tasks)
     DS->>TP: MarkRecentlyShown(task IDs)
     DS-->>DV: DoorSelection{doors: [t1, t2, t3]}
-    DV->>DV: Render Three Doors (horizontally)
+    DV->>DV: Render Three Doors (horizontally, dynamically sized, no initial selection)
     DV-->>User: Display doors with status indicators
 ```
 
@@ -46,7 +46,7 @@ sequenceDiagram
     participant TDV as TaskDetailView
     participant Task as Task Model
 
-    User->>DV: Press "W" (select Door 2)
+    User->>DV: Press "W" or "Up Arrow" (select Door 2)
     DV->>MM: Send SelectDoorMsg{doorIndex: 1}
     MM->>MM: Switch view mode to "detail"
     MM->>DV: GetTask(doorIndex: 1)
@@ -174,5 +174,19 @@ sequenceDiagram
     FM-->>TDV: Success
     TDV-->>User: Show status=BLOCKED + blocker reason
 ```
+
+## Future Task Management Workflows (Architectural Considerations)
+
+The application now includes key bindings for several task management actions that are currently unimplemented: 'c' (complete), 'b' (blocked), 'i' (in progress), 'e' (expand), 'f' (fork), 'p' (procrastinate). These actions represent significant future functionality and will require dedicated workflows and architectural considerations.
+
+**Architectural Implications:**
+
+*   **State Management:** Each action will likely involve updating the state of a `Task` object (e.g., `StatusComplete`, `StatusBlocked`, `StatusInProgress`). This will require robust state transition logic, potentially leveraging the `StatusManager` component.
+*   **Persistence:** Changes to task status or properties will need to be persisted. This will involve interactions with the `FileManager` to save updated `TaskPool` data.
+*   **Task Expansion/Forking:** The 'e' (expand) and 'f' (fork) actions imply the creation of new tasks or the modification of existing ones. This will require logic to generate new task IDs, potentially split existing task content, and integrate these new tasks into the `TaskPool`. This could have implications for how tasks are uniquely identified and managed.
+*   **Procrastination:** The 'p' (procrastinate) action might involve deferring a task, potentially moving it to a different pool or marking it with a future start date. This could introduce new scheduling or prioritization logic.
+*   **User Feedback:** Implementing these actions will require clear visual feedback to the user about the success or failure of the operation.
+
+These future workflows will need detailed design and story breakdown in subsequent development phases, with careful consideration of their impact on the existing `Task` model, `TaskPool`, and persistence mechanisms.
 
 ---

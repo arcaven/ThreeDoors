@@ -18,8 +18,14 @@ The main interface presents three tasks simultaneously as entry points. These ta
 Over time, the system learns: "On Tuesday mornings, user picks Door 1 (focused work). On Friday afternoons, user picks Door 3 (quick wins). User never picks administrative tasks before 10am."
 
 **Door Refresh & Feedback (MVP Core):**
-- **Refresh/New Doors** - Simple keystroke (e.g., 'R' or 'N') to generate a new set of three doors if current options don't appeal. No judgment, no friction—just new options.
-- **Door Feedback** - Option to indicate why a door isn't suitable (basic MVP options):
+- **Refresh/New Doors** - Simple keystroke ('s' or 'down arrow') to generate a new set of three doors if current options don't appeal. No judgment, no friction—just new options.
+- **Task Management Feedback** - Options to indicate task status or modify tasks:
+  - 'c': Mark selected task as complete.
+  - 'b': Mark selected task as blocked.
+  - 'i': Mark selected task as in progress.
+  - 'e': Expand selected task (into more tasks).
+  - 'f': Fork selected task (clone/split).
+  - 'p': Procrastinate/avoid selected task.
   - "Blocked" - Task cannot proceed (captures blocker)
   - "Not now" - Task is valid but doesn't fit current mood/context (teaches system about state)
   - "Needs breakdown" - Task is too big/unclear (MVP: flag for later attention; Post-MVP: may trigger breakdown assistance)
@@ -69,17 +75,17 @@ From a product perspective, these are the critical views necessary to deliver MV
 Leverage Charm Bracelet/Bubbletea's capabilities for styled terminal UI—think clean, readable typography with subtle use of color for status indication (green for progress, yellow for prompts, red sparingly for errors).
 
 **Three Doors Visual Metaphor:**
-The main interface will render three visual "doors" arranged horizontally in ASCII art or styled terminal boxes:
+The main interface will render three visual "doors" arranged horizontally in ASCII art or styled terminal boxes. These doors will dynamically adjust their width based on the terminal size.
 ```
 ┌─────────────┐  ┌─────────────┐  ┌─────────────┐
-│   DOOR 1    │  │   DOOR 2    │  │   DOOR 3    │
 │             │  │             │  │             │
 │  [Task A]   │  │  [Task B]   │  │  [Task C]   │
 │  Quick win  │  │  Deep work  │  │  Creative   │
 │  ~5min      │  │  ~30min     │  │  ~15min     │
 └─────────────┘  └─────────────┘  └─────────────┘
 
-Press A, W, or D to enter  |  S to re-roll  |  Q to quit
+Press A/Left, W/Up, or D/Right to select  |  S/Down to re-roll  |  Q to quit
+Press C (complete), B (blocked), I (in progress), E (expand), F (fork), P (procrastinate) for task actions
 ```
 
 **"Progress Over Perfection" Visual Language:**
@@ -90,7 +96,7 @@ Use asymmetry, incomplete progress bars, and "good enough" indicators. The three
 **Primary: macOS Terminal Emulators (iTerm2, Terminal.app, Alacritty)**
 - CLI/TUI optimized for 80x24 minimum, responsive to larger terminal sizes
 - Assumes modern terminal with 256-color support minimum
-- Keyboard-driven navigation (keys 'a', 'w', 'd' for door selection; 's' for re-roll; 'q' to quit)
+- Keyboard-driven navigation (keys 'a'/'left', 'w'/'up', 'd'/'right' for door selection; 's'/'down' for re-roll; 'q' to quit; 'c', 'b', 'i', 'e', 'f', 'p' for task actions)
 
 **Secondary: Remote Terminal Access**
 - Should function over SSH connections (for future Geodesic/remote environment access)

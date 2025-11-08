@@ -39,6 +39,6 @@ ThreeDoors/
 | Date | Version | Description | Author |
 |------|---------|-------------|--------|
 | 2025-11-07 | 1.0 | Initial architecture document for Technical Demo with full task management (status, notes, blocker tracking) | Winston (Architect) |
-| 2025-11-07 | 1.1 | Added AI implementation clarifications: state machine diagram, UUID generation timing, MainModel message routing example, atomic write checklist | Winston (Architect) |
+| 2025-11-08 | 1.2 | Incorporated user feedback: enhanced UX with new key bindings (arrow keys), dynamic door sizing, no initial selection, removal of "Door X" labels, and introduction of new task management key bindings (c, b, i, e, f, p) for future implementation. Noted architectural implications for future task management features. | Bob (SM Agent) |
 
 ---
