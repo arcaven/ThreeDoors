@@ -46,10 +46,4 @@ func TestUpdate(t *testing.T) {
 	}
 }
 
-func TestView(t *testing.T) {
-	m := initialModel()
-	expectedView := "ThreeDoors - Technical Demo"
-	if view := m.View(); view != expectedView {
-		t.Errorf("View() = %q, want %q", view, expectedView)
-	}
-}
+

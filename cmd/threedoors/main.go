@@ -14,8 +14,22 @@ import (
 
 // model represents the application's state.
 type model struct {
-	allTasks     []tasks.Task
-	displayedDoors []tasks.Task
+	allTasks          []tasks.Task
+	displayedDoors    []tasks.Task
+	selectedDoorIndex int // 0 for left, 1 for center, 2 for right
+}
+
+// getThreeRandomDoors selects 3 random tasks from the provided allTasks pool.
+func getThreeRandomDoors(allTasks []tasks.Task) []tasks.Task {
+	if len(allTasks) < 3 {
+		panic("Not enough tasks loaded to display three doors.")
+	}
+	displayedDoors := make([]tasks.Task, 3)
+	perm := rand.Perm(len(allTasks))
+	for i := 0; i < 3; i++ {
+		displayedDoors[i] = allTasks[perm[i]]
+	}
+	return displayedDoors
 }
 
 // initialModel initializes the application's model.
@@ -30,23 +44,12 @@ func initialModel() model {
 		panic(fmt.Sprintf("Failed to load tasks: %v", err))
 	}
 
-	if len(allTasks) < 3 {
-		// Ensure we have at least 3 tasks to display.
-		// If not, we'll just use all available tasks and duplicate if necessary.
-		// For this story, we assume there will be enough tasks.
-		panic("Not enough tasks loaded to display three doors.")
-	}
-
-	// Randomly select 3 tasks
-	displayedDoors := make([]tasks.Task, 3)
-	perm := rand.Perm(len(allTasks))
-	for i := 0; i < 3; i++ {
-		displayedDoors[i] = allTasks[perm[i]]
-	}
+	displayedDoors := getThreeRandomDoors(allTasks)
 
 	return model{
-		allTasks:     allTasks,
-		displayedDoors: displayedDoors,
+		allTasks:          allTasks,
+		displayedDoors:    displayedDoors,
+		selectedDoorIndex: 0, // Initialize to select the first door
 	}
 }
 
@@ -60,6 +63,15 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 		case "q", "ctrl+c":
 			return m, tea.Quit
+		case "a": // Select left door
+			m.selectedDoorIndex = 0
+		case "w": // Select center door
+			m.selectedDoorIndex = 1
+		case "d": // Select right door
+			m.selectedDoorIndex = 2
+		case "s": // Re-roll tasks
+			m.displayedDoors = getThreeRandomDoors(m.allTasks)
+			m.selectedDoorIndex = 0 // Reset selection after re-rolling
 		}
 	}
 	return m, nil
@@ -69,18 +81,31 @@ func (m model) View() string {
 	s := strings.Builder{}
 	s.WriteString("ThreeDoors - Technical Demo\n\n")
 
-	doorStyle := lipgloss.NewStyle().
+	unselectedDoorStyle := lipgloss.NewStyle().
 		Border(lipgloss.RoundedBorder()).
 		BorderForeground(lipgloss.Color("63")).
-		Padding(1, 2). // Using Padding(vertical, horizontal)
+		Padding(1, 2).
 		Width(20)
 
+	selectedDoorStyle := lipgloss.NewStyle().
+		Border(lipgloss.ThickBorder()).
+		BorderForeground(lipgloss.Color("86")). // Green color for selected
+		Padding(1, 2).
+		Width(20)
+
+	var renderedDoors []string
 	for i, task := range m.displayedDoors {
 		doorContent := fmt.Sprintf("Door %d:\n%s", i+1, task.Text)
-		s.WriteString(doorStyle.Render(doorContent))
-		s.WriteString("  ") // Space between doors
+		if i == m.selectedDoorIndex {
+			renderedDoors = append(renderedDoors, selectedDoorStyle.Render(doorContent))
+		} else {
+			renderedDoors = append(renderedDoors, unselectedDoorStyle.Render(doorContent))
+		}
 	}
+
+	s.WriteString(lipgloss.JoinHorizontal(lipgloss.Top, renderedDoors...))
 	s.WriteString("\n\nPress 'q' or 'ctrl+c' to quit.\n")
+	s.WriteString("Use 'a', 'w', 'd' to select doors, 's' to re-roll.\n")
 	return s.String()
 }
 
