@@ -30,6 +30,6 @@ ThreeDoors recognizes that as technology has advanced, we can offer substantiall
 |------|---------|-------------|--------|
 | 2025-11-07 | 1.0 | Initial PRD creation from project brief | John (PM Agent) |
 | 2025-11-07 | 1.1 | Pivoted to Technical Demo & Validation approach (Option C): Simplified to text file storage, 1-week validation timeline, deferred Apple Notes and learning features to post-validation phases | John (PM Agent) |
-| 2025-11-07 | 1.2 | Optimized Epic 1 story sequence (Option A): Moved refresh before completion (1.6→1.4), merged completion with persistence, simplified file I/O and polish stories. Reduced timeline from 4-8 hours to 3-6 hours while maintaining validation quality | John (PM Agent) |
+| 2025-11-08 | 1.3 | Incorporated user feedback: application name change to "ThreeDoors", enhanced UX with new key bindings (arrow keys), dynamic door sizing, no initial selection, removal of "Door X" labels, and introduction of new task management key bindings (c, b, i, e, f, p) for future implementation. | Bob (SM Agent) |
 
 ---

@@ -35,15 +35,15 @@ The application is divided into **two primary layers**:
 - `sessionCompletionCount` - Tasks completed this session
 
 **Key Behaviors:**
-- **Keyboard: A/W/D** - Select corresponding door, transition to TaskDetailView
-- **Keyboard: S** - Re-roll doors (generate new selection)
+- **Keyboard: A/Left, W/Up, D/Right** - Select corresponding door, transition to TaskDetailView. Initially, or after re-rolling, no door is selected.
+- **Keyboard: S/Down** - Re-roll doors (generate new selection)
+- **Keyboard: C, B, I, E, F, P** - Task management actions (functionality to be implemented in future stories)
 - **Keyboard: Q** - Quit application
-- **Keyboard: Arrow Keys** - Move cursor between doors (visual highlight)
 
 **Rendering Example:**
+The doors will dynamically adjust their width based on the terminal size.
 ```
 ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
-│   DOOR 1 🔵     │  │   DOOR 2 🔴     │  │   DOOR 3 🟡     │
 │   [TODO]        │  │   [BLOCKED]     │  │   [IN-PROGRESS] │
 │                 │  │                 │  │                 │
 │  Write arch...  │  │  Implement St...│  │  Review PRD...  │
@@ -52,7 +52,8 @@ The application is divided into **two primary layers**:
 └─────────────────┘  └─────────────────┘  └─────────────────┘
 
 Completed this session: 3
-Press A, W, D to select | S to re-roll | Q to quit
+Press A/Left, W/Up, D/Right to select | S/Down to re-roll | Q to quit
+Press C (complete), B (blocked), I (in progress), E (expand), F (fork), P (procrastinate) for task actions
 Progress over perfection. Just pick one and start. ✨
 ```
 
