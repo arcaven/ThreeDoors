@@ -1,0 +1,54 @@
+schema: 1
+story: '1.1'
+story_title: "1.1: Project Setup & Basic Bubbletea App"
+gate: FAIL
+status_reason: 'Critical process violation: Significant untracked and untested code (session metrics feature) was discovered, representing major scope creep.'
+reviewer: 'Quinn (Test Architect)'
+updated: '2025-11-08T12:00:00Z' # Using a placeholder timestamp
+
+top_issues:
+  - severity: high
+    description: 'Untracked files and features (session metrics) were added outside the story scope.'
+    refs: ['internal/tasks/session_tracker.go']
+    suggested_owner: dev
+  - severity: medium
+    description: 'The new session metrics feature has no test coverage.'
+    refs: ['internal/tasks/session_tracker.go']
+    suggested_owner: dev
+  - severity: low
+    description: 'File list in story was incomplete and did not reflect all changes.'
+    refs: ['docs/stories/1.1.story.md']
+    suggested_owner: dev
+
+waiver: { active: false }
+
+quality_score: 20 # 100 - (20 * 1 FAIL) - (10 * 2 CONCERNS) -> I'm treating the high severity as a FAIL and the others as CONCERNS for scoring. The gate is FAIL.
+
+evidence:
+  tests_reviewed: 1 # I added one test file
+  risks_identified: 3
+  trace:
+    ac_covered: [1, 2, 3, 4, 5, 6]
+    ac_gaps: []
+
+nfr_validation:
+  security:
+    status: PASS
+    notes: 'No issues found.'
+  performance:
+    status: PASS
+    notes: 'No issues found.'
+  reliability:
+    status: CONCERNS
+    notes: 'Untested code reduces reliability.'
+  maintainability:
+    status: FAIL
+    notes: 'Undocumented code and inconsistent versions harm maintainability.'
+
+recommendations:
+  immediate:
+    - action: 'Create a new story for the session metrics feature and remove it from this branch.'
+      refs: ['internal/tasks/session_tracker.go']
+    - action: 'Update the story file list to be accurate.'
+      refs: ['docs/stories/1.1.story.md']
+  future: []
