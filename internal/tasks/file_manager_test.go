@@ -10,7 +10,7 @@ import (
 
 func TestLoadTasks_NoFileExists(t *testing.T) {
 	tempDir := t.TempDir()
-	SetHomeDir(tempDir) // Redirect home directory for testing
+	SetHomeDir(tempDir)  // Redirect home directory for testing
 	defer SetHomeDir("") // Reset after test
 
 	tasks, err := LoadTasks()
