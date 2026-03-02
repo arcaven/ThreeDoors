@@ -30,6 +30,7 @@
 | **Storage** | YAML Files | N/A | Task persistence with metadata | `~/.threedoors/tasks.yaml` with status, notes, timestamps |
 | **Platform** | macOS | 14+ (Sonoma+) | Target OS | Developer's primary platform |
 | **Terminal** | iTerm2 / Terminal.app | Latest | Terminal emulator | 256-color support |
+| **CI/CD** | GitHub Actions | N/A | Continuous integration & alpha release | Public runners, native Go support, quality gates |
 | **Version Control** | Git | 2.40+ | Source control | github.com/arcaven/ThreeDoors.git |
 
 ## Makefile Targets

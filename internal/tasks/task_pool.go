@@ -2,8 +2,8 @@ package tasks
 
 // TaskPool manages an in-memory collection of tasks.
 type TaskPool struct {
-	tasks           map[string]*Task
-	recentlyShown   []string
+	tasks            map[string]*Task
+	recentlyShown    []string
 	recentlyShownIdx int
 	maxRecentlyShown int
 }

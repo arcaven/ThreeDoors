@@ -92,7 +92,7 @@ func (dv *DoorsView) View() string {
 	s.WriteString(lipgloss.JoinHorizontal(lipgloss.Top, renderedDoors...))
 
 	if dv.completedCount > 0 {
-		s.WriteString(fmt.Sprintf("\n\nCompleted this session: %d", dv.completedCount))
+		fmt.Fprintf(&s, "\n\nCompleted this session: %d", dv.completedCount)
 	}
 
 	s.WriteString("\n\n")

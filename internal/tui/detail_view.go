@@ -5,8 +5,8 @@ import (
 	"strings"
 
 	"github.com/arcaven/ThreeDoors/internal/tasks"
-	"github.com/charmbracelet/lipgloss"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 )
 
 // DetailViewMode tracks the sub-view within the detail view.
@@ -142,13 +142,13 @@ func (dv *DetailView) View() string {
 
 	statusColor := StatusColor(string(dv.task.Status))
 	statusStyle := lipgloss.NewStyle().Foreground(statusColor).Bold(true)
-	s.WriteString(fmt.Sprintf("Status: %s\n", statusStyle.Render(string(dv.task.Status))))
-	s.WriteString(fmt.Sprintf("Created: %s\n", dv.task.CreatedAt.Format("2006-01-02 15:04")))
-	s.WriteString(fmt.Sprintf("Updated: %s\n", dv.task.UpdatedAt.Format("2006-01-02 15:04")))
+	fmt.Fprintf(&s, "Status: %s\n", statusStyle.Render(string(dv.task.Status)))
+	fmt.Fprintf(&s, "Created: %s\n", dv.task.CreatedAt.Format("2006-01-02 15:04"))
+	fmt.Fprintf(&s, "Updated: %s\n", dv.task.UpdatedAt.Format("2006-01-02 15:04"))
 
 	if dv.task.Blocker != "" {
 		blockerStyle := lipgloss.NewStyle().Foreground(colorBlocked)
-		s.WriteString(fmt.Sprintf("Blocker: %s\n", blockerStyle.Render(dv.task.Blocker)))
+		fmt.Fprintf(&s, "Blocker: %s\n", blockerStyle.Render(dv.task.Blocker))
 	}
 
 	s.WriteString("\n")
@@ -158,7 +158,7 @@ func (dv *DetailView) View() string {
 	if len(dv.task.Notes) > 0 {
 		s.WriteString("\nNotes:\n")
 		for _, note := range dv.task.Notes {
-			s.WriteString(fmt.Sprintf("  [%s] %s\n", note.Timestamp.Format("15:04"), note.Text))
+			fmt.Fprintf(&s, "  [%s] %s\n", note.Timestamp.Format("15:04"), note.Text)
 		}
 	}
 
