@@ -34,7 +34,7 @@ func TestTaskPool_GetTasksByStatus(t *testing.T) {
 	pool := NewTaskPool()
 	t1 := NewTask("Todo task")
 	t2 := NewTask("Blocked task")
-	t2.UpdateStatus(StatusBlocked)
+	_ = t2.UpdateStatus(StatusBlocked)
 	pool.AddTask(t1)
 	pool.AddTask(t2)
 
@@ -62,7 +62,7 @@ func TestTaskPool_GetAvailableForDoors(t *testing.T) {
 
 	// Complete one task
 	allTasks := pool.GetAllTasks()
-	allTasks[0].UpdateStatus(StatusComplete)
+	_ = allTasks[0].UpdateStatus(StatusComplete)
 	pool.UpdateTask(allTasks[0])
 
 	available = pool.GetAvailableForDoors()

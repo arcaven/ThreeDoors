@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  quality-gate:
+    name: Quality Gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: 'go.mod'
+
+      - name: Install gofumpt
+        run: go install mvdan.cc/gofumpt@v0.7.0
+
+      - name: Check formatting (gofumpt)
+        run: |
+          UNFORMATTED=$(gofumpt -l .)
+          if [ -n "$UNFORMATTED" ]; then
+            echo "::error::Files need formatting with gofumpt:"
+            echo "$UNFORMATTED"
+            exit 1
+          fi
+
+      - name: Run go vet
+        run: go vet ./...
+
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v7
+
+      - name: Run tests
+        run: go test ./... -v -count=1
+
+      - name: Validate build
+        run: go build -o /dev/null ./cmd/threedoors
+
+  alpha-release:
+    name: Alpha Release
+    needs: quality-gate
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: 'go.mod'
+
+      - name: Build binaries
+        run: |
+          GOOS=darwin GOARCH=arm64 go build -o threedoors-darwin-arm64 ./cmd/threedoors
+          GOOS=darwin GOARCH=amd64 go build -o threedoors-darwin-amd64 ./cmd/threedoors
+          GOOS=linux GOARCH=amd64 go build -o threedoors-linux-amd64 ./cmd/threedoors
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: threedoors-binaries-${{ github.sha }}
+          path: threedoors-*
+          retention-days: 14

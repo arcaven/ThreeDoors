@@ -63,7 +63,7 @@ func TestTask_AddNote(t *testing.T) {
 
 func TestTask_SetBlocker(t *testing.T) {
 	task := NewTask("Test")
-	task.UpdateStatus(StatusBlocked)
+	_ = task.UpdateStatus(StatusBlocked)
 	if err := task.SetBlocker("Waiting on API"); err != nil {
 		t.Fatalf("SetBlocker failed: %v", err)
 	}
@@ -82,9 +82,9 @@ func TestTask_SetBlocker_WrongStatus(t *testing.T) {
 
 func TestTask_UpdateStatus_ClearBlocker(t *testing.T) {
 	task := NewTask("Test")
-	task.UpdateStatus(StatusBlocked)
-	task.SetBlocker("blocker reason")
-	task.UpdateStatus(StatusInProgress)
+	_ = task.UpdateStatus(StatusBlocked)
+	_ = task.SetBlocker("blocker reason")
+	_ = task.UpdateStatus(StatusInProgress)
 	if task.Blocker != "" {
 		t.Errorf("Expected blocker cleared after status change, got %q", task.Blocker)
 	}

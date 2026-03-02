@@ -49,14 +49,14 @@ func TestLoadTasks_YAMLFileExists(t *testing.T) {
 	defer SetHomeDir("")
 
 	configPath := filepath.Join(tempDir, configDir)
-	os.MkdirAll(configPath, 0o755)
+	_ = os.MkdirAll(configPath, 0o755)
 
 	// Write a YAML tasks file
 	task1 := NewTask("Task A")
 	task2 := NewTask("Task B")
 	tf := TasksFile{Tasks: []*Task{task1, task2}}
 	data, _ := yaml.Marshal(&tf)
-	os.WriteFile(filepath.Join(configPath, tasksYAMLFile), data, 0o644)
+	_ = os.WriteFile(filepath.Join(configPath, tasksYAMLFile), data, 0o644)
 
 	tasks, err := LoadTasks()
 	if err != nil {
@@ -76,12 +76,12 @@ func TestLoadTasks_MigratesFromText(t *testing.T) {
 	defer SetHomeDir("")
 
 	configPath := filepath.Join(tempDir, configDir)
-	os.MkdirAll(configPath, 0o755)
+	_ = os.MkdirAll(configPath, 0o755)
 
 	// Write old-style text file
 	txtContent := "Task One\nTask Two\nTask Three\n"
 	txtPath := filepath.Join(configPath, tasksTextFile)
-	os.WriteFile(txtPath, []byte(txtContent), 0o644)
+	_ = os.WriteFile(txtPath, []byte(txtContent), 0o644)
 
 	tasks, err := LoadTasks()
 	if err != nil {
@@ -112,7 +112,7 @@ func TestSaveTasks_Roundtrip(t *testing.T) {
 		NewTask("Alpha task"),
 		NewTask("Beta task"),
 	}
-	original[1].UpdateStatus(StatusInProgress)
+	_ = original[1].UpdateStatus(StatusInProgress)
 	original[0].AddNote("Test note")
 
 	if err := SaveTasks(original); err != nil {
@@ -147,7 +147,7 @@ func TestAppendCompleted(t *testing.T) {
 	defer SetHomeDir("")
 
 	task := NewTask("Completed task")
-	task.UpdateStatus(StatusComplete)
+	_ = task.UpdateStatus(StatusComplete)
 
 	if err := AppendCompleted(task); err != nil {
 		t.Fatalf("AppendCompleted() failed: %v", err)
@@ -178,11 +178,11 @@ func TestLoadTasks_EmptyYAML(t *testing.T) {
 	defer SetHomeDir("")
 
 	configPath := filepath.Join(tempDir, configDir)
-	os.MkdirAll(configPath, 0o755)
+	_ = os.MkdirAll(configPath, 0o755)
 
 	tf := TasksFile{Tasks: []*Task{}}
 	data, _ := yaml.Marshal(&tf)
-	os.WriteFile(filepath.Join(configPath, tasksYAMLFile), data, 0o644)
+	_ = os.WriteFile(filepath.Join(configPath, tasksYAMLFile), data, 0o644)
 
 	tasks, err := LoadTasks()
 	if err != nil {

@@ -29,7 +29,7 @@ func (mw *MetricsWriter) AppendSession(metrics *SessionMetrics) error {
 	if err != nil {
 		return err
 	}
-	defer f.Close()
+	defer f.Close() //nolint:errcheck // best-effort close on append file
 
 	// Marshal to JSON (compact, single line)
 	data, err := json.Marshal(metrics)
