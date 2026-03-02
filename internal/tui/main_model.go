@@ -8,12 +8,6 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-const (
-	defaultWidth  = 80
-	defaultHeight = 24
-	doorCount     = 3
-)
-
 // ViewMode tracks which view is currently active.
 type ViewMode int
 

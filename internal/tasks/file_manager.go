@@ -131,7 +131,7 @@ func migrateFromText(path string) ([]*Task, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer file.Close()
+	defer file.Close() //nolint:errcheck // best-effort close on read-only file
 
 	var tasks []*Task
 	scanner := bufio.NewScanner(file)
@@ -166,20 +166,20 @@ func SaveTasks(tasks []*Task) error {
 	}
 
 	if _, err := f.Write(data); err != nil {
-		f.Close()
-		os.Remove(tmpPath)
+		_ = f.Close()
+		_ = os.Remove(tmpPath)
 		return fmt.Errorf("failed to write temp file: %w", err)
 	}
 
 	if err := f.Sync(); err != nil {
-		f.Close()
-		os.Remove(tmpPath)
+		_ = f.Close()
+		_ = os.Remove(tmpPath)
 		return fmt.Errorf("failed to sync temp file: %w", err)
 	}
-	f.Close()
+	_ = f.Close()
 
 	if err := os.Rename(tmpPath, yamlPath); err != nil {
-		os.Remove(tmpPath)
+		_ = os.Remove(tmpPath)
 		return fmt.Errorf("failed to rename temp file: %w", err)
 	}
 	return nil
@@ -197,7 +197,7 @@ func AppendCompleted(task *Task) error {
 	if err != nil {
 		return fmt.Errorf("failed to open completed file: %w", err)
 	}
-	defer f.Close()
+	defer f.Close() //nolint:errcheck // best-effort close on append file
 
 	line := fmt.Sprintf("[%s] %s | %s\n",
 		time.Now().UTC().Format("2006-01-02 15:04:05"),

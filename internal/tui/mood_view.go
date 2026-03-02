@@ -103,7 +103,7 @@ func (mv *MoodView) View() string {
 	s.WriteString("\n\n")
 
 	for i, mood := range moodOptions {
-		s.WriteString(fmt.Sprintf("  %d. %s\n", i+1, mood))
+		fmt.Fprintf(&s, "  %d. %s\n", i+1, mood)
 	}
 
 	s.WriteString("\n")

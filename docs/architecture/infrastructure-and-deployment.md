@@ -2,9 +2,9 @@
 
 ## Infrastructure as Code
 
-**Tool:** Not Applicable (local execution)
+**Tool:** GitHub Actions
 
-**Approach:** ThreeDoors Technical Demo runs locally with no cloud infrastructure.
+**Approach:** ThreeDoors uses GitHub Actions for CI/CD on public runners. The application runs locally with no cloud infrastructure for runtime.
 
 ## Deployment Strategy
 
@@ -27,7 +27,20 @@ make run
 brew install arcaven/tap/threedoors
 ```
 
-**CI/CD Platform:** None for Technical Demo (deferred to Epic 2)
+**CI/CD Platform:** GitHub Actions (`.github/workflows/ci.yml`)
+
+**PR Quality Gates** (runs on every `pull_request` to `main`):
+- `gofumpt` formatting check
+- `go vet` correctness check
+- `golangci-lint` static analysis
+- `go test` unit tests
+- `go build` build validation
+
+**Alpha Release** (runs on `push` to `main`, i.e., PR merge):
+- Cross-compiles binaries for darwin/arm64, darwin/amd64, linux/amd64
+- Uploads as GitHub Actions workflow artifacts (14-day retention)
+
+**Recommended:** Enable branch protection on `main` requiring the quality-gate job to pass before merge.
 
 ## Environments
 
