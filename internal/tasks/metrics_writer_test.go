@@ -77,7 +77,7 @@ func TestMetricsWriter_AppendSession_AppendsMultipleSessions(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Open() error = %v", err)
 	}
-	defer f.Close()
+	defer func() { _ = f.Close() }()
 
 	lineCount := 0
 	scanner := bufio.NewScanner(f)
