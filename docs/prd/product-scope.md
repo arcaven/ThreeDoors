@@ -1,0 +1,76 @@
+# Product Scope
+
+## Phase 1: Technical Demo & Validation (MVP)
+
+**In Scope:**
+- CLI/TUI application using Go and Bubbletea framework
+- Three Doors interface displaying three randomly selected tasks
+- Local text file storage (`~/.threedoors/tasks.txt`)
+- Door selection via keyboard (A/W/D, arrow keys)
+- Door refresh to generate new set of three tasks
+- Expanded task detail view with status actions
+- Task status management: complete, blocked, in progress, expand, fork, procrastinate, rework
+- Quick search with live substring matching (/ key)
+- Command palette with vi-style `:commands` (`:add`, `:edit`, `:mood`, `:stats`, `:help`, `:quit`)
+- Mood tracking with predefined and custom options
+- Silent session metrics collection (JSONL format)
+- Completed task tracking with timestamps
+- "Progress over perfection" messaging in interface
+- macOS as primary target platform
+
+**Out of Scope for Phase 1:**
+- Apple Notes integration
+- Bidirectional sync with any external system
+- LLM-powered features
+- Values/goals persistent display
+- Automated tests (manual validation via daily use)
+- Cross-computer sync
+- Mobile interface
+- Any cloud services or telemetry
+
+---
+
+## Phase 2: Growth (Post-Validation)
+
+**In Scope:**
+- Apple Notes integration with bidirectional sync
+- Adapter pattern for pluggable backends
+- Quick add mode and extended task capture with context
+- Values/goals setup and persistent display
+- Door feedback mechanisms (blocked, not now, needs breakdown)
+- Learning and intelligent door selection based on session metrics
+- macOS code signing, notarization, and Homebrew distribution
+- Local enrichment storage (SQLite) for metadata
+- Health check command for backend connectivity
+
+**Out of Scope for Phase 2:**
+- Third-party integrations beyond Apple Notes
+- Cross-computer sync
+- LLM task decomposition
+- Calendar awareness
+- Multi-source aggregation
+
+---
+
+## Phase 3: Vision (Post-MVP)
+
+**In Scope:**
+- Plugin/adapter SDK with registry and developer guide
+- Obsidian vault integration
+- Comprehensive testing infrastructure (integration, contract, E2E, CI gates)
+- First-run onboarding experience
+- Sync observability and offline-first operation
+- Calendar awareness (local-first, no OAuth)
+- Multi-source task aggregation with dedup
+- LLM-powered task decomposition
+- Psychology research validation
+
+**Out of Scope (Deferred Indefinitely):**
+- Web interface
+- Dedicated mobile apps
+- Voice interface
+- Gamification and trading mechanics
+- Multi-user support
+- Jira, Linear, Slack, Google Calendar integrations (until plugin SDK is mature)
+
+---
