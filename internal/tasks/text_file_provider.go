@@ -74,7 +74,7 @@ func (p *TextFileProvider) MarkComplete(taskID string) error {
 		}
 	}
 	if target == nil {
-		return fmt.Errorf("mark complete: task %s not found", taskID)
+		return fmt.Errorf("mark complete: task %q not found", taskID)
 	}
 
 	if !IsValidTransition(target.Status, StatusComplete) {

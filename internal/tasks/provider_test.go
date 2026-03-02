@@ -2,6 +2,9 @@ package tasks
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
+	"strings"
 	"testing"
 	"time"
 )
@@ -214,6 +217,20 @@ func TestTextFileProvider_MarkComplete_Success(t *testing.T) {
 		if r.ID == task.ID {
 			t.Error("completed task should not be in active tasks")
 		}
+	}
+
+	// Verify completed.txt was written
+	completedPath := filepath.Join(tmpDir, configDir, completedFile)
+	data, err := os.ReadFile(completedPath)
+	if err != nil {
+		t.Fatalf("failed to read completed.txt: %v", err)
+	}
+	content := string(data)
+	if !strings.Contains(content, task.ID) {
+		t.Errorf("completed.txt should contain task ID %q, got: %s", task.ID, content)
+	}
+	if !strings.Contains(content, "Complete me") {
+		t.Errorf("completed.txt should contain task text, got: %s", content)
 	}
 }
 

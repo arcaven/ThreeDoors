@@ -168,3 +168,56 @@ func TestFallbackProvider_DeleteTask_DelegatesToCorrectProvider(t *testing.T) {
 		}
 	})
 }
+
+func TestFallbackProvider_MarkComplete_DelegatesToCorrectProvider(t *testing.T) {
+	t.Run("primary active - delegates to primary", func(t *testing.T) {
+		primary := &MockProvider{Tasks: []*Task{}}
+		fallback := &MockProvider{Tasks: []*Task{}}
+
+		fp := NewFallbackProvider(primary, fallback)
+		_, _ = fp.LoadTasks()
+
+		err := fp.MarkComplete("aaa")
+		if err != nil {
+			t.Fatalf("MarkComplete() unexpected error: %v", err)
+		}
+		if len(primary.CompletedIDs) != 1 {
+			t.Errorf("primary.CompletedIDs has %d items, want 1", len(primary.CompletedIDs))
+		}
+	})
+
+	t.Run("primary failed - delegates to fallback", func(t *testing.T) {
+		primary := &MockProvider{LoadErr: fmt.Errorf("failed")}
+		fallback := &MockProvider{Tasks: []*Task{}}
+
+		fp := NewFallbackProvider(primary, fallback)
+		_, _ = fp.LoadTasks()
+
+		err := fp.MarkComplete("aaa")
+		if err != nil {
+			t.Fatalf("MarkComplete() unexpected error: %v", err)
+		}
+		if len(fallback.CompletedIDs) != 1 {
+			t.Errorf("fallback.CompletedIDs has %d items, want 1", len(fallback.CompletedIDs))
+		}
+	})
+
+	t.Run("primary returns ErrReadOnly - delegates to fallback", func(t *testing.T) {
+		primary := &MockProvider{
+			Tasks:       []*Task{},
+			CompleteErr: ErrReadOnly,
+		}
+		fallback := &MockProvider{Tasks: []*Task{}}
+
+		fp := NewFallbackProvider(primary, fallback)
+		_, _ = fp.LoadTasks()
+
+		err := fp.MarkComplete("aaa")
+		if err != nil {
+			t.Fatalf("MarkComplete() should succeed via fallback, got: %v", err)
+		}
+		if len(fallback.CompletedIDs) != 1 {
+			t.Errorf("fallback.CompletedIDs has %d items, want 1", len(fallback.CompletedIDs))
+		}
+	})
+}
