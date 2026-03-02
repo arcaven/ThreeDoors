@@ -5,9 +5,9 @@ import "fmt"
 // Notarizer handles Apple notarization operations.
 type Notarizer struct {
 	Runner   CommandRunner
-	AppleID  string
-	Password string
-	TeamID   string
+	appleID  string
+	password string
+	teamID   string
 	Timeout  int // seconds, default 900
 }
 
@@ -15,9 +15,9 @@ type Notarizer struct {
 func NewNotarizer(runner CommandRunner, appleID, password, teamID string) *Notarizer {
 	return &Notarizer{
 		Runner:   runner,
-		AppleID:  appleID,
-		Password: password,
-		TeamID:   teamID,
+		appleID:  appleID,
+		password: password,
+		teamID:   teamID,
 		Timeout:  900,
 	}
 }
@@ -28,9 +28,9 @@ func (n *Notarizer) Submit(filePath string) error {
 	timeout := fmt.Sprintf("%d", n.Timeout)
 	output, err := n.Runner.Run("xcrun", "notarytool", "submit",
 		filePath,
-		"--apple-id", n.AppleID,
-		"--password", n.Password,
-		"--team-id", n.TeamID,
+		"--apple-id", n.appleID,
+		"--password", n.password,
+		"--team-id", n.teamID,
 		"--wait",
 		"--timeout", timeout,
 	)

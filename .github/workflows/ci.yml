@@ -218,16 +218,19 @@ jobs:
         with:
           name: binaries
 
-      - name: Download linux binary
+      - name: Download all binaries (for linux)
+        if: needs.sign-and-notarize.result == 'success'
         uses: actions/download-artifact@v4
         with:
           name: binaries
-          pattern: threedoors-linux-*
+          path: unsigned-binaries
 
-      - name: Prepare release files
-        run: |
-          # Ensure linux binary is present (may have been overwritten by signed artifact download)
-          ls -la threedoors-* || true
+      - name: Copy linux binary from unsigned artifacts
+        if: needs.sign-and-notarize.result == 'success'
+        run: cp unsigned-binaries/threedoors-linux-amd64 . && rm -rf unsigned-binaries
+
+      - name: List release files
+        run: ls -la threedoors-* *.pkg 2>/dev/null || true
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
