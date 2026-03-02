@@ -135,6 +135,10 @@ var (
 				Bold(true).
 				Foreground(lipgloss.Color("214"))
 
+	improvementHeaderStyle = lipgloss.NewStyle().
+				Bold(true).
+				Foreground(lipgloss.Color("86"))
+
 	valuesFooterSeparator = "  ·  "
 
 	valuesSelectedPrefix = "▸ "

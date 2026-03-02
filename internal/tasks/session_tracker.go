@@ -135,6 +135,30 @@ func (st *SessionTracker) RecordDoorFeedback(taskID, feedbackType, comment strin
 	st.metrics.DoorFeedbackCount++
 }
 
+// MetricsSnapshot provides a read-only view of current session state without finalizing.
+type MetricsSnapshot struct {
+	TasksCompleted int
+	startTime      time.Time
+}
+
+// DurationSeconds returns the elapsed session duration in seconds.
+func (ms *MetricsSnapshot) DurationSeconds() float64 {
+	return time.Since(ms.startTime).Seconds()
+}
+
+// GetMetricsSnapshot returns a snapshot of current session metrics without finalizing.
+func (st *SessionTracker) GetMetricsSnapshot() *MetricsSnapshot {
+	return &MetricsSnapshot{
+		TasksCompleted: st.metrics.TasksCompleted,
+		startTime:      st.metrics.StartTime,
+	}
+}
+
+// GetSessionID returns the current session's unique identifier.
+func (st *SessionTracker) GetSessionID() string {
+	return st.metrics.SessionID
+}
+
 // Finalize calculates session duration and returns metrics for persistence.
 func (st *SessionTracker) Finalize() *SessionMetrics {
 	st.metrics.EndTime = time.Now().UTC()

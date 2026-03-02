@@ -87,6 +87,18 @@ type DoorFeedbackMsg struct {
 	Comment      string
 }
 
+// RequestQuitMsg is sent when the user requests to quit.
+// MainModel intercepts this to show the improvement prompt if criteria are met.
+type RequestQuitMsg struct{}
+
+// ImprovementSubmittedMsg is sent when the user submits an improvement suggestion.
+type ImprovementSubmittedMsg struct {
+	Text string
+}
+
+// ImprovementSkippedMsg is sent when the user skips the improvement prompt.
+type ImprovementSkippedMsg struct{}
+
 // ReturnToSearchMsg is sent to restore search view from detail view.
 type ReturnToSearchMsg struct {
 	Query         string
