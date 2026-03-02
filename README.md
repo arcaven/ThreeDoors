@@ -95,43 +95,78 @@ Traditional task lists create **choice paralysis**. Staring at 50+ tasks makes i
 
 ## Getting Started
 
-### Prerequisites
+### Option 1: Download Pre-built Binary
 
+Pre-built binaries are available as CI artifacts for each push to `main`. Download the appropriate binary for your platform:
+
+| Platform | Binary |
+|----------|--------|
+| macOS (Apple Silicon) | `threedoors-darwin-arm64` |
+| macOS (Intel) | `threedoors-darwin-amd64` |
+| Linux (x86_64) | `threedoors-linux-amd64` |
+
+To download, go to [Actions](https://github.com/arcaven/ThreeDoors/actions) on GitHub, select the latest successful workflow run, and download the `threedoors-binaries` artifact.
+
+```bash
+# Make the binary executable and move it to your PATH
+chmod +x threedoors-*
+mv threedoors-darwin-arm64 /usr/local/bin/threedoors   # adjust for your platform
+```
+
+### Option 2: Install with `go install`
+
+```bash
+go install github.com/arcaven/ThreeDoors/cmd/threedoors@latest
+```
+
+This places the `threedoors` binary in your `$GOPATH/bin` (or `$HOME/go/bin` by default).
+
+### Option 3: Build from Source
+
+**Prerequisites:**
 * **Go** 1.25.4 or higher ([installation guide](https://golang.org/doc/install))
 * **Git**
 * **Make** (optional, for build automation)
 
-### Installation
+```bash
+git clone https://github.com/arcaven/ThreeDoors.git
+cd ThreeDoors
+make build
+# or without Make:
+go build -o bin/threedoors ./cmd/threedoors
+```
 
-1. Clone the repository:
+The binary will be at `bin/threedoors` (or wherever you specified with `-o`).
+
+### Usage
+
+1. **Launch** the app:
    ```bash
-   git clone https://github.com/arcaven/ThreeDoors.git
-   cd ThreeDoors
+   threedoors
    ```
+2. **First run** creates `~/.threedoors/tasks.txt` with sample tasks.
+3. **Add your tasks** by editing `~/.threedoors/tasks.txt` (one task per line).
+4. **Select a door** with `a` (left), `w` (center), or `d` (right) to view task details.
+5. **Re-roll** doors with `s` if nothing appeals.
+6. **Act on a task** using status keys: `c` (complete), `b` (blocked), `i` (in progress), `e` (expand), `f` (fork), `p` (procrastinate).
+7. **Log your mood** with `m`.
+8. **Search** with `/` to find a specific task.
+9. **Quit** with `q` or `Ctrl+C`.
 
-2. Build the application:
-   ```bash
-   make build
-   # or without Make:
-   go build -o threedoors ./cmd/threedoors
-   ```
+### Data Directory (`~/.threedoors/`)
 
-3. Run the application:
-   ```bash
-   make run
-   # or directly:
-   ./threedoors
-   ```
+ThreeDoors stores all data locally in `~/.threedoors/`:
 
-### Quick Start Usage
+```
+~/.threedoors/
+├── tasks.txt          # Active tasks (one per line)
+├── completed.txt      # Tasks marked as complete
+└── sessions.jsonl     # Session metrics (JSON Lines format)
+```
 
-1. **First run** creates `~/.threedoors/tasks.txt` with sample tasks
-2. **Add your tasks** by editing `~/.threedoors/tasks.txt` (one task per line)
-3. **Launch ThreeDoors** and see three tasks displayed as doors
-4. **Select a door** (a/w/d or arrow keys) to view task details
-5. **Take action** on the task (complete, block, defer, etc.)
-6. **Refresh** (press `s`) if you don't like your options
-7. **Search** (press `/`) when you need a specific task
+- **`tasks.txt`** — Your active task list. Edit this file directly to add, remove, or reorder tasks.
+- **`completed.txt`** — Tasks that have been marked complete are moved here automatically.
+- **`sessions.jsonl`** — Records of each session including door selections, bypasses, mood logs, and timing data. Each line is a self-contained JSON object.
 
 ## Development
 
