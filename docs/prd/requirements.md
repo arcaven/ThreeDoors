@@ -24,14 +24,14 @@
     *   'f': Fork selected task (clone/split).
     *   'p': Procrastinate/avoid selected task.
 
-**TD8:** The system shall embed "progress over perfection" messaging in the interface
+**TD8:** The system shall display at least one "progress over perfection" encouragement message per session (e.g., on startup greeting or after completing a task)
 
 **TD9:** The system shall write completed tasks to a separate file (e.g., `~/.threedoors/completed.txt`) with timestamp
 
 **Success Criteria for Phase:**
 - Built and running within 4-8 hours of development time
 - Developer uses it daily for 1 week to validate UX concept
-- Three Doors selection feels meaningfully different from a simple list
+- Three Doors selection results in faster time-to-first-action compared to scanning a full task list (measured via session metrics)
 - Decisions made on whether to proceed to Full MVP based on real usage
 
 ---
@@ -64,7 +64,7 @@
 
 **FR10:** The system shall embed "progress over perfection" messaging throughout interaction patterns and interface copy (enhanced beyond Tech Demo)
 
-**FR16:** The system shall support a "quick add" mode for capturing tasks with minimal interaction
+**FR16:** The system shall support a "quick add" mode for capturing tasks in 3 or fewer keystrokes beyond typing the task text (e.g., `:add <text>` + Enter)
 
 **FR18:** The system shall allow users to provide feedback on why a specific door isn't suitable with options: Blocked, Not now, Needs breakdown, or Other comment
 
@@ -84,11 +84,11 @@
 
 **FR25:** The system shall provide a DMG or pkg installer as an alternative installation method for users who prefer graphical installation over Homebrew
 
-**FR26:** The CI/CD pipeline shall automate code signing, notarization, Homebrew formula updates, and installer generation as part of the release process
+**FR26:** The release process shall automate code signing, notarization, distribution formula updates, and installer generation without manual intervention
 
 **Phase 5 - Data Layer & Enrichment:**
 
-**FR11:** The system shall maintain a local enrichment layer (SQLite and/or vector database) for metadata, cross-references, and relationships that cannot be stored in source systems
+**FR11:** The system shall maintain a local enrichment layer for metadata, cross-references, and relationships that cannot be stored in source systems
 
 ---
 
@@ -144,7 +144,7 @@
 
 **Calendar Awareness (Local-First, No OAuth):**
 
-**FR44:** The system shall read local calendar sources only (macOS Calendar.app via AppleScript, .ics files, CalDAV cache) with no OAuth or cloud API dependencies
+**FR44:** The system shall read local calendar sources only (no OAuth or cloud API dependencies) to determine upcoming events and available time blocks
 
 **FR45:** The system shall use calendar context to inform time-contextual door selection (e.g., suggesting tasks appropriate for available time blocks)
 
