@@ -31,5 +31,6 @@ ThreeDoors recognizes that as technology has advanced, we can offer substantiall
 | 2025-11-07 | 1.0 | Initial PRD creation from project brief | John (PM Agent) |
 | 2025-11-07 | 1.1 | Pivoted to Technical Demo & Validation approach (Option C): Simplified to text file storage, 1-week validation timeline, deferred Apple Notes and learning features to post-validation phases | John (PM Agent) |
 | 2025-11-08 | 1.3 | Incorporated user feedback: application name change to "ThreeDoors", enhanced UX with new key bindings (arrow keys), dynamic door sizing, no initial selection, removal of "Door X" labels, and introduction of new task management key bindings (c, b, i, e, f, p) for future implementation. | Bob (SM Agent) |
+| 2026-03-02 | 1.4 | Course correction: Added macOS Distribution & Packaging requirements (FR22-FR26), Epic 5 with Stories 5.1-5.3 for code signing, notarization, Homebrew tap, and pkg installer. Addresses Gatekeeper quarantine friction for unsigned binaries. Updated NFR3 to require signed+notarized binaries. Renumbered Data Layer epic from 5→6 and Phase 3 epics accordingly. | PM Agent |
 
 ---
