@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/arcaven/ThreeDoors/internal/tasks"
 	"github.com/arcaven/ThreeDoors/internal/tui"
@@ -10,7 +11,22 @@ import (
 )
 
 func main() {
-	loadedTasks, err := tasks.LoadTasks()
+	configDir, configErr := tasks.GetConfigDirPath()
+	var cfg *tasks.ProviderConfig
+	if configErr != nil {
+		fmt.Fprintf(os.Stderr, "Warning: config dir not found: %v, using defaults\n", configErr)
+		cfg = &tasks.ProviderConfig{Provider: "textfile", NoteTitle: "ThreeDoors Tasks"}
+	} else {
+		var loadErr error
+		cfg, loadErr = tasks.LoadProviderConfig(filepath.Join(configDir, "config.yaml"))
+		if loadErr != nil {
+			fmt.Fprintf(os.Stderr, "Warning: config load failed: %v, using defaults\n", loadErr)
+			cfg = &tasks.ProviderConfig{Provider: "textfile", NoteTitle: "ThreeDoors Tasks"}
+		}
+	}
+
+	provider := tasks.NewProviderFromConfig(cfg)
+	loadedTasks, err := provider.LoadTasks()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to load tasks: %v\n", err)
 		os.Exit(1)
@@ -22,7 +38,7 @@ func main() {
 	}
 
 	tracker := tasks.NewSessionTracker()
-	model := tui.NewMainModel(pool, tracker)
+	model := tui.NewMainModel(pool, tracker, provider)
 
 	p := tea.NewProgram(model)
 	if _, err := p.Run(); err != nil {
@@ -31,8 +47,7 @@ func main() {
 	}
 
 	// Persist session metrics on exit
-	configDir, err := tasks.GetConfigDirPath()
-	if err == nil {
+	if configErr == nil {
 		writer := tasks.NewMetricsWriter(configDir)
 		if writeErr := writer.AppendSession(tracker.Finalize()); writeErr != nil {
 			fmt.Fprintf(os.Stderr, "Warning: failed to save session metrics: %v\n", writeErr)
