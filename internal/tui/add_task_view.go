@@ -19,10 +19,10 @@ const (
 // AddTaskView handles inline task creation when :add is used without arguments,
 // and multi-step context capture when :add-ctx or :add --why is used.
 type AddTaskView struct {
-	textInput   textinput.Model
-	width       int
+	textInput    textinput.Model
+	width        int
 	withContext  bool
-	step        addTaskStep
+	step         addTaskStep
 	capturedText string
 }
 
