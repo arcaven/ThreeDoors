@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math/rand/v2"
 	"os"
+	"path/filepath"
 
 	"github.com/arcaven/ThreeDoors/internal/tasks"
 	tea "github.com/charmbracelet/bubbletea"
@@ -64,7 +65,7 @@ func NewMainModel(pool *tasks.TaskPool, tracker *tasks.SessionTracker, provider 
 	// Initialize completion counter for daily tracking
 	cc := tasks.NewCompletionCounter()
 	if configPath, err := tasks.GetConfigDirPath(); err == nil {
-		if loadErr := cc.LoadFromFile(configPath + "/completed.txt"); loadErr != nil {
+		if loadErr := cc.LoadFromFile(filepath.Join(configPath, "completed.txt")); loadErr != nil {
 			fmt.Fprintf(os.Stderr, "warning: failed to load completion history: %v\n", loadErr)
 		}
 	}

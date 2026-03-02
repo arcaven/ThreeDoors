@@ -4,8 +4,8 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
+	"math/rand/v2"
 	"os"
-	"sort"
 	"strings"
 	"time"
 )
@@ -155,30 +155,18 @@ func (cc *CompletionCounter) FormatCompletionMessage() string {
 
 	msg := fmt.Sprintf("Completed today: %d (yesterday: %d)", todayCount, yesterdayCount)
 	if todayCount > yesterdayCount {
-		msg += " - " + positiveMessage(todayCount)
+		msg += " - " + positiveMessage()
 	}
 	return msg
 }
 
-// positiveMessage returns a varied positive reinforcement message.
-func positiveMessage(todayCount int) string {
+// positiveMessage returns a randomly selected positive reinforcement message.
+func positiveMessage() string {
 	messages := []string{
 		"You're ahead of yesterday!",
 		"Beating yesterday's pace!",
 		"On a roll!",
 		"Momentum building!",
 	}
-	// Use today's count as a simple selector for variety
-	return messages[todayCount%len(messages)]
-}
-
-// SortedDates returns all dates with completions in sorted order (oldest first).
-// Useful for debugging and testing.
-func (cc *CompletionCounter) SortedDates() []string {
-	dates := make([]string, 0, len(cc.dateCounts))
-	for d := range cc.dateCounts {
-		dates = append(dates, d)
-	}
-	sort.Strings(dates)
-	return dates
+	return messages[rand.IntN(len(messages))]
 }
