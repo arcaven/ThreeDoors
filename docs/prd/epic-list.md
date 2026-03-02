@@ -64,7 +64,20 @@
 - **Estimated Effort:** 3-4 weeks at 2-4 hrs/week
 - **Risk:** Algorithm complexity; may need to simplify learning approach
 
-**Epic 5: Data Layer & Enrichment (Optional)**
+**Epic 5: macOS Distribution & Packaging**
+- **Goal:** Provide a trusted, seamless installation experience on macOS by signing, notarizing, and packaging the binary so Gatekeeper does not quarantine it
+- **Prerequisites:** None (independent of feature epics; can be implemented at any time)
+- **Deliverables:**
+  - Code signing with Apple Developer certificate in CI
+  - Notarization with Apple's notarization service
+  - Homebrew tap formula (`brew install arcaven/tap/threedoors`)
+  - DMG or pkg installer as alternative to Homebrew
+  - Automated release pipeline for signed/notarized binaries
+- **Estimated Effort:** 1-2 weeks at 2-4 hrs/week
+- **Risk:** Requires active Apple Developer Program membership ($99/year); certificate management adds CI complexity
+- **Independence:** This epic is independent of the story pipeline and can be merged at any time
+
+**Epic 6: Data Layer & Enrichment (Optional)**
 - **Goal:** Add enrichment storage layer for metadata that cannot live in source systems
 - **Prerequisites:** Epic 4 complete; proven need for enrichment beyond what backends support
 - **Deliverables:**
@@ -79,10 +92,10 @@
 
 ## Phase 3: Future Expansion (12+ months out)
 
-**Epic 6+: Additional Integrations** (Jira, Linear, Google Calendar, Slack, etc.)
-**Epic 7+: Cross-Computer Sync** (Implement alternative to monolithic SQLite on cloud storage)
-**Epic 8+: LLM Integration** (Task breakdown assistance, assumption challenging, dependency collapse)
-**Epic 9+: Advanced Features** (Voice interface, mobile app, web interface, trading mechanic, gamification)
+**Epic 7+: Additional Integrations** (Jira, Linear, Google Calendar, Slack, etc.)
+**Epic 8+: Cross-Computer Sync** (Implement alternative to monolithic SQLite on cloud storage)
+**Epic 9+: LLM Integration** (Task breakdown assistance, assumption challenging, dependency collapse)
+**Epic 10+: Advanced Features** (Voice interface, mobile app, web interface, trading mechanic, gamification)
 
 **Guiding Principle:** Each epic must deliver tangible user value and be informed by real usage patterns from previous phases. No speculation-driven development.
 
