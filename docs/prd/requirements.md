@@ -74,7 +74,19 @@
 
 **FR21:** The system shall categorize tasks by type, effort level, and context to enable diverse door selection
 
-**Phase 4 - Data Layer & Enrichment:**
+**Phase 4 - Distribution & Packaging (macOS):**
+
+**FR22:** The system shall provide macOS binaries that are code-signed with a valid Apple Developer certificate so that Gatekeeper does not quarantine the binary on download
+
+**FR23:** The system shall be notarized with Apple's notarization service so that Gatekeeper allows execution without requiring users to bypass security warnings
+
+**FR24:** The system shall be installable via Homebrew using a custom tap (`brew install arcaven/tap/threedoors`), with the formula downloading the appropriate signed binary for the user's architecture
+
+**FR25:** The system shall provide a DMG or pkg installer as an alternative installation method for users who prefer graphical installation over Homebrew
+
+**FR26:** The CI/CD pipeline shall automate code signing, notarization, Homebrew formula updates, and installer generation as part of the release process
+
+**Phase 5 - Data Layer & Enrichment:**
 
 **FR11:** The system shall maintain a local enrichment layer (SQLite and/or vector database) for metadata, cross-references, and relationships that cannot be stored in source systems
 
@@ -104,7 +116,7 @@
 
 **NFR2:** The system shall continue using Bubbletea/Charm Bracelet ecosystem
 
-**NFR3:** The system shall operate on macOS as primary platform
+**NFR3:** The system shall operate on macOS as primary platform, with binaries that are code-signed and notarized for seamless Gatekeeper approval
 
 **NFR4:** The system shall store all user data locally or in user's iCloud (via Apple Notes), with no external telemetry or tracking
 

@@ -337,7 +337,78 @@
 
 *Detailed stories to be defined based on sufficient usage data from Epic 3*
 
-**Epic 5: Data Layer & Enrichment (Optional)**
+**Epic 5: macOS Distribution & Packaging**
+
+**Goal:** Provide a trusted, seamless installation experience on macOS by signing, notarizing, and packaging the binary so macOS Gatekeeper does not quarantine it on download. This removes the biggest adoption friction for new users.
+
+**Context:** Currently, Go binaries built in CI are unsigned and untrusted. When users download them from GitHub Releases, macOS Gatekeeper quarantines the file, requiring users to manually allow execution via System Preferences > Security & Privacy. This is a poor first-run experience that undermines trust and creates unnecessary friction.
+
+**Independence:** This epic has no dependencies on other feature epics and can be implemented at any time. It is a cross-cutting infrastructure concern.
+
+**Stories:**
+
+### Story 5.1: CI Code Signing & Notarization
+
+**As a** macOS user downloading ThreeDoors,
+**I want** the binary to be signed and notarized,
+**so that** macOS Gatekeeper allows execution without security warnings or quarantine.
+
+**Acceptance Criteria:**
+1. CI pipeline signs darwin/arm64 and darwin/amd64 binaries with a valid Apple Developer ID Application certificate
+2. Signed binaries are submitted to Apple's notarization service and stapled
+3. `codesign --verify` and `spctl --assess` pass on the resulting binaries
+4. GitHub Releases contain only signed+notarized macOS binaries (Linux binaries remain unsigned)
+5. Signing secrets (certificate, password, Apple ID credentials, team ID) are stored as GitHub Actions encrypted secrets
+6. Signing step fails gracefully with clear error if secrets are not configured (e.g., in forks)
+
+**Implementation Guidance:**
+- Use `gon` or direct `codesign`/`xcrun notarytool` in CI
+- Apple Developer ID Application certificate exported as .p12, base64-encoded in secrets
+- Notarization requires Apple ID with app-specific password and Team ID
+- Consider using `macos-latest` runner for the signing step (codesign requires macOS)
+
+### Story 5.2: Homebrew Tap Formula
+
+**As a** macOS user,
+**I want** to install ThreeDoors via `brew install arcaven/tap/threedoors`,
+**so that** I get automatic updates and a standard macOS installation experience.
+
+**Acceptance Criteria:**
+1. A separate GitHub repository `arcaven/homebrew-tap` is created with a Homebrew formula
+2. Formula downloads the correct signed binary for the user's architecture (arm64 or amd64)
+3. Formula includes SHA256 checksums for integrity verification
+4. `brew install arcaven/tap/threedoors` installs the binary to the Homebrew prefix
+5. `brew upgrade arcaven/tap/threedoors` upgrades to the latest version
+6. CI pipeline automatically updates the Homebrew formula on new releases (SHA256 and version)
+
+**Implementation Guidance:**
+- Homebrew formula is a Ruby file in the `homebrew-tap` repo
+- Use `on_arm` / `on_intel` blocks for architecture-specific URLs
+- CI can use `brew bump-formula-pr` or directly update the formula file via GitHub API
+- Include `test` block in formula that runs `threedoors --version` or `threedoors health`
+
+### Story 5.3: DMG/pkg Installer
+
+**As a** macOS user who prefers graphical installation,
+**I want** a DMG or pkg installer available for download,
+**so that** I can install ThreeDoors without using the terminal or Homebrew.
+
+**Acceptance Criteria:**
+1. CI generates a signed .pkg installer containing the signed+notarized binary
+2. The .pkg installs `threedoors` to `/usr/local/bin/`
+3. The .pkg is also notarized with Apple
+4. The installer is uploaded to GitHub Releases alongside the raw binaries
+5. Double-clicking the .pkg on macOS launches the standard macOS installer UI
+
+**Implementation Guidance:**
+- Use `pkgbuild` and `productbuild` (available on macOS runners) to create the .pkg
+- Sign the .pkg with Developer ID Installer certificate
+- Notarize the .pkg separately from the binary
+- DMG is an alternative but .pkg is simpler for CLI tools (no drag-to-install UX needed)
+
+---
+
+**Epic 6: Data Layer & Enrichment (Optional)**
 *Stories to be defined only if clear need emerges from Epic 4*
 
 ---
