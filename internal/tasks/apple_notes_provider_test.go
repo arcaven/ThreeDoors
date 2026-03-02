@@ -269,3 +269,12 @@ func TestAppleNotesProvider_DeleteTask_ReturnsErrReadOnly(t *testing.T) {
 		t.Errorf("DeleteTask() error = %v, want ErrReadOnly", err)
 	}
 }
+
+func TestAppleNotesProvider_MarkComplete_ReturnsErrReadOnly(t *testing.T) {
+	provider := NewAppleNotesProviderWithExecutor("TestNote", mockExecutor("", nil))
+
+	err := provider.MarkComplete("aaa")
+	if !errors.Is(err, ErrReadOnly) {
+		t.Errorf("MarkComplete() error = %v, want ErrReadOnly", err)
+	}
+}
