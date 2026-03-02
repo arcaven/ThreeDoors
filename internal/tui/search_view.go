@@ -162,7 +162,7 @@ func (sv *SearchView) executeCommand() tea.Cmd {
 		}
 
 	case "quit", "exit":
-		return tea.Quit
+		return func() tea.Msg { return RequestQuitMsg{} }
 
 	case "":
 		return nil

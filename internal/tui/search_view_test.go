@@ -436,7 +436,7 @@ func TestSearchView_QuitCommand_SendsQuit(t *testing.T) {
 	if cmd == nil {
 		t.Fatal(":quit should return a command")
 	}
-	// tea.Quit returns a special batch message
+	// :quit sends RequestQuitMsg which triggers quit flow
 }
 
 func TestSearchView_ExitCommand_SendsQuit(t *testing.T) {

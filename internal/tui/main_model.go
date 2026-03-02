@@ -22,6 +22,7 @@ const (
 	ViewAddTask
 	ViewValuesGoals
 	ViewFeedback
+	ViewImprovement
 )
 
 // MainModel is the root Bubbletea model that orchestrates view transitions.
@@ -36,6 +37,7 @@ type MainModel struct {
 	addTaskView         *AddTaskView
 	valuesView          *ValuesView
 	feedbackView        *FeedbackView
+	improvementView     *ImprovementView
 	pool                *tasks.TaskPool
 	tracker             *tasks.SessionTracker
 	provider            tasks.TaskProvider
@@ -114,6 +116,9 @@ func (m *MainModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		if m.feedbackView != nil {
 			m.feedbackView.SetWidth(msg.Width)
+		}
+		if m.improvementView != nil {
+			m.improvementView.SetWidth(msg.Width)
 		}
 		return m, nil
 
@@ -306,6 +311,33 @@ func (m *MainModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.doorsView.RefreshDoors()
 		return m, ClearFlashCmd()
 
+	case RequestQuitMsg:
+		// Show improvement prompt if session qualifies (5+ min OR 1+ completions)
+		if m.tracker != nil {
+			metrics := m.tracker.GetMetricsSnapshot()
+			if metrics.TasksCompleted >= 1 || metrics.DurationSeconds() >= 300 {
+				m.improvementView = NewImprovementView()
+				m.improvementView.SetWidth(m.width)
+				m.viewMode = ViewImprovement
+				return m, nil
+			}
+		}
+		return m, tea.Quit
+
+	case ImprovementSubmittedMsg:
+		if m.tracker != nil && msg.Text != "" {
+			configDir, err := tasks.GetConfigDirPath()
+			if err == nil {
+				if writeErr := tasks.WriteImprovement(configDir, m.tracker.GetSessionID(), msg.Text); writeErr != nil {
+					fmt.Fprintf(os.Stderr, "warning: failed to save improvement: %v\n", writeErr)
+				}
+			}
+		}
+		return m, tea.Quit
+
+	case ImprovementSkippedMsg:
+		return m, tea.Quit
+
 	case FlashMsg:
 		m.flash = msg.Text
 		return m, ClearFlashCmd()
@@ -329,9 +361,19 @@ func (m *MainModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m.updateValues(msg)
 	case ViewFeedback:
 		return m.updateFeedback(msg)
+	case ViewImprovement:
+		return m.updateImprovement(msg)
 	}
 
 	return m, nil
+}
+
+func (m *MainModel) updateImprovement(msg tea.Msg) (tea.Model, tea.Cmd) {
+	if m.improvementView == nil {
+		return m, nil
+	}
+	cmd := m.improvementView.Update(msg)
+	return m, cmd
 }
 
 func (m *MainModel) updateDoors(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -339,7 +381,7 @@ func (m *MainModel) updateDoors(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.KeyMsg:
 		switch msg.String() {
 		case "q", "ctrl+c":
-			return m, tea.Quit
+			return m, func() tea.Msg { return RequestQuitMsg{} }
 		case "a", "left":
 			m.doorsView.selectedDoorIndex = 0
 		case "w", "up":
@@ -483,6 +525,10 @@ func (m *MainModel) View() string {
 	case ViewFeedback:
 		if m.feedbackView != nil {
 			view = m.feedbackView.View()
+		}
+	case ViewImprovement:
+		if m.improvementView != nil {
+			view = m.improvementView.View()
 		}
 	default:
 		view = m.doorsView.View()

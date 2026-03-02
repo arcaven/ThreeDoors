@@ -21,33 +21,55 @@ func newTestModel(t *testing.T) *tui.MainModel {
 func TestQuitKey(t *testing.T) {
 	m := newTestModel(t)
 
+	// 'q' sends RequestQuitMsg, which (with no completions and <5min) becomes tea.Quit
 	msg := tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'q'}}
-	_, cmd := m.Update(msg)
+	updated, cmd := m.Update(msg)
 
 	if cmd == nil {
-		t.Error("'q' key should trigger tea.Quit command")
+		t.Error("'q' key should trigger a command")
 		return
 	}
 
+	// First step: RequestQuitMsg
 	result := cmd()
-	if _, ok := result.(tea.QuitMsg); !ok {
-		t.Error("'q' key should return a tea.QuitMsg")
+	updated, cmd = updated.Update(result)
+
+	if cmd == nil {
+		t.Error("RequestQuitMsg should trigger tea.Quit command")
+		return
 	}
+
+	quitResult := cmd()
+	if _, ok := quitResult.(tea.QuitMsg); !ok {
+		t.Error("'q' key should ultimately return a tea.QuitMsg")
+	}
+	_ = updated
 }
 
 func TestCtrlCKey(t *testing.T) {
 	m := newTestModel(t)
 
+	// 'ctrl+c' sends RequestQuitMsg, which (with no completions and <5min) becomes tea.Quit
 	msg := tea.KeyMsg{Type: tea.KeyCtrlC}
-	_, cmd := m.Update(msg)
+	updated, cmd := m.Update(msg)
 
 	if cmd == nil {
-		t.Error("'ctrl+c' should trigger tea.Quit command")
+		t.Error("'ctrl+c' should trigger a command")
 		return
 	}
 
+	// First step: RequestQuitMsg
 	result := cmd()
-	if _, ok := result.(tea.QuitMsg); !ok {
-		t.Error("'ctrl+c' should return a tea.QuitMsg")
+	updated, cmd = updated.Update(result)
+
+	if cmd == nil {
+		t.Error("RequestQuitMsg should trigger tea.Quit command")
+		return
 	}
+
+	quitResult := cmd()
+	if _, ok := quitResult.(tea.QuitMsg); !ok {
+		t.Error("'ctrl+c' should ultimately return a tea.QuitMsg")
+	}
+	_ = updated
 }
