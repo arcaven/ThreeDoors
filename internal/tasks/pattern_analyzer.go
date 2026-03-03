@@ -325,9 +325,7 @@ func (pa *PatternAnalyzer) analyzeMoodCorrelations(sessions []SessionMetrics) []
 			acc.taskTexts = append(acc.taskTexts, sel.TaskText)
 		}
 		for _, bypass := range s.TaskBypasses {
-			for _, text := range bypass {
-				acc.bypassTexts = append(acc.bypassTexts, text)
-			}
+			acc.bypassTexts = append(acc.bypassTexts, bypass...)
 		}
 	}
 

@@ -68,8 +68,8 @@ func (v *AvoidancePromptView) View() string {
 		taskText = taskText[:57] + "..."
 	}
 
-	s.WriteString(fmt.Sprintf("  %s\n\n", taskText))
-	s.WriteString(fmt.Sprintf("  This task has appeared %d times.\n", v.count))
+	fmt.Fprintf(&s, "  %s\n\n", taskText)
+	fmt.Fprintf(&s, "  This task has appeared %d times.\n", v.count)
 	s.WriteString("  What would you like to do?\n\n")
 	s.WriteString("  [R] Reconsider - take it on now\n")
 	s.WriteString("  [B] Break down - look at it closer\n")
