@@ -1039,3 +1039,163 @@
 **Estimated Time:** 4-6 hours (research)
 
 ---
+
+## Epic 16: iPhone Mobile App (SwiftUI) 🆕
+
+**Epic Goal:** Bring the Three Doors experience to iPhone with a native SwiftUI app that syncs tasks via the same Apple Notes document used by the desktop TUI. The mobile app provides the core Three Doors experience — see three doors, pick one, take action — optimized for touch interaction.
+
+**Origin:** Party mode mobile app discussion (2026-03-02)
+**Research:** See `docs/research/mobile-app-research.md` for full analysis of technology choices.
+
+**Prerequisites:** Epic 2 ✅ (Apple Notes integration established)
+**Tech Stack:** Swift 5.9+, SwiftUI, iCloud Drive, Xcode 16+, iOS 17+ target
+
+**Key Design Decisions:**
+- **Native SwiftUI** over React Native/Flutter/PWA — ThreeDoors is Apple-ecosystem only, and SwiftUI provides seamless iCloud/Apple Notes integration
+- **Protocol-level code sharing** — Port Go interfaces (TaskProvider, Task model, SyncEngine patterns) to Swift protocols rather than using gomobile
+- **Apple Notes as shared backend** — Both TUI and mobile read/write the same Apple Notes document; iCloud syncs automatically
+- **Swipeable card carousel** — Three Doors translates to swipeable cards with tap-to-open, pull-to-refresh, and swipe-to-complete gestures
+
+---
+
+### Story 16.1: SwiftUI Project Setup & CI
+
+**As a** developer,
+**I want** a working SwiftUI project with CI pipeline,
+**so that** I have a foundation for building the Three Doors mobile app.
+
+**Acceptance Criteria:**
+1. Xcode project created at `mobile/ThreeDoors/` with SwiftUI lifecycle
+2. Target: iOS 17+, iPhone only (iPad layout deferred)
+3. Basic app shell renders "ThreeDoors" header with app icon placeholder
+4. GitHub Actions CI workflow for building and testing the Swift project
+5. `.gitignore` configured for Xcode project artifacts
+6. SwiftUI previews configured for development
+7. App compiles and runs in iOS Simulator without errors
+
+**Estimated Time:** 60-90 minutes
+
+---
+
+### Story 16.2: Task Provider Protocol & Apple Notes Reader
+
+**As a** mobile user,
+**I want** the app to read tasks from the same Apple Notes document used by the desktop TUI,
+**so that** my tasks are consistent across devices.
+
+**Acceptance Criteria:**
+1. `TaskProvider` Swift protocol defined mirroring Go's `TaskProvider` interface (loadTasks, saveTask, deleteTask, markComplete)
+2. `Task` Swift struct defined with Codable conformance (id, text, status, notes, createdAt, updatedAt)
+3. `TaskStatus` enum matches Go version (todo, blocked, inProgress, inReview, complete)
+4. `AppleNotesProvider` implementation reads tasks from Apple Notes
+5. Checkbox format parsing matches TUI: `- [ ] task` (todo), `- [x] task` (complete)
+6. Deterministic UUID generation matches Go implementation (`noteTitle:lineIndex` based)
+7. Note title configurable (matches TUI's config)
+8. Error handling for Notes access permission denied
+9. Unit tests with mock note content
+
+**Estimated Time:** 120-150 minutes
+
+---
+
+### Story 16.3: Three Doors Card Carousel
+
+**As a** mobile user,
+**I want** to see three task cards I can swipe through,
+**so that** I get the Three Doors experience on my phone.
+
+**Acceptance Criteria:**
+1. Three task cards displayed as a horizontal swipeable carousel (TabView with PageTabViewStyle or custom)
+2. Each card shows task text, status badge, and creation date
+3. Cards use distinct visual styling consistent with TUI door aesthetic
+4. Current card indicator (dots or similar) shows position
+5. Smooth swipe animation between cards
+6. Empty state handled ("No tasks found — add tasks in Apple Notes")
+7. Loading state while fetching from Apple Notes
+8. Card layout adapts to different iPhone screen sizes
+
+**Estimated Time:** 90-120 minutes
+
+---
+
+### Story 16.4: Door Detail & Status Actions
+
+**As a** mobile user,
+**I want** to tap a card to see task details and change its status,
+**so that** I can take action on tasks from my phone.
+
+**Acceptance Criteria:**
+1. Tapping a card opens a detail view with full task text, notes, status, timestamps
+2. Detail view includes action buttons: Complete, Blocked, In Progress, In Review
+3. Status change writes back to Apple Notes (same checkbox format)
+4. Success haptic feedback on status change
+5. "Progress over perfection" toast shown after completing a task
+6. Detail view dismissible via swipe-down gesture or close button
+7. After status change, returns to carousel with updated card
+8. Optimistic UI update with rollback on write failure
+
+**Estimated Time:** 90-120 minutes
+
+---
+
+### Story 16.5: Session Metrics & iCloud Sync
+
+**As a** developer analyzing usage patterns,
+**I want** mobile session metrics compatible with the desktop JSONL format,
+**so that** mobile and desktop sessions can be analyzed together.
+
+**Acceptance Criteria:**
+1. `SessionTracker` Swift class mirrors Go's SessionTracker (session_id, start/end, behavioral counters)
+2. Metrics recorded: doors_viewed, tasks_completed, refreshes, status_changes, card_swipes
+3. Session data appended to `sessions.jsonl` in app's iCloud Drive container
+4. JSONL format matches Go's MetricsWriter output schema exactly
+5. iCloud Drive sync configured for `~/.threedoors/` equivalent directory
+6. Config file (`config.yaml`) readable from shared iCloud Drive location
+7. Metrics written on app background/termination (UIApplication lifecycle)
+8. Offline metrics cached locally, synced when iCloud available
+
+**Estimated Time:** 120-150 minutes
+
+---
+
+### Story 16.6: Swipe Gestures & Pull-to-Refresh
+
+**As a** mobile user,
+**I want** intuitive gestures for common actions,
+**so that** the app feels native and fast to use.
+
+**Acceptance Criteria:**
+1. **Pull-to-refresh**: Pull down on carousel to generate new set of three doors
+2. **Swipe right on card**: Quick-complete gesture (with confirmation haptic)
+3. **Swipe left on card**: Defer/skip gesture (marks as "not now")
+4. **Long press on card**: Opens context menu with all status options
+5. Gesture animations smooth and responsive (60 FPS)
+6. Gesture hints shown on first use (onboarding overlay)
+7. Undo option shown briefly after swipe-to-complete (5 second window)
+8. Pull-to-refresh triggers Apple Notes re-read
+
+**Estimated Time:** 90-120 minutes
+
+---
+
+### Story 16.7: Polish & TestFlight Distribution
+
+**As a** developer,
+**I want** the app polished and distributed via TestFlight,
+**so that** it can be tested on real devices before wider release.
+
+**Acceptance Criteria:**
+1. App icon designed and configured (Three Doors motif)
+2. Launch screen configured with branding
+3. Dark mode support (matches system setting)
+4. Accessibility: VoiceOver labels on all interactive elements
+5. Accessibility: Dynamic Type support for text sizing
+6. App configured in App Store Connect for TestFlight
+7. Privacy labels configured: "Data Not Collected" (tasks stay in Apple Notes)
+8. TestFlight build uploaded and available for testing
+9. Minimum iOS version validated (iOS 17+)
+10. No crashes on iPhone SE (smallest screen) through iPhone 16 Pro Max (largest screen)
+
+**Estimated Time:** 120-150 minutes
+
+---
