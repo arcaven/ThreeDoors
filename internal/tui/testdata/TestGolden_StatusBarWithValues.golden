@@ -1,0 +1,16 @@
+ThreeDoors - Technical Demo
+Pick one. Start small. That's progress.
+
+╭────────────────────────╮╭────────────────────────╮╭────────────────────────╮
+│                        ││                        ││                        │
+│  [todo]                ││  [todo]                ││  [todo]                │
+│                        ││                        ││                        │
+│  Write tests           ││  Review PRs            ││  Update docs           │
+│                        ││                        ││                        │
+╰────────────────────────╯╰────────────────────────╯╰────────────────────────╯
+
+✓ Local
+
+a/left, w/up, d/right to select | s/down to re-roll | Enter to open | N feedback | / search | M mood | q quit
+Three doors. One choice. Zero wrong answers.
+Focus  ·  Quality  ·  Balance
