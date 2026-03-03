@@ -1,0 +1,5 @@
+- [ ] Fix "login" bug & deploy
+- [ ] Review <PR #42> changes
+- [x] Tom & Jerry's café order
+- [ ] Task with 🎯 emoji target
+- [ ] Handle null/empty cases

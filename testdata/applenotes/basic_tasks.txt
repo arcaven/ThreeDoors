@@ -1,0 +1,5 @@
+- [ ] Buy groceries
+- [x] Walk the dog
+- [ ] Write report
+- [ ] Call dentist
+- [x] Send invoices
