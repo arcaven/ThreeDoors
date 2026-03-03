@@ -123,6 +123,17 @@ type TagCancelledMsg struct{}
 // ShowTagViewMsg is sent when :tag is selected from command palette.
 type ShowTagViewMsg struct{}
 
+// ShowAvoidancePromptMsg is sent to display the avoidance action prompt.
+type ShowAvoidancePromptMsg struct {
+	Task *tasks.Task
+}
+
+// AvoidanceActionMsg is sent when the user picks an avoidance prompt action.
+type AvoidanceActionMsg struct {
+	Task   *tasks.Task
+	Action string // "reconsider", "breakdown", "defer", "archive"
+}
+
 // ReturnToSearchMsg is sent to restore search view from detail view.
 type ReturnToSearchMsg struct {
 	Query         string

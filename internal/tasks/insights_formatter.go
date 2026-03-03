@@ -158,6 +158,76 @@ func FormatMoodInsights(report *PatternReport) string {
 	return b.String()
 }
 
+// FormatAvoidanceInsights returns a focused avoidance-pattern summary.
+func FormatAvoidanceInsights(report *PatternReport) string {
+	if report == nil {
+		return "Not enough data yet — need at least 5 sessions for insights."
+	}
+
+	var b strings.Builder
+
+	fmt.Fprintf(&b, "Avoidance Analysis (%d sessions analyzed)\n\n", report.SessionCount)
+
+	// Tasks bypassed 5+ times
+	avoidance5Plus := []AvoidanceEntry{}
+	for _, a := range report.AvoidanceList {
+		if a.TimesBypassed >= 5 {
+			avoidance5Plus = append(avoidance5Plus, a)
+		}
+	}
+
+	if len(avoidance5Plus) == 0 {
+		b.WriteString("No significant avoidance patterns detected yet.\n")
+		b.WriteString("Tasks need to be bypassed 5+ times to appear here.\n")
+		return b.String()
+	}
+
+	fmt.Fprintf(&b, "Tasks bypassed 5+ times: %d\n\n", len(avoidance5Plus))
+	for _, a := range avoidance5Plus {
+		label := "seen"
+		if a.NeverSelected {
+			label = "never selected"
+		}
+		fmt.Fprintf(&b, "  - %q (bypassed %d/%d times, %s)\n",
+			truncate(a.TaskText, 40), a.TimesBypassed, a.TimesShown, label)
+	}
+	b.WriteString("\n")
+
+	// Mood-avoidance correlation
+	if len(report.MoodCorrelations) > 0 {
+		hasAvoidedTypes := false
+		for _, mc := range report.MoodCorrelations {
+			if mc.AvoidedType != "" {
+				hasAvoidedTypes = true
+				break
+			}
+		}
+		if hasAvoidedTypes {
+			b.WriteString("Mood-Avoidance Patterns:\n")
+			for _, mc := range report.MoodCorrelations {
+				if mc.AvoidedType != "" {
+					fmt.Fprintf(&b, "  - When %s, you tend to bypass %s tasks\n", mc.Mood, mc.AvoidedType)
+				}
+			}
+			b.WriteString("\n")
+		}
+	}
+
+	// Persistent avoidance (10+)
+	persistent := []AvoidanceEntry{}
+	for _, a := range report.AvoidanceList {
+		if a.TimesBypassed >= 10 {
+			persistent = append(persistent, a)
+		}
+	}
+	if len(persistent) > 0 {
+		fmt.Fprintf(&b, "Persistent avoidance (10+ bypasses): %d tasks\n", len(persistent))
+		b.WriteString("These tasks will prompt you with options when they appear in doors.\n")
+	}
+
+	return b.String()
+}
+
 func truncate(s string, maxLen int) string {
 	if len(s) <= maxLen {
 		return s
