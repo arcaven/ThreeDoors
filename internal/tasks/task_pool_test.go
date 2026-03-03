@@ -1,6 +1,9 @@
 package tasks
 
-import "testing"
+import (
+	"testing"
+	"time"
+)
 
 func TestTaskPool_AddAndGet(t *testing.T) {
 	pool := NewTaskPool()
@@ -96,5 +99,52 @@ func TestTaskPool_GetAvailableForDoors_FewTasks(t *testing.T) {
 	available := pool.GetAvailableForDoors()
 	if len(available) != 1 {
 		t.Errorf("Expected 1 available task (including recently shown), got %d", len(available))
+	}
+}
+
+func TestGetAvailableForDoors_ExcludesDeferred(t *testing.T) {
+	pool := NewTaskPool()
+	t1 := NewTask("Normal task")
+	t2 := NewTask("Deferred task")
+	future := time.Now().Add(24 * time.Hour)
+	t2.DeferredUntil = &future
+	pool.AddTask(t1)
+	pool.AddTask(t2)
+
+	available := pool.GetAvailableForDoors()
+	for _, task := range available {
+		if task.ID == t2.ID {
+			t.Error("deferred task should be excluded from available doors")
+		}
+	}
+	if len(available) != 1 {
+		t.Errorf("expected 1 available task, got %d", len(available))
+	}
+}
+
+func TestGetAvailableForDoors_IncludesExpiredDeferred(t *testing.T) {
+	pool := NewTaskPool()
+	t1 := NewTask("Expired deferred task")
+	past := time.Now().Add(-24 * time.Hour)
+	t1.DeferredUntil = &past
+	pool.AddTask(t1)
+
+	available := pool.GetAvailableForDoors()
+	if len(available) != 1 {
+		t.Errorf("expected 1 available task (expired deferral), got %d", len(available))
+	}
+}
+
+func TestGetAvailableForDoors_DeferredExactlyNow(t *testing.T) {
+	pool := NewTaskPool()
+	t1 := NewTask("Borderline task")
+	now := time.Now()
+	t1.DeferredUntil = &now
+	pool.AddTask(t1)
+
+	// DeferredUntil.After(time.Now()) should be false when equal → task included
+	available := pool.GetAvailableForDoors()
+	if len(available) != 1 {
+		t.Errorf("expected 1 available task (deferral expired at now), got %d", len(available))
 	}
 }

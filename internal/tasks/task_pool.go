@@ -1,5 +1,7 @@
 package tasks
 
+import "time"
+
 // TaskPool manages an in-memory collection of tasks.
 type TaskPool struct {
 	tasks            map[string]*Task
@@ -58,22 +60,28 @@ func (tp *TaskPool) GetTasksByStatus(status TaskStatus) []*Task {
 	return result
 }
 
+// isDeferredAt returns true if the task has a DeferredUntil time after the given time.
+func isDeferredAt(t *Task, now time.Time) bool {
+	return t.DeferredUntil != nil && t.DeferredUntil.After(now)
+}
+
 // GetAvailableForDoors returns tasks eligible for door selection.
-// Eligible: status is todo, blocked, or in-progress, and not recently shown.
+// Eligible: status is todo, blocked, or in-progress, not recently shown, and not deferred.
 func (tp *TaskPool) GetAvailableForDoors() []*Task {
+	now := time.Now()
 	var result []*Task
 	for _, t := range tp.tasks {
-		if t.Status == StatusTodo || t.Status == StatusBlocked || t.Status == StatusInProgress {
+		if (t.Status == StatusTodo || t.Status == StatusBlocked || t.Status == StatusInProgress) && !isDeferredAt(t, now) {
 			if !tp.IsRecentlyShown(t.ID) {
 				result = append(result, t)
 			}
 		}
 	}
-	// If not enough non-recent tasks, include recently shown ones
+	// If not enough non-recent tasks, include recently shown ones (but still exclude deferred)
 	if len(result) < 3 {
 		result = nil
 		for _, t := range tp.tasks {
-			if t.Status == StatusTodo || t.Status == StatusBlocked || t.Status == StatusInProgress {
+			if (t.Status == StatusTodo || t.Status == StatusBlocked || t.Status == StatusInProgress) && !isDeferredAt(t, now) {
 				result = append(result, t)
 			}
 		}

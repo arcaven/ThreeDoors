@@ -89,3 +89,36 @@ func newCategorizedTestTask(id, text string, status TaskStatus, taskType TaskTyp
 	t.Location = loc
 	return t
 }
+
+// makeTestPatternReport creates a PatternReport with functional options for testing.
+func makeTestPatternReport(opts ...func(*PatternReport)) *PatternReport {
+	r := &PatternReport{
+		SessionCount:      10,
+		TaskTypeStats:     map[string]TypeSelectionRate{},
+		TimeOfDayPatterns: []TimeOfDayPattern{},
+		MoodCorrelations:  []MoodCorrelation{},
+		AvoidanceList:     []AvoidanceEntry{},
+	}
+	for _, opt := range opts {
+		opt(r)
+	}
+	return r
+}
+
+func withAvoidance(entries ...AvoidanceEntry) func(*PatternReport) {
+	return func(r *PatternReport) {
+		r.AvoidanceList = entries
+	}
+}
+
+func withMoodCorrelations(corrs ...MoodCorrelation) func(*PatternReport) {
+	return func(r *PatternReport) {
+		r.MoodCorrelations = corrs
+	}
+}
+
+func withTimeOfDay(patterns ...TimeOfDayPattern) func(*PatternReport) {
+	return func(r *PatternReport) {
+		r.TimeOfDayPatterns = patterns
+	}
+}

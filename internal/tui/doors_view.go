@@ -55,6 +55,7 @@ type DoorsView struct {
 	footerMessage     string
 	avoidanceMap      map[string]int // task text → bypass count (TimesBypassed)
 	avoidanceShown    map[string]int // task text → shown count (TimesShown)
+	patterns          *tasks.PatternReport
 }
 
 // NewDoorsView creates a new DoorsView.
@@ -76,6 +77,7 @@ func NewDoorsView(pool *tasks.TaskPool, tracker *tasks.SessionTracker) *DoorsVie
 func (dv *DoorsView) SetAvoidanceData(report *tasks.PatternReport) {
 	dv.avoidanceMap = make(map[string]int)
 	dv.avoidanceShown = make(map[string]int)
+	dv.patterns = report
 	if report == nil {
 		return
 	}
@@ -120,9 +122,17 @@ func (dv *DoorsView) RotateFooterMessage() {
 	dv.footerMessage = pickFooterMessage(-1)
 }
 
-// RefreshDoors selects new random doors from the pool.
+// RefreshDoors selects new doors from the pool using adaptive scoring when available.
 func (dv *DoorsView) RefreshDoors() {
-	dv.currentDoors = tasks.SelectDoors(dv.pool, 3)
+	var selector *tasks.AdaptiveSelector
+	if dv.patterns != nil {
+		mood := ""
+		if dv.tracker != nil {
+			mood = dv.tracker.LatestMood()
+		}
+		selector = tasks.NewAdaptiveSelector(mood, dv.patterns, tasks.DefaultAdaptiveWeights())
+	}
+	dv.currentDoors = tasks.SelectDoorsAdaptive(dv.pool, 3, selector)
 	dv.selectedDoorIndex = -1
 }
 

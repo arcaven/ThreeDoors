@@ -437,6 +437,7 @@ func (m *MainModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.viewMode = ViewDetail
 			return m, nil
 		case "defer":
+			tasks.DeferTask(msg.Task)
 			if err := msg.Task.UpdateStatus(tasks.StatusDeferred); err == nil {
 				if err := m.saveTasks(); err != nil {
 					fmt.Fprintf(os.Stderr, "warning: failed to save tasks: %v\n", err)

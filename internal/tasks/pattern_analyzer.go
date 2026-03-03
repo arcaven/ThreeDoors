@@ -259,7 +259,7 @@ func (pa *PatternAnalyzer) analyzeTimeOfDay(sessions []SessionMetrics) []TimeOfD
 	}
 
 	for _, s := range sessions {
-		period := hourToPeriod(s.StartTime.Hour())
+		period := HourToPeriod(s.StartTime.Hour())
 		acc := periods[period]
 		acc.count++
 		acc.totalComp += s.TasksCompleted
@@ -283,7 +283,8 @@ func (pa *PatternAnalyzer) analyzeTimeOfDay(sessions []SessionMetrics) []TimeOfD
 	return patterns
 }
 
-func hourToPeriod(hour int) string {
+// HourToPeriod maps an hour (0-23) to a named period.
+func HourToPeriod(hour int) string {
 	switch {
 	case hour >= 5 && hour <= 11:
 		return "morning"
