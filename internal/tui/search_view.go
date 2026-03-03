@@ -367,7 +367,8 @@ func (sv *SearchView) View() string {
 				Foreground(statusColor).
 				Render(fmt.Sprintf("[%s]", task.Status))
 
-			line := fmt.Sprintf("  %s %s", statusIndicator, task.Text)
+			srcBadge := SourceBadge(task.SourceProvider)
+			line := fmt.Sprintf("  %s %s %s", statusIndicator, task.Text, srcBadge)
 			if i == sv.selectedIndex {
 				line = searchSelectedStyle.Render(line)
 			} else {

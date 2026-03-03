@@ -319,6 +319,10 @@ func (dv *DetailView) View() string {
 	fmt.Fprintf(&s, "Created: %s\n", dv.task.CreatedAt.Format("2006-01-02 15:04"))
 	fmt.Fprintf(&s, "Updated: %s\n", dv.task.UpdatedAt.Format("2006-01-02 15:04"))
 
+	if dv.task.SourceProvider != "" {
+		fmt.Fprintf(&s, "Source: %s\n", SourceBadge(dv.task.SourceProvider))
+	}
+
 	if dv.task.Blocker != "" {
 		blockerStyle := lipgloss.NewStyle().Foreground(colorBlocked)
 		fmt.Fprintf(&s, "Blocker: %s\n", blockerStyle.Render(dv.task.Blocker))

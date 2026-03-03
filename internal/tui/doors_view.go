@@ -221,6 +221,11 @@ func (dv *DoorsView) View() string {
 	for i, task := range dv.currentDoors {
 		content := task.Text
 
+		// Source provider badge
+		if srcBadge := SourceBadge(task.SourceProvider); srcBadge != "" {
+			content = content + "\n" + srcBadge
+		}
+
 		// Category badges
 		badge := categoryBadge(task)
 		if badge != "" {
