@@ -1,7 +1,7 @@
 THREEDOORS_DIR ?= $(HOME)/.threedoors
 VERSION ?= dev
 
-.PHONY: build run clean fmt lint test test-docker analyze test-scripts sign pkg release-local test-dist
+.PHONY: build run clean fmt lint test test-docker bench analyze test-scripts sign pkg release-local test-dist
 
 build:
 	go build -ldflags "-X main.version=$(VERSION)" -o bin/threedoors ./cmd/threedoors
@@ -26,6 +26,13 @@ test-docker:
 	@docker info >/dev/null 2>&1 || { echo "Error: Docker daemon is not running. Start Docker and try again."; exit 1; }
 	@mkdir -p test-results
 	docker compose -f docker-compose.test.yml run --rm test
+
+bench:
+	go test -bench=. -benchmem -count=1 ./internal/core/ ./internal/adapters/textfile/
+
+bench-save:
+	@mkdir -p benchmarks
+	go test -bench=. -benchmem -count=5 ./internal/core/ ./internal/adapters/textfile/ | tee benchmarks/bench-$$(date +%Y%m%d-%H%M%S).txt
 
 analyze:
 	@chmod +x scripts/*.sh
