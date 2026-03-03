@@ -113,6 +113,9 @@ func TestObsidianWatcher_IgnoresSelfWrites(t *testing.T) {
 		}
 	})
 
+	// Allow watcher goroutine to fully start
+	time.Sleep(100 * time.Millisecond)
+
 	// Record a self-write before writing the file
 	taskFile := filepath.Join(dir, "test.md")
 	watcher.RecordSelfWrite(taskFile)
@@ -123,7 +126,7 @@ func TestObsidianWatcher_IgnoresSelfWrites(t *testing.T) {
 	}
 
 	// Wait a reasonable amount of time — no event should arrive
-	time.Sleep(500 * time.Millisecond)
+	time.Sleep(1 * time.Second)
 
 	mu.Lock()
 	defer mu.Unlock()
