@@ -212,9 +212,26 @@
 - **FRs covered:** FR34
 - **Risk:** Academic research may not yield actionable insights; focus on practical findings
 
-**Epic 16+: Additional Integrations** (Jira, Linear, Google Calendar, Slack, etc.)
-**Epic 17+: Cross-Computer Sync** (Implement alternative to monolithic SQLite on cloud storage)
-**Epic 18+: Advanced Features** (Voice interface, mobile app, web interface, trading mechanic, gamification)
+**Epic 16: iPhone Mobile App (SwiftUI)** 🆕
+- **Goal:** Bring the Three Doors experience to iPhone with a native SwiftUI app that shares tasks via Apple Notes and syncs seamlessly with the desktop TUI
+- **Prerequisites:** Epic 2 ✅ (Apple Notes integration), Epic 3.5 (platform readiness for shared specs)
+- **Deliverables:**
+  - Native SwiftUI iPhone app with swipeable Three Doors card carousel
+  - Apple Notes integration via Swift (reading tasks from same note as TUI)
+  - Task completion and status changes from mobile
+  - Session metrics collection compatible with desktop JSONL format
+  - iCloud Drive sync for config and metrics
+  - TestFlight distribution (App Store submission in Phase 2)
+- **Stories:** 16.1 (SwiftUI Project Setup & CI), 16.2 (Task Provider Protocol & Apple Notes Reader), 16.3 (Three Doors Card Carousel), 16.4 (Door Detail & Status Actions), 16.5 (Session Metrics & iCloud Sync), 16.6 (Swipe Gestures & Pull-to-Refresh), 16.7 (Polish & TestFlight Distribution)
+- **Estimated Effort:** 6-8 weeks at 4-6 hrs/week
+- **Tech Stack:** Swift 5.9+, SwiftUI, CloudKit/iCloud Drive, Xcode 16+, iOS 17+ target
+- **Risk:** Apple Notes API access from Swift may differ from osascript approach; App Store review timeline uncertainty
+- **Origin:** Party mode mobile app discussion (2026-03-02)
+- **Research:** See `docs/research/mobile-app-research.md` for full analysis
+
+**Epic 17+: Additional Integrations** (Jira, Linear, Google Calendar, Slack, etc.)
+**Epic 18+: Cross-Computer Sync** (Implement alternative to monolithic SQLite on cloud storage)
+**Epic 19+: Advanced Features** (Voice interface, web interface, Apple Watch, iPad, trading mechanic, gamification)
 
 **Guiding Principle:** Each epic must deliver tangible user value and be informed by real usage patterns from previous phases. No speculation-driven development.
 
@@ -240,6 +257,7 @@
 | Epic 13: Multi-Source Aggregation | 2 | Not Started |
 | Epic 14: LLM Decomposition | 2 | Not Started |
 | Epic 15: Psychology Research | 2 | Not Started |
-| **Total** | **62** | **21 complete, 41 remaining** |
+| Epic 16: iPhone Mobile App | 7 | 🆕 Not Started |
+| **Total** | **69** | **21 complete, 48 remaining** |
 
 ---
