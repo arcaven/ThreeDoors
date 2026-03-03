@@ -92,6 +92,9 @@ func TestObsidianWatcher_DetectsFileChange(t *testing.T) {
 }
 
 func TestObsidianWatcher_IgnoresSelfWrites(t *testing.T) {
+	if os.Getenv("CI") != "" {
+		t.Skip("Skipping: filesystem event timing is unreliable on CI runners")
+	}
 	t.Parallel()
 
 	dir := t.TempDir()
@@ -115,13 +118,6 @@ func TestObsidianWatcher_IgnoresSelfWrites(t *testing.T) {
 		}
 	})
 
-	if os.Getenv("CI") != "" {
-		t.Skip("Skipping flaky file watcher test in CI — fsnotify timing is unreliable on GitHub Actions runners")
-	}
-
-	// Allow watcher goroutine to fully start
-	time.Sleep(100 * time.Millisecond)
-
 	// Record a self-write before writing the file
 	taskFile := filepath.Join(dir, "test.md")
 	watcher.RecordSelfWrite(taskFile)
@@ -131,13 +127,45 @@ func TestObsidianWatcher_IgnoresSelfWrites(t *testing.T) {
 		t.Fatalf("WriteFile error: %v", err)
 	}
 
-	// Wait a reasonable amount of time — no event should arrive
-	time.Sleep(1 * time.Second)
+	// Sentinel pattern: write a second file that is NOT a self-write.
+	// When the sentinel event arrives, we know the watcher has processed
+	// all prior events — so the absence of the self-write event is reliable.
+	sentinelFile := filepath.Join(dir, "sentinel.md")
+	sentinelContent := "- [ ] Sentinel task <!-- td:sentinel-1 -->\n"
+	if err := os.WriteFile(sentinelFile, []byte(sentinelContent), 0o644); err != nil {
+		t.Fatalf("WriteFile error: %v", err)
+	}
 
+	// Poll until the sentinel event arrives
+	deadline := time.After(5 * time.Second)
+	for {
+		mu.Lock()
+		var gotSentinel bool
+		for _, e := range received {
+			if filepath.Base(e.FilePath) == "sentinel.md" {
+				gotSentinel = true
+				break
+			}
+		}
+		mu.Unlock()
+		if gotSentinel {
+			break
+		}
+		select {
+		case <-deadline:
+			t.Fatal("timed out waiting for sentinel event — watcher may not be processing events")
+		case <-time.After(50 * time.Millisecond):
+		}
+	}
+
+	// The sentinel arrived, so if the self-write was going to produce an
+	// event it would have by now. Assert only the sentinel was received.
 	mu.Lock()
 	defer mu.Unlock()
-	if len(received) != 0 {
-		t.Errorf("expected no events for self-write, got %d", len(received))
+	for _, e := range received {
+		if filepath.Base(e.FilePath) == "test.md" {
+			t.Errorf("expected self-write to be ignored, but got event for test.md")
+		}
 	}
 }
 
