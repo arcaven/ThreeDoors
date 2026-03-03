@@ -1,0 +1,148 @@
+package tui
+
+import (
+	"fmt"
+	"os"
+	"path/filepath"
+	"testing"
+
+	"github.com/arcaven/ThreeDoors/internal/tasks"
+	"github.com/charmbracelet/lipgloss"
+	"github.com/charmbracelet/x/exp/teatest"
+	"github.com/muesli/termenv"
+)
+
+// TestOption configures how the test app is created.
+type TestOption func(*testAppConfig)
+
+type testAppConfig struct {
+	width    int
+	height   int
+	taskFile string
+	tasks    []string
+	provider tasks.TaskProvider
+}
+
+// WithTermSize sets the virtual terminal dimensions for the test.
+func WithTermSize(w, h int) TestOption {
+	return func(c *testAppConfig) {
+		c.width = w
+		c.height = h
+	}
+}
+
+// WithTaskFile copies a task file into the test's config directory so that
+// TextFileProvider can load tasks from it.
+func WithTaskFile(path string) TestOption {
+	return func(c *testAppConfig) {
+		c.taskFile = path
+		c.tasks = nil // Don't populate pool manually when using a task file.
+	}
+}
+
+// WithTasks sets the task texts to populate the pool with.
+func WithTasks(texts ...string) TestOption {
+	return func(c *testAppConfig) {
+		c.tasks = texts
+	}
+}
+
+// WithProvider sets a custom TaskProvider for the test.
+func WithProvider(p tasks.TaskProvider) TestOption {
+	return func(c *testAppConfig) {
+		c.provider = p
+	}
+}
+
+// NewTestApp creates a teatest.TestModel wrapping the full TUI application.
+// It sets the color profile to ASCII for deterministic output and configures
+// a temporary home directory to isolate filesystem side effects.
+//
+// The returned TestModel can send key messages, retrieve output, and inspect
+// the final model state.
+func NewTestApp(t *testing.T, opts ...TestOption) *teatest.TestModel {
+	t.Helper()
+
+	cfg := testAppConfig{
+		width:  80,
+		height: 24,
+		tasks:  []string{"Task A", "Task B", "Task C"},
+	}
+	for _, opt := range opts {
+		opt(&cfg)
+	}
+
+	// Force ASCII color profile for deterministic, portable output.
+	lipgloss.SetColorProfile(termenv.Ascii)
+	t.Cleanup(func() {
+		lipgloss.SetColorProfile(termenv.TrueColor)
+	})
+
+	// Isolate filesystem access to a temp directory.
+	tmpDir := t.TempDir()
+	tasks.SetHomeDir(tmpDir)
+	t.Cleanup(func() {
+		tasks.SetHomeDir("")
+	})
+
+	// If a task file was provided, copy it into the temp config directory.
+	if cfg.taskFile != "" {
+		configDir := filepath.Join(tmpDir, ".threedoors")
+		if err := os.MkdirAll(configDir, 0o755); err != nil {
+			t.Fatalf("create test config dir: %v", err)
+		}
+		src, err := os.ReadFile(cfg.taskFile)
+		if err != nil {
+			t.Fatalf("read task file %s: %v", cfg.taskFile, err)
+		}
+		dst := filepath.Join(configDir, "tasks.yaml")
+		if err := os.WriteFile(dst, src, 0o644); err != nil {
+			t.Fatalf("write task file to %s: %v", dst, err)
+		}
+	}
+
+	// Build provider.
+	var provider tasks.TaskProvider
+	if cfg.provider != nil {
+		provider = cfg.provider
+	} else {
+		provider = &testProvider{}
+	}
+
+	// Build pool from explicit task texts.
+	pool := tasks.NewTaskPool()
+	for _, text := range cfg.tasks {
+		pool.AddTask(tasks.NewTask(text))
+	}
+
+	// If using a task file with no explicit tasks, load from the provider.
+	if cfg.taskFile != "" && len(cfg.tasks) == 0 {
+		loaded, err := tasks.NewTextFileProvider().LoadTasks()
+		if err != nil {
+			t.Fatalf("load tasks from file: %v", err)
+		}
+		for _, task := range loaded {
+			pool.AddTask(task)
+		}
+		if pool.Count() == 0 {
+			t.Fatal("task file provided but no tasks loaded")
+		}
+	}
+
+	tracker := tasks.NewSessionTracker()
+	model := NewMainModel(pool, tracker, provider, nil, false, nil)
+
+	tm := teatest.NewTestModel(
+		t,
+		model,
+		teatest.WithInitialTermSize(cfg.width, cfg.height),
+	)
+	t.Cleanup(func() {
+		if err := tm.Quit(); err != nil {
+			// Log but don't fail — program may have already quit.
+			fmt.Fprintf(os.Stderr, "quit test model: %v\n", err)
+		}
+	})
+
+	return tm
+}
