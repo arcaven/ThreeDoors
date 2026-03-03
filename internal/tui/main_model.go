@@ -24,6 +24,7 @@ const (
 	ViewFeedback
 	ViewImprovement
 	ViewNextSteps
+	ViewAvoidancePrompt
 )
 
 // MainModel is the root Bubbletea model that orchestrates view transitions.
@@ -40,6 +41,7 @@ type MainModel struct {
 	feedbackView        *FeedbackView
 	improvementView     *ImprovementView
 	nextStepsView       *NextStepsView
+	avoidancePromptView *AvoidancePromptView
 	pool                *tasks.TaskPool
 	tracker             *tasks.SessionTracker
 	provider            tasks.TaskProvider
@@ -52,6 +54,7 @@ type MainModel struct {
 	height              int
 	searchQuery         string
 	searchSelectedIndex int
+	promptedTasks       map[string]bool
 }
 
 // NewMainModel creates the root application model.
@@ -95,6 +98,7 @@ func NewMainModel(pool *tasks.TaskPool, tracker *tasks.SessionTracker, provider 
 		completionCounter: cc,
 		patternReport:     patternReport,
 		valuesConfig:      valuesConfig,
+		promptedTasks:     make(map[string]bool),
 	}
 }
 
@@ -136,6 +140,9 @@ func (m *MainModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		if m.nextStepsView != nil {
 			m.nextStepsView.SetWidth(msg.Width)
+		}
+		if m.avoidancePromptView != nil {
+			m.avoidancePromptView.SetWidth(msg.Width)
 		}
 		return m, nil
 
@@ -402,6 +409,60 @@ func (m *MainModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.doorsView.RotateFooterMessage()
 		return m, nil
 
+	case ShowAvoidancePromptMsg:
+		m.avoidancePromptView = NewAvoidancePromptView(msg.Task, m.doorsView.avoidanceMap[msg.Task.Text])
+		m.avoidancePromptView.SetWidth(m.width)
+		m.promptedTasks[msg.Task.Text] = true
+		m.previousView = m.viewMode
+		m.viewMode = ViewAvoidancePrompt
+		return m, nil
+
+	case AvoidanceActionMsg:
+		m.avoidancePromptView = nil
+		switch msg.Action {
+		case "reconsider":
+			if err := msg.Task.UpdateStatus(tasks.StatusInProgress); err == nil {
+				if err := m.saveTasks(); err != nil {
+					fmt.Fprintf(os.Stderr, "warning: failed to save tasks: %v\n", err)
+				}
+			}
+			m.detailView = NewDetailView(msg.Task, m.tracker)
+			m.detailView.SetWidth(m.width)
+			m.viewMode = ViewDetail
+			m.flash = "Taking it on!"
+			return m, ClearFlashCmd()
+		case "breakdown":
+			m.detailView = NewDetailView(msg.Task, m.tracker)
+			m.detailView.SetWidth(m.width)
+			m.viewMode = ViewDetail
+			return m, nil
+		case "defer":
+			if err := msg.Task.UpdateStatus(tasks.StatusDeferred); err == nil {
+				if err := m.saveTasks(); err != nil {
+					fmt.Fprintf(os.Stderr, "warning: failed to save tasks: %v\n", err)
+				}
+			}
+			m.viewMode = ViewDoors
+			m.doorsView.RefreshDoors()
+			m.flash = "Task set aside for later"
+			return m, ClearFlashCmd()
+		case "archive":
+			if err := msg.Task.UpdateStatus(tasks.StatusArchived); err == nil {
+				if err := m.provider.MarkComplete(msg.Task.ID); err != nil {
+					fmt.Fprintf(os.Stderr, "warning: failed to archive task: %v\n", err)
+				}
+				m.pool.RemoveTask(msg.Task.ID)
+			}
+			m.viewMode = ViewDoors
+			m.doorsView.RefreshDoors()
+			m.flash = "Task archived"
+			return m, ClearFlashCmd()
+		default:
+			m.viewMode = ViewDoors
+			m.doorsView.RefreshDoors()
+		}
+		return m, nil
+
 	case FlashMsg:
 		m.flash = msg.Text
 		return m, ClearFlashCmd()
@@ -429,6 +490,8 @@ func (m *MainModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m.updateImprovement(msg)
 	case ViewNextSteps:
 		return m.updateNextSteps(msg)
+	case ViewAvoidancePrompt:
+		return m.updateAvoidancePrompt(msg)
 	}
 
 	return m, nil
@@ -460,6 +523,10 @@ func (m *MainModel) updateDoors(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 			m.doorsView.RefreshDoors()
 			m.doorsView.RotateFooterMessage()
+			// Check for 10+ bypassed tasks and show avoidance prompt
+			if task := m.findAvoidancePromptTask(); task != nil {
+				return m, func() tea.Msg { return ShowAvoidancePromptMsg{Task: task} }
+			}
 			m.flash = doorRefreshMessages[rand.IntN(len(doorRefreshMessages))]
 			return m, ClearFlashCmd()
 		case "enter":
@@ -554,12 +621,32 @@ func (m *MainModel) updateNextSteps(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, cmd
 }
 
+func (m *MainModel) updateAvoidancePrompt(msg tea.Msg) (tea.Model, tea.Cmd) {
+	if m.avoidancePromptView == nil {
+		return m, nil
+	}
+	cmd := m.avoidancePromptView.Update(msg)
+	return m, cmd
+}
+
 func (m *MainModel) updateValues(msg tea.Msg) (tea.Model, tea.Cmd) {
 	if m.valuesView == nil {
 		return m, nil
 	}
 	cmd := m.valuesView.Update(msg)
 	return m, cmd
+}
+
+// findAvoidancePromptTask checks current doors for a task with 10+ bypasses
+// that hasn't already been prompted this session. Returns the first match or nil.
+func (m *MainModel) findAvoidancePromptTask() *tasks.Task {
+	for _, task := range m.doorsView.currentDoors {
+		count, ok := m.doorsView.avoidanceMap[task.Text]
+		if ok && count >= 10 && !m.promptedTasks[task.Text] {
+			return task
+		}
+	}
+	return nil
 }
 
 func (m *MainModel) saveTasks() error {
@@ -612,6 +699,10 @@ func (m *MainModel) View() string {
 			view = m.nextStepsView.View()
 		}
 		showValuesFooter = true
+	case ViewAvoidancePrompt:
+		if m.avoidancePromptView != nil {
+			view = m.avoidancePromptView.View()
+		}
 	default:
 		view = m.doorsView.View()
 		showValuesFooter = true

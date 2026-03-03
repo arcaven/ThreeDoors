@@ -54,6 +54,7 @@ type MoodCorrelation struct {
 	SessionCount      int     `json:"session_count"`
 	PreferredType     string  `json:"preferred_type"`
 	PreferredEffort   string  `json:"preferred_effort"`
+	AvoidedType       string  `json:"avoided_type,omitempty"`
 	AvgTasksCompleted float64 `json:"avg_tasks_completed"`
 }
 
@@ -298,9 +299,10 @@ func hourToPeriod(hour int) string {
 // analyzeMoodCorrelations correlates mood entries with task selections.
 func (pa *PatternAnalyzer) analyzeMoodCorrelations(sessions []SessionMetrics) []MoodCorrelation {
 	type moodAcc struct {
-		count     int
-		totalComp int
-		taskTexts []string
+		count       int
+		totalComp   int
+		taskTexts   []string
+		bypassTexts []string
 	}
 	moods := map[string]*moodAcc{}
 
@@ -321,6 +323,9 @@ func (pa *PatternAnalyzer) analyzeMoodCorrelations(sessions []SessionMetrics) []
 		acc.totalComp += s.TasksCompleted
 		for _, sel := range s.DoorSelections {
 			acc.taskTexts = append(acc.taskTexts, sel.TaskText)
+		}
+		for _, bypass := range s.TaskBypasses {
+			acc.bypassTexts = append(acc.bypassTexts, bypass...)
 		}
 	}
 
@@ -367,11 +372,34 @@ func (pa *PatternAnalyzer) analyzeMoodCorrelations(sessions []SessionMetrics) []
 			}
 		}
 
+		// Determine avoided type from bypassed tasks
+		avoidedType := ""
+		if len(pa.taskCategories) > 0 && len(acc.bypassTexts) > 0 {
+			bypassTypeCounts := map[TaskType]int{}
+			for _, text := range acc.bypassTexts {
+				info, ok := pa.taskCategories[text]
+				if !ok {
+					continue
+				}
+				if info.Type != "" {
+					bypassTypeCounts[info.Type]++
+				}
+			}
+			maxBypassCount := 0
+			for t, c := range bypassTypeCounts {
+				if c > maxBypassCount {
+					maxBypassCount = c
+					avoidedType = string(t)
+				}
+			}
+		}
+
 		correlations = append(correlations, MoodCorrelation{
 			Mood:              mood,
 			SessionCount:      acc.count,
 			PreferredType:     preferredType,
 			PreferredEffort:   preferredEffort,
+			AvoidedType:       avoidedType,
 			AvgTasksCompleted: math.Round(float64(acc.totalComp)/float64(acc.count)*10) / 10,
 		})
 	}

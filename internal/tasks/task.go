@@ -61,7 +61,7 @@ func (t *Task) UpdateStatus(newStatus TaskStatus) error {
 	now := time.Now().UTC()
 	t.Status = newStatus
 	t.UpdatedAt = now
-	if newStatus == StatusComplete {
+	if newStatus == StatusComplete || newStatus == StatusArchived {
 		t.CompletedAt = &now
 	}
 	if newStatus != StatusBlocked {
@@ -107,8 +107,8 @@ func (t *Task) Validate() error {
 	if !t.UpdatedAt.IsZero() && t.UpdatedAt.Before(t.CreatedAt) {
 		return fmt.Errorf("updatedAt must be >= createdAt")
 	}
-	if t.CompletedAt != nil && t.Status != StatusComplete {
-		return fmt.Errorf("completedAt should only be set when status is complete")
+	if t.CompletedAt != nil && t.Status != StatusComplete && t.Status != StatusArchived {
+		return fmt.Errorf("completedAt should only be set when status is complete or archived")
 	}
 	if err := ValidateTaskType(t.Type); err != nil {
 		return err

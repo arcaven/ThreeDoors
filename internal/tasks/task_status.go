@@ -11,15 +11,19 @@ const (
 	StatusInProgress TaskStatus = "in-progress"
 	StatusInReview   TaskStatus = "in-review"
 	StatusComplete   TaskStatus = "complete"
+	StatusDeferred   TaskStatus = "deferred"
+	StatusArchived   TaskStatus = "archived"
 )
 
 // validTransitions maps each status to its allowed next states.
 var validTransitions = map[TaskStatus][]TaskStatus{
-	StatusTodo:       {StatusInProgress, StatusBlocked, StatusComplete},
+	StatusTodo:       {StatusInProgress, StatusBlocked, StatusComplete, StatusDeferred, StatusArchived},
 	StatusBlocked:    {StatusTodo, StatusInProgress, StatusComplete},
 	StatusInProgress: {StatusBlocked, StatusInReview, StatusComplete},
 	StatusInReview:   {StatusInProgress, StatusComplete},
 	StatusComplete:   {},
+	StatusDeferred:   {StatusTodo},
+	StatusArchived:   {},
 }
 
 // IsValidTransition checks if transitioning from one status to another is allowed.
@@ -48,7 +52,7 @@ func GetValidTransitions(current TaskStatus) []TaskStatus {
 // ValidateStatus checks if a string is a valid TaskStatus.
 func ValidateStatus(s string) error {
 	switch TaskStatus(s) {
-	case StatusTodo, StatusBlocked, StatusInProgress, StatusInReview, StatusComplete:
+	case StatusTodo, StatusBlocked, StatusInProgress, StatusInReview, StatusComplete, StatusDeferred, StatusArchived:
 		return nil
 	default:
 		return fmt.Errorf("invalid task status: %q", s)

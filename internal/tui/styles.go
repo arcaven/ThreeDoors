@@ -191,6 +191,10 @@ func StatusColor(status string) lipgloss.Color {
 		return colorInReview
 	case "complete":
 		return colorComplete
+	case "deferred":
+		return lipgloss.Color("243") // gray/muted
+	case "archived":
+		return lipgloss.Color("240") // darker gray
 	default:
 		return colorTodo
 	}

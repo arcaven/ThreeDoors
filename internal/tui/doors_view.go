@@ -53,7 +53,8 @@ type DoorsView struct {
 	tracker           *tasks.SessionTracker
 	greeting          string
 	footerMessage     string
-	avoidanceMap      map[string]int // task text → bypass count
+	avoidanceMap      map[string]int // task text → bypass count (TimesBypassed)
+	avoidanceShown    map[string]int // task text → shown count (TimesShown)
 }
 
 // NewDoorsView creates a new DoorsView.
@@ -65,6 +66,7 @@ func NewDoorsView(pool *tasks.TaskPool, tracker *tasks.SessionTracker) *DoorsVie
 		greeting:          pickGreeting(-1),
 		footerMessage:     pickFooterMessage(-1),
 		avoidanceMap:      make(map[string]int),
+		avoidanceShown:    make(map[string]int),
 	}
 	dv.RefreshDoors()
 	return dv
@@ -73,11 +75,13 @@ func NewDoorsView(pool *tasks.TaskPool, tracker *tasks.SessionTracker) *DoorsVie
 // SetAvoidanceData populates the avoidance map from a pattern report.
 func (dv *DoorsView) SetAvoidanceData(report *tasks.PatternReport) {
 	dv.avoidanceMap = make(map[string]int)
+	dv.avoidanceShown = make(map[string]int)
 	if report == nil {
 		return
 	}
 	for _, entry := range report.AvoidanceList {
 		dv.avoidanceMap[entry.TaskText] = entry.TimesBypassed
+		dv.avoidanceShown[entry.TaskText] = entry.TimesShown
 	}
 }
 
@@ -175,10 +179,14 @@ func (dv *DoorsView) View() string {
 			content = content + "\n" + badgeStyle.Render(badge)
 		}
 
-		// Avoidance indicator
-		if count, ok := dv.avoidanceMap[task.Text]; ok && count >= 5 {
+		// Avoidance indicator — show when bypassed 5+ times, display total times shown
+		if bypassCount, ok := dv.avoidanceMap[task.Text]; ok && bypassCount >= 5 {
+			shownCount := dv.avoidanceShown[task.Text]
+			if shownCount == 0 {
+				shownCount = bypassCount
+			}
 			avoidStyle := lipgloss.NewStyle().Faint(true)
-			content = content + "\n" + avoidStyle.Render(fmt.Sprintf("Seen %d times", count))
+			content = content + "\n" + avoidStyle.Render(fmt.Sprintf("Seen %d times", shownCount))
 		}
 
 		statusIndicator := lipgloss.NewStyle().
