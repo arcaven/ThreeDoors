@@ -2,7 +2,7 @@
 # Story 18.4: Builds a test runner image with Go toolchain and linting tools.
 # Source code is mounted at runtime via docker-compose, not copied into the image.
 
-FROM golang:1.24-bookworm
+FROM golang:1.25-bookworm
 
 # Pin tool versions to match CI (.github/workflows/ci.yml)
 ARG GOFUMPT_VERSION=v0.7.0
@@ -30,6 +30,7 @@ USER testuser
 
 # Default environment for test execution
 ENV CGO_ENABLED=0
+ENV CI=true
 
 # Default command runs the full test suite with coverage
 CMD ["go", "test", "./...", "-v", "-count=1", "-timeout", "5m", "-coverprofile=test-results/coverage.out"]
