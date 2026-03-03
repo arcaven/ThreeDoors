@@ -1,0 +1,11 @@
+Project Notes Header
+Some context about the project
+
+- [ ] Standard dash checkbox
+* [ ] Asterisk checkbox
+- [x] Completed dash item
+* [x] Completed asterisk item
+- [X] Capital X completed
+
+Plain text line as task
+  - [ ] Indented checkbox

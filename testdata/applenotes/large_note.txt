@@ -1,0 +1,23 @@
+Shopping List
+- [ ] Buy milk
+- [ ] Buy eggs
+- [ ] Buy bread
+- [x] Buy butter
+
+Work Tasks
+- [ ] Review PR
+- [ ] Update documentation
+- [ ] Fix login bug
+- [x] Deploy staging
+
+Personal
+- [ ] Call dentist
+- [ ] Renew gym membership
+- [x] Pay electricity bill
+- [ ] Schedule car service
+- [ ] Book flights
+
+Home
+- [ ] Fix kitchen faucet
+- [ ] Mow the lawn
+- [x] Clean garage
