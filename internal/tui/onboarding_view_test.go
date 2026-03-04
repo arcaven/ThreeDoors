@@ -20,8 +20,8 @@ func TestOnboardingView_StepProgression(t *testing.T) {
 	if !strings.Contains(view, "Welcome to ThreeDoors") {
 		t.Error("expected welcome step on init")
 	}
-	if !strings.Contains(view, "Step 1 of 5") {
-		t.Error("expected step 1 of 5 indicator")
+	if !strings.Contains(view, "Step 1 of 6") {
+		t.Error("expected step 1 of 6 indicator")
 	}
 
 	// Press Enter to advance to keybindings
@@ -30,8 +30,8 @@ func TestOnboardingView_StepProgression(t *testing.T) {
 	if !strings.Contains(view, "Key Bindings") {
 		t.Error("expected keybindings step after Enter")
 	}
-	if !strings.Contains(view, "Step 2 of 5") {
-		t.Error("expected step 2 of 5 indicator")
+	if !strings.Contains(view, "Step 2 of 6") {
+		t.Error("expected step 2 of 6 indicator")
 	}
 
 	// Press Enter to advance to values
@@ -40,18 +40,28 @@ func TestOnboardingView_StepProgression(t *testing.T) {
 	if !strings.Contains(view, "Values & Goals") {
 		t.Error("expected values step after Enter")
 	}
-	if !strings.Contains(view, "Step 3 of 5") {
-		t.Error("expected step 3 of 5 indicator")
+	if !strings.Contains(view, "Step 3 of 6") {
+		t.Error("expected step 3 of 6 indicator")
 	}
 
-	// Press Enter with empty to advance to import
+	// Press Enter with empty to advance to theme picker
+	ov.Update(tea.KeyMsg{Type: tea.KeyEnter})
+	view = ov.View()
+	if !strings.Contains(view, "Theme") {
+		t.Error("expected theme step after empty Enter on values")
+	}
+	if !strings.Contains(view, "Step 4 of 6") {
+		t.Error("expected step 4 of 6 indicator")
+	}
+
+	// Press Enter to confirm theme and advance to import
 	ov.Update(tea.KeyMsg{Type: tea.KeyEnter})
 	view = ov.View()
 	if !strings.Contains(view, "Import Tasks") {
-		t.Error("expected import step after empty Enter on values")
+		t.Error("expected import step after Enter on theme")
 	}
-	if !strings.Contains(view, "Step 4 of 5") {
-		t.Error("expected step 4 of 5 indicator")
+	if !strings.Contains(view, "Step 5 of 6") {
+		t.Error("expected step 5 of 6 indicator")
 	}
 
 	// Press Enter with empty to advance to done (skip import)
@@ -60,8 +70,8 @@ func TestOnboardingView_StepProgression(t *testing.T) {
 	if !strings.Contains(view, "You're All Set") {
 		t.Error("expected done step after empty Enter on import")
 	}
-	if !strings.Contains(view, "Step 5 of 5") {
-		t.Error("expected step 5 of 5 indicator")
+	if !strings.Contains(view, "Step 6 of 6") {
+		t.Error("expected step 6 of 6 indicator")
 	}
 
 	// Press Enter to complete onboarding
@@ -112,10 +122,10 @@ func TestOnboardingView_ValuesSkipOnEsc(t *testing.T) {
 	ov.step = stepValues
 	ov.textInput.Focus()
 
-	// Esc should skip to import step
+	// Esc should skip to theme step
 	ov.Update(tea.KeyMsg{Type: tea.KeyEscape})
-	if ov.step != stepImport {
-		t.Errorf("step = %d, want stepImport after Esc on values", ov.step)
+	if ov.step != stepTheme {
+		t.Errorf("step = %d, want stepTheme after Esc on values", ov.step)
 	}
 }
 
@@ -328,9 +338,9 @@ func TestOnboardingView_ValuesMaxFive(t *testing.T) {
 	if len(ov.values) != 5 {
 		t.Fatalf("expected 5 values, got %d", len(ov.values))
 	}
-	// Should auto-advance to import
-	if ov.step != stepImport {
-		t.Errorf("step = %d, want stepImport after 5 values", ov.step)
+	// Should auto-advance to theme picker
+	if ov.step != stepTheme {
+		t.Errorf("step = %d, want stepTheme after 5 values", ov.step)
 	}
 }
 
@@ -471,8 +481,11 @@ func TestOnboardingView_CompletedMsgCarriesData(t *testing.T) {
 	ov.textInput.SetValue("Focus")
 	ov.Update(tea.KeyMsg{Type: tea.KeyEnter})
 
-	// Skip to import
+	// Skip to theme picker (empty enter)
 	ov.textInput.SetValue("")
+	ov.Update(tea.KeyMsg{Type: tea.KeyEnter})
+
+	// Confirm theme (Enter)
 	ov.Update(tea.KeyMsg{Type: tea.KeyEnter})
 
 	// Import tasks
@@ -508,10 +521,14 @@ func TestOnboardingView_DoneSummary(t *testing.T) {
 	ov := NewOnboardingView()
 	ov.step = stepDone
 	ov.values = []string{"Be kind", "Stay focused"}
+	ov.selectedTheme = "scifi"
 	ov.SetWidth(80)
 
 	view := ov.View()
 	if !strings.Contains(view, "2 values/goals saved") {
 		t.Error("done view should show values summary")
+	}
+	if !strings.Contains(view, "scifi") {
+		t.Error("done view should show selected theme")
 	}
 }

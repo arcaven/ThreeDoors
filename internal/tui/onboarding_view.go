@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/arcaven/ThreeDoors/internal/core"
+	"github.com/arcaven/ThreeDoors/internal/tui/themes"
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 )
@@ -16,15 +17,16 @@ const (
 	stepWelcome onboardingStep = iota
 	stepKeybindings
 	stepValues
+	stepTheme
 	stepImport
 	stepImportPreview
 	stepDone
 )
 
-const onboardingTotalSteps = 5
+const onboardingTotalSteps = 6
 
 // OnboardingView guides first-time users through the Three Doors concept,
-// values/goals setup, and task import.
+// values/goals setup, theme selection, and task import.
 type OnboardingView struct {
 	step       onboardingStep
 	width      int
@@ -35,6 +37,10 @@ type OnboardingView struct {
 	values    []string
 	textInput textinput.Model
 
+	// Theme picker state
+	themePicker   *ThemePicker
+	selectedTheme string
+
 	// Import state
 	importResult *core.ImportResult
 	importError  string
@@ -44,6 +50,7 @@ type OnboardingView struct {
 type OnboardingCompletedMsg struct {
 	Values        []string
 	ImportedTasks []*core.Task
+	SelectedTheme string
 }
 
 // NewOnboardingView creates a new onboarding wizard.
@@ -52,9 +59,13 @@ func NewOnboardingView() *OnboardingView {
 	ti.CharLimit = 200
 	ti.Width = 40
 
+	reg := themes.NewDefaultRegistry()
+
 	return &OnboardingView{
-		triedKeys: make(map[string]bool),
-		textInput: ti,
+		triedKeys:     make(map[string]bool),
+		textInput:     ti,
+		themePicker:   NewThemePicker(reg),
+		selectedTheme: themes.DefaultThemeName,
 	}
 }
 
@@ -64,6 +75,9 @@ func (ov *OnboardingView) SetWidth(w int) {
 	if w > 6 {
 		ov.textInput.Width = w - 6
 	}
+	if ov.themePicker != nil {
+		ov.themePicker.SetWidth(w)
+	}
 }
 
 func (ov *OnboardingView) completeMsg() tea.Cmd {
@@ -72,10 +86,12 @@ func (ov *OnboardingView) completeMsg() tea.Cmd {
 	if ov.importResult != nil {
 		imported = ov.importResult.Tasks
 	}
+	selectedTheme := ov.selectedTheme
 	return func() tea.Msg {
 		return OnboardingCompletedMsg{
 			Values:        values,
 			ImportedTasks: imported,
+			SelectedTheme: selectedTheme,
 		}
 	}
 }
@@ -88,10 +104,12 @@ func (ov *OnboardingView) stepNumber() int {
 		return 2
 	case stepValues:
 		return 3
-	case stepImport, stepImportPreview:
+	case stepTheme:
 		return 4
-	case stepDone:
+	case stepImport, stepImportPreview:
 		return 5
+	case stepDone:
+		return 6
 	}
 	return 1
 }
@@ -114,6 +132,8 @@ func (ov *OnboardingView) Update(msg tea.Msg) tea.Cmd {
 			return ov.updateKeybindings(key)
 		case stepValues:
 			return ov.updateValues(msg)
+		case stepTheme:
+			return ov.updateTheme(msg)
 		case stepImport:
 			return ov.updateImport(msg)
 		case stepImportPreview:
@@ -176,20 +196,16 @@ func (ov *OnboardingView) updateValues(msg tea.KeyMsg) tea.Cmd {
 
 	switch msg.Type {
 	case tea.KeyEscape:
-		ov.step = stepImport
-		ov.textInput.Placeholder = "Path to task file (e.g. ~/tasks.txt)..."
-		ov.textInput.SetValue("")
-		ov.importError = ""
+		ov.step = stepTheme
+		ov.textInput.Blur()
 		return nil
 
 	case tea.KeyEnter:
 		text := strings.TrimSpace(ov.textInput.Value())
 		if text == "" {
-			// Empty enter = done with values, move to import
-			ov.step = stepImport
-			ov.textInput.Placeholder = "Path to task file (e.g. ~/tasks.txt)..."
-			ov.textInput.SetValue("")
-			ov.importError = ""
+			// Empty enter = done with values, move to theme picker
+			ov.step = stepTheme
+			ov.textInput.Blur()
 			return nil
 		}
 		if len(ov.values) >= 5 {
@@ -201,9 +217,8 @@ func (ov *OnboardingView) updateValues(msg tea.KeyMsg) tea.Cmd {
 		ov.values = append(ov.values, text)
 		ov.textInput.SetValue("")
 		if len(ov.values) >= 5 {
-			ov.step = stepImport
-			ov.textInput.Placeholder = "Path to task file (e.g. ~/tasks.txt)..."
-			ov.importError = ""
+			ov.step = stepTheme
+			ov.textInput.Blur()
 		}
 		return nil
 	}
@@ -212,6 +227,31 @@ func (ov *OnboardingView) updateValues(msg tea.KeyMsg) tea.Cmd {
 	var cmd tea.Cmd
 	ov.textInput, cmd = ov.textInput.Update(msg)
 	return cmd
+}
+
+func (ov *OnboardingView) viewTheme() string {
+	var s strings.Builder
+	s.WriteString(ov.themePicker.View())
+	fmt.Fprintf(&s, "\n%s", helpStyle.Render(fmt.Sprintf("Step %d of %d", ov.stepNumber(), onboardingTotalSteps)))
+	return s.String()
+}
+
+func (ov *OnboardingView) updateTheme(msg tea.KeyMsg) tea.Cmd {
+	cmd := ov.themePicker.Update(msg)
+	if cmd != nil {
+		// Intercept ThemeSelectedMsg to capture selection and advance step
+		result := cmd()
+		if sel, ok := result.(ThemeSelectedMsg); ok {
+			ov.selectedTheme = sel.ThemeName
+			ov.step = stepImport
+			ov.textInput.Placeholder = "Path to task file (e.g. ~/tasks.txt)..."
+			ov.textInput.SetValue("")
+			ov.textInput.Focus()
+			ov.importError = ""
+			return nil
+		}
+	}
+	return nil
 }
 
 func (ov *OnboardingView) updateImport(msg tea.KeyMsg) tea.Cmd {
@@ -287,6 +327,8 @@ func (ov *OnboardingView) View() string {
 		content = ov.viewKeybindings()
 	case stepValues:
 		content = ov.viewValues()
+	case stepTheme:
+		content = ov.viewTheme()
 	case stepImport:
 		content = ov.viewImport()
 	case stepImportPreview:
@@ -469,10 +511,13 @@ func (ov *OnboardingView) viewDone() string {
 	if len(ov.values) > 0 {
 		fmt.Fprintf(&s, "%s %d values/goals saved\n", flashStyle.Render("*"), len(ov.values))
 	}
+	if ov.selectedTheme != "" {
+		fmt.Fprintf(&s, "%s Theme: %s\n", flashStyle.Render("*"), ov.selectedTheme)
+	}
 	if ov.importResult != nil && len(ov.importResult.Tasks) > 0 {
 		fmt.Fprintf(&s, "%s %d tasks imported\n", flashStyle.Render("*"), len(ov.importResult.Tasks))
 	}
-	if len(ov.values) > 0 || (ov.importResult != nil && len(ov.importResult.Tasks) > 0) {
+	if len(ov.values) > 0 || ov.selectedTheme != "" || (ov.importResult != nil && len(ov.importResult.Tasks) > 0) {
 		fmt.Fprintf(&s, "\n")
 	}
 
