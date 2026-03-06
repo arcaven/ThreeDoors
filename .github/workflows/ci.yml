@@ -93,6 +93,30 @@ jobs:
       - name: Validate build
         run: go build -o /dev/null ./cmd/threedoors
 
+  benchmarks:
+    name: Performance Benchmarks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: 'go.mod'
+
+      - name: Run benchmarks
+        run: go test -bench=. -benchmem -count=3 -run='^$' ./internal/core/ ./internal/adapters/textfile/ | tee benchmark-results.txt
+
+      - name: Validate NFR13 (<100ms threshold)
+        run: go test -run='NFR13' -v -count=1 ./internal/core/ ./internal/adapters/textfile/
+
+      - name: Upload benchmark results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results
+          path: benchmark-results.txt
+          retention-days: 90
+
   test-docker-e2e:
     name: Docker E2E Tests
     runs-on: ubuntu-latest
