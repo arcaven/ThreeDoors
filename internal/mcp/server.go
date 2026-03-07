@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/arcaven/ThreeDoors/internal/core"
+	"github.com/arcaven/ThreeDoors/internal/core/metrics"
 	"github.com/arcaven/ThreeDoors/internal/enrichment"
 )
 
@@ -17,14 +18,15 @@ type Middleware func(Handler) Handler
 // MCPServer implements the Model Context Protocol server.
 // It wraps existing ThreeDoors core components and exposes them via MCP.
 type MCPServer struct {
-	registry   *core.Registry
-	aggregator *core.MultiSourceAggregator
-	pool       *core.TaskPool
-	session    *core.SessionTracker
-	enrichDB   *enrichment.DB
-	middleware []Middleware
-	handler    Handler
-	version    string
+	registry       *core.Registry
+	aggregator     *core.MultiSourceAggregator
+	pool           *core.TaskPool
+	session        *core.SessionTracker
+	enrichDB       *enrichment.DB
+	sessionsReader *metrics.Reader
+	middleware     []Middleware
+	handler        Handler
+	version        string
 
 	initialized bool
 }
@@ -48,6 +50,11 @@ func NewMCPServer(
 	}
 	s.handler = s.buildHandler()
 	return s
+}
+
+// SetSessionsReader configures the reader for historical session data.
+func (s *MCPServer) SetSessionsReader(r *metrics.Reader) {
+	s.sessionsReader = r
 }
 
 // Use appends middleware to the server's middleware chain.
@@ -101,8 +108,12 @@ func (s *MCPServer) dispatch(req *Request) *Response {
 		return s.handleInitialize(req)
 	case "resources/list":
 		return s.handleResourcesList(req)
+	case "resources/read":
+		return s.handleResourceRead(req)
 	case "tools/list":
 		return s.handleToolsList(req)
+	case "tools/call":
+		return s.handleToolCall(req)
 	case "prompts/list":
 		return s.handlePromptsList(req)
 	default:
@@ -138,14 +149,12 @@ func (s *MCPServer) handleInitialize(req *Request) *Response {
 }
 
 func (s *MCPServer) handleResourcesList(req *Request) *Response {
-	// Placeholder — subsequent stories (24.2) will populate with actual resources.
-	result := ResourcesListResult{Resources: []ResourceItem{}}
+	result := ResourcesListResult{Resources: resourceDefinitions()}
 	return NewResponse(req.ID, result)
 }
 
 func (s *MCPServer) handleToolsList(req *Request) *Response {
-	// Placeholder — subsequent stories (24.3+) will populate with actual tools.
-	result := ToolsListResult{Tools: []ToolItem{}}
+	result := ToolsListResult{Tools: toolDefinitions()}
 	return NewResponse(req.ID, result)
 }
 
