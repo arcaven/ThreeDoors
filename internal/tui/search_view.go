@@ -12,18 +12,19 @@ import (
 
 // SearchView handles search and command palette functionality.
 type SearchView struct {
-	textInput         textinput.Model
-	results           []*core.Task
-	selectedIndex     int
-	pool              *core.TaskPool
-	tracker           *core.SessionTracker
-	healthChecker     *core.HealthChecker
-	completionCounter *core.CompletionCounter
-	patternReport     *core.PatternReport
-	syncLog           *core.SyncLog
-	width             int
-	isCommandMode     bool
-	duplicateTaskIDs  map[string]bool
+	textInput          textinput.Model
+	results            []*core.Task
+	selectedIndex      int
+	pool               *core.TaskPool
+	tracker            *core.SessionTracker
+	healthChecker      *core.HealthChecker
+	completionCounter  *core.CompletionCounter
+	patternReport      *core.PatternReport
+	syncLog            *core.SyncLog
+	width              int
+	isCommandMode      bool
+	duplicateTaskIDs   map[string]bool
+	devDispatchEnabled bool
 }
 
 // NewSearchView creates a new SearchView.
@@ -62,6 +63,11 @@ func (sv *SearchView) SetSyncLog(sl *core.SyncLog) {
 // SetDuplicateTaskIDs sets the set of task IDs flagged as potential duplicates.
 func (sv *SearchView) SetDuplicateTaskIDs(ids map[string]bool) {
 	sv.duplicateTaskIDs = ids
+}
+
+// SetDevDispatchEnabled sets whether the :dispatch command is available.
+func (sv *SearchView) SetDevDispatchEnabled(enabled bool) {
+	sv.devDispatchEnabled = enabled
 }
 
 // RestoreState restores search state after returning from detail view.
@@ -203,9 +209,19 @@ func (sv *SearchView) executeCommand() tea.Cmd {
 	case "devqueue":
 		return func() tea.Msg { return ShowDevQueueMsg{} }
 
+	case "dispatch":
+		if !sv.devDispatchEnabled {
+			return func() tea.Msg {
+				return FlashMsg{Text: "Dev dispatch is not enabled. Set dev_dispatch_enabled: true in config."}
+			}
+		}
+		return func() tea.Msg {
+			return FlashMsg{Text: "Use 'x' in task detail view to dispatch a specific task."}
+		}
+
 	case "help":
 		return func() tea.Msg {
-			return FlashMsg{Text: "Commands: :add <text>, :add-ctx, :add --why, :tag, :theme, :goals [edit], :mood [mood], :stats, :dashboard, :insights [mood|avoidance], :health, :synclog, :devqueue, :help, :quit | Keys: / search, a/w/d select, s re-roll, Enter open, m mood, L link, X xrefs, q quit"}
+			return FlashMsg{Text: "Commands: :add <text>, :add-ctx, :add --why, :tag, :theme, :dispatch, :goals [edit], :mood [mood], :stats, :dashboard, :insights [mood|avoidance], :health, :synclog, :devqueue, :help, :quit | Keys: / search, a/w/d select, s re-roll, Enter open, m mood, L link, X xrefs, q quit"}
 		}
 
 	case "quit", "exit":
