@@ -237,6 +237,17 @@ type DevQueueWorkerRemovedMsg struct {
 	Err error
 }
 
+// DevDispatchRequestMsg is sent when the user confirms dispatching a task.
+type DevDispatchRequestMsg struct {
+	Task *core.Task
+}
+
+// DevDispatchResultMsg is sent when dev dispatch queue write completes.
+type DevDispatchResultMsg struct {
+	TaskID string
+	Err    error
+}
+
 // ClearFlashCmd returns a command that clears the flash after a delay.
 func ClearFlashCmd() tea.Cmd {
 	return tea.Tick(flashDuration, func(_ time.Time) tea.Msg {
