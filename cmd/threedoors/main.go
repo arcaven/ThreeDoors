@@ -11,6 +11,7 @@ import (
 	"github.com/arcaven/ThreeDoors/internal/adapters/obsidian"
 	"github.com/arcaven/ThreeDoors/internal/adapters/reminders"
 	"github.com/arcaven/ThreeDoors/internal/adapters/textfile"
+	"github.com/arcaven/ThreeDoors/internal/cli"
 	"github.com/arcaven/ThreeDoors/internal/core"
 	"github.com/arcaven/ThreeDoors/internal/dist"
 	"github.com/arcaven/ThreeDoors/internal/enrichment"
@@ -26,6 +27,11 @@ func main() {
 	if len(os.Args) > 1 && os.Args[1] == "--version" {
 		fmt.Println(dist.FormatVersion(version))
 		os.Exit(0)
+	}
+
+	// Route to CLI if the first arg is a known subcommand
+	if len(os.Args) > 1 && isSubcommand(os.Args[1]) {
+		os.Exit(cli.Execute())
 	}
 
 	// Register built-in adapters with the global registry
@@ -232,4 +238,14 @@ func registerBuiltinAdapters(reg *core.Registry) {
 	// Apple Reminders provider: macOS-only via JXA/osascript.
 	// On non-macOS platforms the factory returns a descriptive error.
 	_ = reg.Register("reminders", reminders.NewFactory())
+}
+
+// isSubcommand checks whether arg is a known CLI subcommand name.
+func isSubcommand(arg string) bool {
+	for _, name := range cli.KnownSubcommands() {
+		if arg == name {
+			return true
+		}
+	}
+	return false
 }
