@@ -27,11 +27,11 @@ func NewDoorsCmd() *cobra.Command {
 		Short: "Present three randomly selected tasks",
 		Long:  "Display three doors — randomly selected tasks from your task pool. Use --pick to select a door and mark it in-progress, or --interactive for a prompted selection.",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			formatter := NewOutputFormatter(cmd.OutOrStdout(), jsonOutput)
+			formatter := NewOutputFormatter(cmd.OutOrStdout(), isJSONOutput(cmd))
 
 			pool, provider, err := loadTaskPool()
 			if err != nil {
-				if jsonOutput {
+				if isJSONOutput(cmd) {
 					_ = formatter.WriteJSONError("doors", ExitProviderError, "failed to load tasks", err.Error())
 				}
 				return err
@@ -41,7 +41,7 @@ func NewDoorsCmd() *cobra.Command {
 			totalAvailable := len(pool.GetAvailableForDoors())
 
 			if len(doors) == 0 {
-				if jsonOutput {
+				if isJSONOutput(cmd) {
 					_ = formatter.WriteJSONError("doors", ExitGeneralError, "no tasks available", "")
 				} else {
 					_ = formatter.Writef("No tasks available.\n")
@@ -57,7 +57,7 @@ func NewDoorsCmd() *cobra.Command {
 				return err
 			}
 
-			if interactive && !jsonOutput {
+			if interactive && !isJSONOutput(cmd) {
 				if !stdoutIsTerminal() {
 					return nil
 				}
