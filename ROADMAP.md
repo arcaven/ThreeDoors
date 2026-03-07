@@ -57,11 +57,13 @@ Expose task management to LLMs via Model Context Protocol.
 | 21 | Sync Protocol Hardening | 4/4 |
 | 22 | Self-Driving Development Pipeline | 8/8 |
 
-## Backlog (Not Scheduled)
+## Icebox (Deferred Indefinitely)
 
-| Epic | Title | Stories | Notes |
-|------|-------|---------|-------|
-| 16 | iPhone Mobile App (SwiftUI) | 0/7 | Requires Apple dev environment, not automatable |
+| Epic | Title | Stories | Decision Date | Rationale |
+|------|-------|---------|---------------|-----------|
+| 16 | iPhone Mobile App (SwiftUI) | 0/7 | 2026-03-07 | No validated user demand; core user is CLI/TUI power user; MCP (Epic 24) may serve mobile-adjacent use cases via LLM agents; adds significant platform/build/distribution complexity |
+
+**Re-entry gate for Epic 16:** Revisit if 5+ distinct user requests for mobile access, OR if MCP proves insufficient for on-the-go task management.
 
 ## Out of Scope
 
