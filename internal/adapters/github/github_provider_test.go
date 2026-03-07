@@ -1223,6 +1223,10 @@ func (a *assigneeCapturingLister) GetAuthenticatedUser(ctx context.Context) (str
 	return a.inner.GetAuthenticatedUser(ctx)
 }
 
+func (a *assigneeCapturingLister) CloseIssue(ctx context.Context, owner, repo string, issueNumber int) error {
+	return a.inner.CloseIssue(ctx, owner, repo, issueNumber)
+}
+
 // countingIssueLister wraps a mockIssueLister and counts ListIssues calls.
 type countingIssueLister struct {
 	inner     *mockIssueLister
