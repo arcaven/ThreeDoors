@@ -165,6 +165,21 @@ func (s *MCPServer) handleToolCall(req *Request) *Response {
 		return s.toolBurnoutRisk(req)
 	case "get_completions":
 		return s.toolGetCompletions(req, params.Arguments)
+	case "propose_enrichment":
+		if s.proposalStore == nil {
+			return s.toolError(req, "proposal store not configured")
+		}
+		return s.toolProposeEnrichment(req, params.Arguments)
+	case "suggest_task":
+		if s.proposalStore == nil {
+			return s.toolError(req, "proposal store not configured")
+		}
+		return s.toolSuggestTask(req, params.Arguments)
+	case "suggest_relationship":
+		if s.proposalStore == nil {
+			return s.toolError(req, "proposal store not configured")
+		}
+		return s.toolSuggestRelationship(req, params.Arguments)
 	default:
 		return NewErrorResponse(req.ID, CodeMethodNotFound, fmt.Sprintf("unknown tool: %s", params.Name))
 	}

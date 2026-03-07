@@ -142,6 +142,8 @@ func (s *MCPServer) handleResourceRead(req *Request) *Response {
 	start := time.Now().UTC()
 
 	switch {
+	case uri == "threedoors://proposals/pending":
+		return s.readPendingProposals(req, start)
 	case uri == "threedoors://tasks":
 		return s.readAllTasks(req, start)
 	case uri == "threedoors://providers":
@@ -430,6 +432,35 @@ func (s *MCPServer) readSessionHistory(req *Request, start time.Time) *Response 
 	}
 
 	return s.resourceJSON(req, "threedoors://session/history", resp)
+}
+
+func (s *MCPServer) readPendingProposals(req *Request, start time.Time) *Response {
+	if s.proposalStore == nil {
+		return NewErrorResponse(req.ID, CodeInternalError, "proposal store not configured")
+	}
+
+	pending := s.proposalStore.List(ProposalFilter{Status: ProposalPending})
+	if pending == nil {
+		pending = []*Proposal{}
+	}
+
+	type proposalsResponse struct {
+		Proposals []*Proposal      `json:"proposals"`
+		Metadata  ResponseMetadata `json:"_metadata"`
+	}
+
+	resp := proposalsResponse{
+		Proposals: pending,
+		Metadata: ResponseMetadata{
+			TotalCount:       len(pending),
+			ReturnedCount:    len(pending),
+			QueryTimeMs:      millisSince(start),
+			ProvidersQueried: []string{},
+			DataFreshness:    "live",
+		},
+	}
+
+	return s.resourceJSON(req, "threedoors://proposals/pending", resp)
 }
 
 // resourceJSON marshals data as JSON text and wraps in a ResourceReadResult.

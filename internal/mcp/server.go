@@ -24,9 +24,11 @@ type MCPServer struct {
 	session        *core.SessionTracker
 	enrichDB       *enrichment.DB
 	sessionsReader *metrics.Reader
+	proposalStore  *ProposalStore
 	middleware     []Middleware
 	handler        Handler
 	version        string
+	clientInfo     EntityInfo
 
 	initialized bool
 }
@@ -55,6 +57,11 @@ func NewMCPServer(
 // SetSessionsReader configures the reader for historical session data.
 func (s *MCPServer) SetSessionsReader(r *metrics.Reader) {
 	s.sessionsReader = r
+}
+
+// SetProposalStore configures the proposal store for enrichment proposals.
+func (s *MCPServer) SetProposalStore(ps *ProposalStore) {
+	s.proposalStore = ps
 }
 
 // Use appends middleware to the server's middleware chain.
@@ -132,6 +139,8 @@ func (s *MCPServer) handleInitialize(req *Request) *Response {
 		}
 	}
 
+	s.clientInfo = params.ClientInfo
+
 	result := InitializeResult{
 		ProtocolVersion: MCPVersion,
 		Capabilities: ServerCaps{
@@ -151,12 +160,25 @@ func (s *MCPServer) handleInitialize(req *Request) *Response {
 }
 
 func (s *MCPServer) handleResourcesList(req *Request) *Response {
-	result := ResourcesListResult{Resources: resourceDefinitions()}
+	resources := resourceDefinitions()
+	if s.proposalStore != nil {
+		resources = append(resources, ResourceItem{
+			URI:         "threedoors://proposals/pending",
+			Name:        "Pending Proposals",
+			Description: "All pending enrichment proposals awaiting review",
+			MimeType:    "application/json",
+		})
+	}
+	result := ResourcesListResult{Resources: resources}
 	return NewResponse(req.ID, result)
 }
 
 func (s *MCPServer) handleToolsList(req *Request) *Response {
-	result := ToolsListResult{Tools: toolDefinitions()}
+	tools := toolDefinitions()
+	if s.proposalStore != nil {
+		tools = append(tools, proposalToolDefinitions()...)
+	}
+	result := ToolsListResult{Tools: tools}
 	return NewResponse(req.ID, result)
 }
 
