@@ -45,6 +45,12 @@ const (
 	CodeInternalError  = -32603
 )
 
+// Application-level error codes.
+const (
+	CodeRateLimited = -32000
+	CodeReadOnly    = -32001
+)
+
 // MCP protocol version and capability types.
 const (
 	MCPVersion = "2024-11-05"
