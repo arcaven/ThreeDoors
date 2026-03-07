@@ -318,7 +318,11 @@ func (dv *DoorsView) View() string {
 		statusIndicator := lipgloss.NewStyle().
 			Foreground(StatusColor(string(task.Status))).
 			Render(fmt.Sprintf("[%s]", task.Status))
-		content = statusIndicator + "\n\n" + content
+		devBadge := ""
+		if task.DevDispatch != nil && task.DevDispatch.Queued {
+			devBadge = " " + DevDispatchBadge(task)
+		}
+		content = statusIndicator + devBadge + "\n\n" + content
 
 		// Use theme Render when a theme is active, otherwise fall back to lipgloss styles
 		if activeTheme != nil {

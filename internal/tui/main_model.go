@@ -78,6 +78,7 @@ type MainModel struct {
 	dedupStore          *core.DedupStore
 	duplicateTaskIDs    map[string]bool
 	duplicatePairs      []core.DuplicatePair
+	devDispatchEnabled  bool
 	dispatcher          dispatch.Dispatcher
 	devQueue            *dispatch.DevQueue
 	pollingActive       bool
@@ -194,6 +195,13 @@ func NewMainModel(pool *core.TaskPool, tracker *core.SessionTracker, provider co
 // SetConfigPath sets the path to config.yaml for theme persistence.
 func (m *MainModel) SetConfigPath(path string) {
 	m.configPath = path
+}
+
+// SetDevDispatch configures dev dispatch with the given dispatcher, queue, and enabled flag.
+func (m *MainModel) SetDevDispatch(enabled bool, d dispatch.Dispatcher, q *dispatch.DevQueue) {
+	m.devDispatchEnabled = enabled
+	m.dispatcher = d
+	m.devQueue = q
 }
 
 // SetAgentService sets the agent service for LLM task decomposition.
@@ -775,6 +783,20 @@ func (m *MainModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.viewMode = ViewDevQueue
 		return m, nil
 
+	case DevDispatchRequestMsg:
+		return m.handleDevDispatch(msg.Task)
+
+	case DevDispatchResultMsg:
+		if msg.Err != nil {
+			m.flash = fmt.Sprintf("Dispatch failed: %s", msg.Err.Error())
+		} else {
+			m.flash = "Task queued for dev dispatch"
+		}
+		if err := m.saveTasks(); err != nil {
+			fmt.Fprintf(os.Stderr, "warning: failed to save tasks after dispatch: %v\n", err)
+		}
+		return m, ClearFlashCmd()
+
 	case SyncStatusUpdateMsg:
 		if m.syncTracker != nil {
 			switch msg.Phase {
@@ -1039,6 +1061,10 @@ func (m *MainModel) newDetailView(task *core.Task) *DetailView {
 		pair := m.findDuplicatePair(task.ID)
 		dv.SetDuplicateInfo(true, m.dedupStore, pair)
 	}
+	if m.devDispatchEnabled && m.dispatcher != nil {
+		available := m.dispatcher.CheckAvailable(context.Background()) == nil
+		dv.SetDevDispatchInfo(true, available)
+	}
 	return dv
 }
 
@@ -1046,6 +1072,11 @@ func (m *MainModel) newSearchView() *SearchView {
 	sv := NewSearchView(m.pool, m.tracker, m.healthChecker, m.completionCounter, m.patternReport)
 	sv.SetSyncLog(m.syncLog)
 	sv.SetDuplicateTaskIDs(m.duplicateTaskIDs)
+	if m.devDispatchEnabled && m.dispatcher != nil {
+		if m.dispatcher.CheckAvailable(context.Background()) == nil {
+			sv.SetDevDispatchEnabled(true)
+		}
+	}
 	return sv
 }
 
@@ -1257,6 +1288,38 @@ func mapPRStatus(status string) string {
 	default:
 		return status
 	}
+}
+
+// handleDevDispatch processes a confirmed dispatch request by queuing the task.
+func (m *MainModel) handleDevDispatch(task *core.Task) (tea.Model, tea.Cmd) {
+	if m.devQueue == nil {
+		m.flash = "Dev queue not configured"
+		return m, ClearFlashCmd()
+	}
+
+	now := time.Now().UTC()
+	task.DevDispatch = &dispatch.DevDispatch{
+		Queued:   true,
+		QueuedAt: &now,
+	}
+
+	q := m.devQueue
+	item := dispatch.QueueItem{
+		TaskID:   task.ID,
+		TaskText: task.Text,
+		Context:  task.Context,
+		Status:   dispatch.QueueItemPending,
+		QueuedAt: &now,
+	}
+
+	cmd := func() tea.Msg {
+		if err := q.Add(item); err != nil {
+			return DevDispatchResultMsg{TaskID: task.ID, Err: err}
+		}
+		return DevDispatchResultMsg{TaskID: task.ID}
+	}
+
+	return m, cmd
 }
 
 // saveThemeCmd returns a tea.Cmd that persists the theme to config.yaml.
