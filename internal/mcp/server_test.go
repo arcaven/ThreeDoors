@@ -106,7 +106,7 @@ func TestCapabilityAdvertisement(t *testing.T) {
 	}
 }
 
-func TestResourcesListEmpty(t *testing.T) {
+func TestResourcesListReturnsDefinitions(t *testing.T) {
 	t.Parallel()
 
 	server := NewMCPServer(core.NewRegistry(), nil, core.NewTaskPool(), core.NewSessionTracker(), nil, "test")
@@ -125,12 +125,12 @@ func TestResourcesListEmpty(t *testing.T) {
 	if err := json.Unmarshal(resultBytes, &result); err != nil {
 		t.Fatalf("unmarshal: %v", err)
 	}
-	if len(result.Resources) != 0 {
-		t.Errorf("expected 0 resources, got %d", len(result.Resources))
+	if len(result.Resources) == 0 {
+		t.Error("expected resources to be populated")
 	}
 }
 
-func TestToolsListEmpty(t *testing.T) {
+func TestToolsListReturnsDefinitions(t *testing.T) {
 	t.Parallel()
 
 	server := NewMCPServer(core.NewRegistry(), nil, core.NewTaskPool(), core.NewSessionTracker(), nil, "test")
@@ -142,6 +142,15 @@ func TestToolsListEmpty(t *testing.T) {
 
 	if resp.Error != nil {
 		t.Fatalf("unexpected error: %v", resp.Error)
+	}
+
+	resultBytes, _ := json.Marshal(resp.Result)
+	var result ToolsListResult
+	if err := json.Unmarshal(resultBytes, &result); err != nil {
+		t.Fatalf("unmarshal: %v", err)
+	}
+	if len(result.Tools) == 0 {
+		t.Error("expected tools to be populated")
 	}
 }
 
