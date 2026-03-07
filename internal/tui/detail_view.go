@@ -20,26 +20,29 @@ const (
 	DetailModeExpandInput
 	DetailModeLinkSelect
 	DetailModeLinkBrowse
+	DetailModeDispatchConfirm
 )
 
 // DetailView displays full task details and status action menu.
 type DetailView struct {
-	task              *core.Task
-	mode              DetailViewMode
-	blockerInput      string
-	expandInput       string
-	width             int
-	tracker           *core.SessionTracker
-	enrichDB          *enrichment.DB
-	pool              *core.TaskPool
-	agentService      *intelligence.AgentService
-	crossRefs         []enrichment.CrossReference
-	linkCandidates    []*core.Task
-	linkSelectedIndex int
-	linkBrowseIndex   int
-	isDuplicate       bool
-	dedupStore        *core.DedupStore
-	duplicatePair     *core.DuplicatePair
+	task                *core.Task
+	mode                DetailViewMode
+	blockerInput        string
+	expandInput         string
+	width               int
+	tracker             *core.SessionTracker
+	enrichDB            *enrichment.DB
+	pool                *core.TaskPool
+	agentService        *intelligence.AgentService
+	crossRefs           []enrichment.CrossReference
+	linkCandidates      []*core.Task
+	linkSelectedIndex   int
+	linkBrowseIndex     int
+	isDuplicate         bool
+	dedupStore          *core.DedupStore
+	duplicatePair       *core.DuplicatePair
+	devDispatchEnabled  bool
+	dispatcherAvailable bool
 }
 
 // NewDetailView creates a detail view for the given task.
@@ -82,6 +85,12 @@ func (dv *DetailView) SetDuplicateInfo(isDup bool, store *core.DedupStore, pair 
 	dv.duplicatePair = pair
 }
 
+// SetDevDispatchInfo sets whether dev dispatch is enabled and available.
+func (dv *DetailView) SetDevDispatchInfo(enabled, available bool) {
+	dv.devDispatchEnabled = enabled
+	dv.dispatcherAvailable = available
+}
+
 // SetWidth sets the terminal width.
 func (dv *DetailView) SetWidth(w int) {
 	dv.width = w
@@ -100,6 +109,8 @@ func (dv *DetailView) Update(msg tea.Msg) tea.Cmd {
 			return dv.handleLinkSelect(msg)
 		case DetailModeLinkBrowse:
 			return dv.handleLinkBrowse(msg)
+		case DetailModeDispatchConfirm:
+			return dv.handleDispatchConfirm(msg)
 		default:
 			return dv.handleDetailKeys(msg)
 		}
@@ -158,6 +169,13 @@ func (dv *DetailView) handleDetailKeys(msg tea.KeyMsg) tea.Cmd {
 		dv.linkSelectedIndex = 0
 		dv.mode = DetailModeLinkSelect
 	case "x", "X":
+		if dv.devDispatchEnabled && dv.dispatcherAvailable {
+			if dv.task.DevDispatch != nil && dv.task.DevDispatch.Queued {
+				return func() tea.Msg { return FlashMsg{Text: "Task already dispatched"} }
+			}
+			dv.mode = DetailModeDispatchConfirm
+			return nil
+		}
 		if len(dv.crossRefs) > 0 {
 			dv.linkBrowseIndex = 0
 			dv.mode = DetailModeLinkBrowse
@@ -349,6 +367,18 @@ func (dv *DetailView) handleLinkBrowse(msg tea.KeyMsg) tea.Cmd {
 	return nil
 }
 
+func (dv *DetailView) handleDispatchConfirm(msg tea.KeyMsg) tea.Cmd {
+	switch msg.String() {
+	case "y", "Y":
+		task := dv.task
+		dv.mode = DetailModeView
+		return func() tea.Msg { return DevDispatchRequestMsg{Task: task} }
+	case "n", "N", "esc":
+		dv.mode = DetailModeView
+	}
+	return nil
+}
+
 // resolveTaskText looks up task text by ID from the pool.
 func (dv *DetailView) resolveTaskText(taskID string) string {
 	if dv.pool == nil {
@@ -380,6 +410,10 @@ func (dv *DetailView) View() string {
 
 	if dv.task.SourceProvider != "" {
 		fmt.Fprintf(&s, "Source: %s\n", SourceBadge(dv.task.SourceProvider))
+	}
+
+	if dv.task.DevDispatch != nil && dv.task.DevDispatch.Queued {
+		fmt.Fprintf(&s, "%s\n", DevDispatchBadge(dv.task))
 	}
 
 	if dv.isDuplicate {
@@ -447,6 +481,12 @@ func (dv *DetailView) View() string {
 		}
 	case DetailModeLinkBrowse:
 		s.WriteString(helpStyle.Render("[Enter] Navigate [U]nlink [Esc] Back"))
+	case DetailModeDispatchConfirm:
+		truncated := dv.task.Text
+		if len(truncated) > 50 {
+			truncated = truncated[:47] + "..."
+		}
+		fmt.Fprintf(&s, "Dispatch '%s' to dev queue? [y/n]\n", truncated)
 	default:
 		linkHint := ""
 		if dv.enrichDB != nil {
@@ -464,7 +504,11 @@ func (dv *DetailView) View() string {
 		if dv.isDuplicate && dv.dedupStore != nil {
 			dupHint = " [D]ismiss-dup [Y]es-merge"
 		}
-		s.WriteString(helpStyle.Render("[C]omplete [B]locked [I]n-progress [E]xpand [F]ork [P]rocrastinate [R]ework [M]ood" + linkHint + browseHint + decomposeHint + dupHint + " [Esc]Back"))
+		dispatchHint := ""
+		if dv.devDispatchEnabled && dv.dispatcherAvailable {
+			dispatchHint = " [X]dispatch"
+		}
+		s.WriteString(helpStyle.Render("[C]omplete [B]locked [I]n-progress [E]xpand [F]ork [P]rocrastinate [R]ework [M]ood" + linkHint + browseHint + decomposeHint + dupHint + dispatchHint + " [Esc]Back"))
 	}
 
 	return detailBorder.Width(w).Render(s.String())

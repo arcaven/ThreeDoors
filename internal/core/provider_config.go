@@ -43,6 +43,8 @@ type ProviderConfig struct {
 	LLM llm.Config `yaml:"llm,omitempty"`
 	// Theme is the door theme name (e.g. "classic", "modern", "scifi", "shoji").
 	Theme string `yaml:"theme,omitempty"`
+	// DevDispatchEnabled enables the dev dispatch feature (x key and :dispatch command).
+	DevDispatchEnabled bool `yaml:"dev_dispatch_enabled,omitempty"`
 }
 
 // CurrentSchemaVersion is the current config.yaml schema version.
