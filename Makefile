@@ -1,10 +1,13 @@
 THREEDOORS_DIR ?= $(HOME)/.threedoors
 VERSION ?= dev
 
-.PHONY: build run clean fmt lint test test-docker bench analyze test-scripts sign pkg release-local test-dist
+.PHONY: build build-mcp run clean fmt lint test test-docker bench analyze test-scripts sign pkg release-local test-dist
 
 build:
 	go build -ldflags "-X main.version=$(VERSION)" -o bin/threedoors ./cmd/threedoors
+
+build-mcp:
+	go build -ldflags "-X main.version=$(VERSION)" -o bin/threedoors-mcp ./cmd/threedoors-mcp
 
 run: build
 	./bin/threedoors
