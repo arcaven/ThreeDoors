@@ -143,6 +143,17 @@ func (tp *TaskPool) removeSourceRefIndex(task *Task) {
 	}
 }
 
+// FindByPrefix returns all tasks whose ID starts with the given prefix.
+func (tp *TaskPool) FindByPrefix(prefix string) []*Task {
+	var matches []*Task
+	for id, t := range tp.tasks {
+		if len(id) >= len(prefix) && id[:len(prefix)] == prefix {
+			matches = append(matches, t)
+		}
+	}
+	return matches
+}
+
 // removeSourceRefIndexByID removes all index entries pointing to the given task ID.
 // This is safe even when the task's SourceRefs have already been mutated in place.
 func (tp *TaskPool) removeSourceRefIndexByID(taskID string) {
