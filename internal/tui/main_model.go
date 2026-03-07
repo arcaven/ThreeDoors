@@ -211,7 +211,6 @@ func (m *MainModel) SetDevQueue(q *dispatch.DevQueue) {
 	m.devQueue = q
 }
 
-
 // Init implements tea.Model.
 func (m *MainModel) Init() tea.Cmd {
 	return nil
