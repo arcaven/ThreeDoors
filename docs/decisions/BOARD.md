@@ -56,7 +56,6 @@
 | D-027 | Multi-provider integration strategy | 2026-02-01 | Three-phase per provider: read-only → bidirectional → advanced; contract tests | [ADR-0027](../ADRs/ADR-0027-multi-provider-integration-strategy.md) |
 | D-028 | CI quality gates and testing strategy | 2025-11-09 | Multi-layer gates; 70% coverage minimum; no bypass allowed | [ADR-0028](../ADRs/ADR-0028-ci-quality-gates.md) |
 | D-029 | Knowledge Decisions Board | 2026-03-08 | Lifecycle-aware kanban; single file dashboard; zero infrastructure | [Research](../research/decision-management-research.md) |
-<<<<<<< HEAD
 | D-030 | Nil check guard for nil provider (Issue #218) | 2026-03-08 | Minimal fix for P0 crash; matches existing bootstrap.go pattern | [Artifact](../../_bmad-output/planning-artifacts/issue-218-party-mode-consensus.md) |
 | D-031 | Portrait door proportions with door anatomy model | 2026-03-08 | Door metaphor fidelity; taller-than-wide is #1 "door" signifier | [Artifact](../../_bmad-output/planning-artifacts/door-appearance-party-mode.md) |
 | D-032 | DoorTheme.Render() extended with height parameter | 2026-03-08 | Enables proportional door rendering; DoorsView calculates available height | [Architecture](../../_bmad-output/planning-artifacts/door-appearance-architecture.md) |
@@ -83,6 +82,8 @@
 | D-053 | Standardized Decisions Summary table in artifacts | 2026-03-08 | Makes decision extraction mechanical; consistent format across all artifacts | [Research](../research/decision-management-research.md) |
 | D-054 | DRY spec cleanup for story files | 2026-03-08 | Remove duplicated content from story specs; specs reference architecture docs | [Artifact](../../_bmad-output/planning-artifacts/34.4-party-mode-dry-cleanup.md) |
 | D-055 | CI churn reduction | 2026-03-08 | Relax up-to-date rule + path filtering; defer merge queue; 70-80% CI reduction | [ADR-0030](../ADRs/ADR-0030-ci-churn-reduction.md) |
+| D-056 | Alpha binary named `threedoors-a` (not `threedoors`) | 2026-03-08 | Prevents Homebrew conflicts; allows simultaneous install; clear channel identity | [Artifact](../../_bmad-output/planning-artifacts/dual-homebrew-distribution-party-mode.md) |
+| D-057 | Alpha formula `threedoors-a.rb` in same tap | 2026-03-08 | Single tap; consistent UX; no `conflicts_with` needed | [Research](../research/dual-homebrew-distribution-research.md) |
 
 ## Rejected
 
@@ -108,6 +109,9 @@
 | X-018 | UX Designer as persistent agent | 2026-03-08 | Zero monitoring surface for CLI/TUI; UX decisions made during story planning | [Artifact](../../_bmad-output/planning-artifacts/persistent-agent-architecture-round1-role-evaluation.md) |
 | X-019 | Dense agent mesh (every agent talks to every other) | 2026-03-08 | Combinatorial explosion; hub-and-spoke (PM as hub) is simpler and sufficient | [Artifact](../../_bmad-output/planning-artifacts/persistent-agent-architecture-round2-collaboration.md) |
 | X-020 | SLSA verification for dependencies | 2026-03-08 | Deferred to future story; OSV scanning is sufficient baseline | [Artifact](../../_bmad-output/planning-artifacts/dependency-management-party-mode.md) |
+| X-021 | Same binary name with `conflicts_with` for alpha | 2026-03-08 | Prevents simultaneous install; poor UX for users wanting both channels | [Artifact](../../_bmad-output/planning-artifacts/dual-homebrew-distribution-party-mode.md) |
+| X-022 | `threedoors@alpha` formula naming | 2026-03-08 | `@` is for versioned formulae, not rolling channels; triggers keg_only expectations | [Artifact](../../_bmad-output/planning-artifacts/dual-homebrew-distribution-party-mode.md) |
+| X-023 | Separate tap for alpha (`homebrew-tap-alpha`) | 2026-03-08 | Unnecessary complexity; single tap with two formulae is standard | [Artifact](../../_bmad-output/planning-artifacts/dual-homebrew-distribution-party-mode.md) |
 
 ## Superseded
 
