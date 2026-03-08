@@ -47,16 +47,44 @@ See individual agent files in `agents/` for specific authority definitions.
 | reviewer | Code review | Block for security/bugs; cannot block for style |
 | release-manager | Release recovery | Fix and patch-release; cannot bump major/minor |
 
-## Decision Tiers
+## Decision Tiers (ADR-0030)
 
-Not all decisions need the same rigor:
+Not all decisions need the same rigor. Three tiers control the cost of deliberation:
 
-| Tier | Examples | Process |
-|------|----------|---------|
-| **Trivial** | Variable naming, import order, test structure | Agent decides autonomously |
-| **Local** | Implementation approach within a story, error handling strategy | Agent decides, documents in PR |
-| **Architectural** | New interfaces, data model changes, dependency additions | Party mode → Decision Board → Story |
-| **Strategic** | New epics, roadmap changes, methodology changes | Human decides after party mode input |
+### Tier 1: Quick Decision
+- **Process:** Single agent recommends, human approves
+- **When:** Config/tooling changes, naming decisions, minor refactors, story task ordering
+- **Artifact:** Brief note in PR description or Decision Board entry
+- **Examples:** "Should we use `snake_case` for this field?", "Which linter rule to enable?"
+
+### Tier 2: Standard Decision
+- **Process:** 3-agent party mode (relevant domain experts)
+- **When:** Feature design, API contracts, integration approaches, multi-story coordination
+- **Artifact:** Party mode artifact in `_bmad-output/planning-artifacts/`
+- **Examples:** "How should the Todoist adapter handle field mapping?", "What's the UX for snooze?"
+
+### Tier 3: Full Decision
+- **Process:** Full party mode (6+ agents), extensive deliberation
+- **When:** Architecture changes, philosophy/SOUL.md changes, epic scoping, methodology changes
+- **Artifact:** Full party mode artifact + Decision Board entry + ADR
+- **Examples:** "Should we adopt a new persistence layer?", "How should agent governance work?"
+
+## Sprint Cadence (ADR-0031)
+
+Biweekly (2-week) sprints provide rhythm without heavy process:
+
+- **Sprint start:** Scope statement + `/reconcile-docs` for clean baseline
+- **Sprint end:** PM audit (`/reconcile-docs`) + retrospective if meaningful work completed
+- **During sprint:** Course corrections via `/course-correct` as needed
+
+This is NOT Scrum. No velocity tracking, no standups, no burndown charts. The cadence serves human-agent team collaboration — giving the human predictable checkpoints to review and course-correct.
+
+## Work Tracking (ADR-0032)
+
+- **BMAD epic/story files are the source of truth** for work tracking
+- **ROADMAP.md is a derived view** — synced from BMAD files for multiclaude scope checking
+- **`/reconcile-docs`** handles the sync between BMAD files and ROADMAP.md
+- Story files live in `docs/stories/`, epic definitions in `docs/prd/`
 
 ## Doc Maintenance Rules
 
