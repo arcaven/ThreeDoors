@@ -516,6 +516,26 @@ These non-functional requirements establish code quality gates that all contribu
 
 ---
 
+## Developer Experience & AI Agent Tooling (Accepted)
+
+*The following requirements establish project-level AI agent alignment and developer workflow automation, based on findings from docs/research/ai-tooling-findings.md and party mode consensus (2026-03-08).*
+
+**SOUL.md — Project Philosophy Document:**
+
+**NFR-DX1:** The project shall maintain a SOUL.md document at the project root defining the project's philosophy, design principles, and behavioral guidelines for AI agents — ensuring consistent decision-making aligned with ThreeDoors values (progress over perfection, work with human nature, three doors not three hundred, local-first privacy-always, meet users where they are)
+
+**Custom Claude Code Slash Commands:**
+
+**NFR-DX2:** The project shall provide a `/pre-pr` Claude Code slash command that automates an 8-step pre-PR validation checklist (branch freshness, formatting via `gofumpt`, linting via `golangci-lint`, tests via `go test`, race detection via `go test -race`, dead code via `go vet`, scope review via `git diff`, commit cleanliness check) — reducing CI failures and enforcing NFR-CQ1 through NFR-CQ5
+
+**NFR-DX3:** The project shall provide a `/validate-adapter` Claude Code slash command that checks TaskProvider implementations for interface compliance, error wrapping patterns, factory registration, test coverage, and atomic write usage
+
+**NFR-DX4:** The project shall provide a `/check-patterns` Claude Code slash command that scans the codebase for design pattern violations (direct status mutation without `IsValidTransition()`, direct file writes bypassing atomic pattern, `fmt.Println` in TUI code, panics in user code, provider instantiation outside factory, missing error wrapping with `%w`)
+
+**NFR-DX5:** The project shall provide a `/new-story` Claude Code slash command that generates story files from a standard template, referencing CLAUDE.md for coding standards and pre-PR checklists instead of embedding them — applying to new stories only (existing completed stories are not modified)
+
+---
+
 ## Task Source Integration NFRs
 
 > Requirements specific to API-based and IPC-based task source adapters.

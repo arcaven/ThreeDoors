@@ -341,9 +341,24 @@
 - **FRs covered:** FR116, FR117, FR118, FR119
 - **Research:** See `docs/research/task-source-expansion-research.md` (Linear section)
 
-**Epic 31+: Additional UX Improvements** (Quick Capture CLI, Snooze/Defer, Focus Timer, Batch Triage — see `docs/research/ux-workflow-improvements-research.md`)
-**Epic 32+: Cross-Computer Sync** (Implement alternative to monolithic SQLite on cloud storage)
-**Epic 33+: Advanced Features** (Voice interface, web interface, Apple Watch, iPad, trading mechanic, gamification)
+**Epic 34: SOUL.md + Custom Development Skills** (P1)
+- **Goal:** Create SOUL.md project philosophy document and 4 custom Claude Code slash commands (/pre-pr, /validate-adapter, /check-patterns, /new-story) to improve AI agent alignment and developer workflow
+- **Prerequisites:** None (CLAUDE.md already exists)
+- **Status:** Not Started
+- **Deliverables:**
+  - SOUL.md at project root — project philosophy, design principles, behavioral guidelines for AI agents
+  - `/pre-pr` slash command — 8-step pre-PR validation automation
+  - `/validate-adapter` slash command — TaskProvider compliance checking
+  - `/check-patterns` slash command — design pattern violation scanning
+  - `/new-story` slash command — story template generator referencing CLAUDE.md
+- **Stories:** 34.1-34.3 (3 stories)
+- **Estimated Effort:** 1-2 days
+- **NFRs covered:** NFR-DX1, NFR-DX2, NFR-DX3, NFR-DX4, NFR-DX5
+- **Research:** See `docs/research/ai-tooling-findings.md`
+
+**Epic 35+: Additional UX Improvements** (Quick Capture CLI, Focus Timer, Batch Triage — see `docs/research/ux-workflow-improvements-research.md`)
+**Epic 36+: Cross-Computer Sync** (Implement alternative to monolithic SQLite on cloud storage)
+**Epic 37+: Advanced Features** (Voice interface, web interface, Apple Watch, iPad, trading mechanic, gamification)
 
 **Guiding Principle:** Each epic must deliver tangible user value and be informed by real usage patterns from previous phases. No speculation-driven development.
 
@@ -379,6 +394,7 @@
 | Epic 22: Self-Driving Dev Pipeline | 8 | Not Started |
 | Epic 27: Daily Planning Mode | 5 | Not Started |
 | Epic 30: Linear Integration | 4 | Not Started |
-| **Total** | **128** | **97 complete, 3 partial, 28 remaining** |
+| Epic 34: SOUL.md + Custom Dev Skills | 3 | Not Started |
+| **Total** | **131** | **97 complete, 3 partial, 31 remaining** |
 
 ---
