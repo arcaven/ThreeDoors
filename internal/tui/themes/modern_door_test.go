@@ -33,9 +33,9 @@ func TestModernDoorProportions(t *testing.T) {
 			output := theme.Render("Buy groceries", 30, tt.height, false)
 			lines := strings.Split(output, "\n")
 
-			// Should have height rows + 1 threshold line
-			if len(lines) != tt.height+1 {
-				t.Errorf("expected %d lines (height + threshold), got %d", tt.height+1, len(lines))
+			// Should have height rows + 1 threshold line + 1 shadow bottom
+			if len(lines) != tt.height+2 {
+				t.Errorf("expected %d lines (height + threshold + shadow), got %d", tt.height+2, len(lines))
 			}
 
 			anatomy := NewDoorAnatomy(tt.height)
@@ -58,10 +58,16 @@ func TestModernDoorProportions(t *testing.T) {
 				}
 			}
 
-			// Check threshold line (last line) contains ▔
-			lastLine := lines[len(lines)-1]
-			if !strings.Contains(lastLine, "▔") {
-				t.Errorf("threshold (last line) should contain ▔, got: %q", lastLine)
+			// Check threshold line (second-to-last; last is shadow bottom) contains ▔
+			threshLine := lines[len(lines)-2]
+			if !strings.Contains(threshLine, "▔") {
+				t.Errorf("threshold should contain ▔, got: %q", threshLine)
+			}
+
+			// Check shadow bottom row contains ▄
+			shadowLine := lines[len(lines)-1]
+			if !strings.Contains(shadowLine, "▄") {
+				t.Errorf("shadow bottom should contain ▄, got: %q", shadowLine)
 			}
 		})
 	}
