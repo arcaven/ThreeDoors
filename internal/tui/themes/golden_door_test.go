@@ -136,11 +136,18 @@ func TestMonochromeDoorSignifiers(t *testing.T) {
 				}
 			}
 
-			// Check threshold (last line)
-			lastLine := lines[len(lines)-1]
-			if !strings.Contains(lastLine, c.thresholdChar) {
+			// Check threshold (second-to-last; last is shadow bottom)
+			threshLine := lines[len(lines)-2]
+			if !strings.Contains(threshLine, c.thresholdChar) {
 				t.Errorf("%s: threshold missing %q in: %q",
-					c.theme.Name, c.thresholdChar, lastLine)
+					c.theme.Name, c.thresholdChar, threshLine)
+			}
+
+			// Check shadow bottom row contains ▄
+			shadowLine := lines[len(lines)-1]
+			if !strings.Contains(shadowLine, "▄") {
+				t.Errorf("%s: shadow bottom missing ▄ in: %q",
+					c.theme.Name, shadowLine)
 			}
 		})
 	}

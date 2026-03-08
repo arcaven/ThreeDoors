@@ -33,9 +33,9 @@ func TestSciFiDoorProportions(t *testing.T) {
 			output := theme.Render("Deploy to staging", 30, tt.height, false)
 			lines := strings.Split(output, "\n")
 
-			// Should have height rows + 1 floor grating line
-			if len(lines) != tt.height+1 {
-				t.Errorf("expected %d lines (height + grating), got %d", tt.height+1, len(lines))
+			// Should have height rows + 1 floor grating line + 1 shadow bottom
+			if len(lines) != tt.height+2 {
+				t.Errorf("expected %d lines (height + grating + shadow), got %d", tt.height+2, len(lines))
 			}
 
 			anatomy := NewDoorAnatomy(tt.height)
@@ -74,10 +74,16 @@ func TestSciFiDoorProportions(t *testing.T) {
 				t.Error("expected [ACCESS] label in lower panel area")
 			}
 
-			// Check floor grating (last line) contains ▓
-			lastLine := lines[len(lines)-1]
-			if !strings.Contains(lastLine, "▓") {
-				t.Errorf("floor grating (last line) should contain ▓, got: %q", lastLine)
+			// Check floor grating (second-to-last; last is shadow bottom) contains ▓
+			gratingLine := lines[len(lines)-2]
+			if !strings.Contains(gratingLine, "▓") {
+				t.Errorf("floor grating should contain ▓, got: %q", gratingLine)
+			}
+
+			// Check shadow bottom row contains ▄
+			shadowLine := lines[len(lines)-1]
+			if !strings.Contains(shadowLine, "▄") {
+				t.Errorf("shadow bottom should contain ▄, got: %q", shadowLine)
 			}
 
 			// Check shade rails on sides

@@ -149,6 +149,6 @@ func classicRender(frameColor, selectedColor lipgloss.Color, unselectedStyle, se
 		threshold := strings.Repeat("▔", width)
 		fmt.Fprintf(&b, "\n%s", style.Render(threshold))
 
-		return b.String()
+		return ApplyShadow(b.String(), width, 15, selected)
 	}
 }

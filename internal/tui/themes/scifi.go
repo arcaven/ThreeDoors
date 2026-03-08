@@ -235,5 +235,5 @@ func scifiRenderDoor(style lipgloss.Style, contentLines []string, width, content
 	grating := strings.Repeat(gratingChar, width)
 	fmt.Fprintf(&b, "\n%s", style.Render(grating))
 
-	return b.String()
+	return ApplyShadow(b.String(), width, 16, selected)
 }
