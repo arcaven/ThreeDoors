@@ -232,7 +232,7 @@ This document provides the complete epic and story breakdown for ThreeDoors, dec
 ### Epic 0: Infrastructure & Process (Backfill)
 Retroactive stories covering CI, documentation, tooling, quality standards, and research work from 29 unstory'd PRs. Now also includes forward-looking infrastructure improvements.
 **FRs covered:** None (cross-cutting infrastructure)
-**Status:** 19 of 22 stories complete. Stories 0.20 (CI Churn Reduction), 0.21 (Homebrew Public Distribution), and 0.24 (Renovate + Dependabot) not started.
+**Status:** 19 of 24 stories complete. Stories 0.20 (CI Churn Reduction), 0.21 (Homebrew Public Distribution), 0.24 (Renovate + Dependabot), 0.28 (Issue Tracker & Authority Config), and 0.29 (Envoy Operations Guide) not started.
 
 ### Epic 1: Three Doors Technical Demo ✅ COMPLETE
 Build and validate the Three Doors interface with minimal viable functionality to prove the UX concept.
@@ -403,7 +403,7 @@ Time-based seasonal theme variants that auto-switch based on the current date, e
 
 **Epic Goal:** Retroactively track infrastructure, documentation, tooling, and process work that was performed outside of story-level planning. These backfill stories capture work from 29 merged PRs that had no backing story. Now also includes forward-looking infrastructure improvements.
 
-**Status:** 19 of 22 stories complete. Stories 0.20 (CI Churn Reduction), 0.21 (Homebrew Public Distribution), and 0.24 (Renovate + Dependabot) not started.
+**Status:** 19 of 24 stories complete. Stories 0.20 (CI Churn Reduction), 0.21 (Homebrew Public Distribution), 0.24 (Renovate + Dependabot), 0.28 (Issue Tracker & Authority Config), and 0.29 (Envoy Operations Guide) not started.
 
 **Origin:** PR-Story Gap Analysis (2026-03-03), see `docs/analysis/pr-story-gap-analysis.md`
 
@@ -726,6 +726,39 @@ So that dependencies stay up to date with security as the top priority and minim
 - **AC5:** Go modules ecosystem excluded from Dependabot (Renovate handles this)
 - **AC6:** Merge-queue agent accepts `dependencies` labeled PRs as in-scope infrastructure
 - **AC7:** Renovate schedule avoids active development hours (weekdays 6-8 AM UTC)
+
+### Story 0.28: Issue Tracker File Structure, Authority Configuration & Initial Content
+
+As the ThreeDoors envoy agent,
+I want a local issue tracker file (`docs/issue-tracker.md`) with proper structure, authority tier configuration, and initial content,
+So that I can track issue lifecycle, detect duplicates, and route issues based on reporter authority.
+
+**Status:** Not Started
+
+**Acceptance Criteria:**
+- **AC1:** `docs/issue-tracker.md` exists with authority tiers header, Open Issues table (8 columns), and Recently Resolved table
+- **AC2:** Authority tiers configured: `arcaven` as owner, empty contributors list
+- **AC3:** Issue status lifecycle: `open` → `triaged` → `story-created` → `pr-open` → `resolved`
+- **AC4:** Current open GitHub issues populated in tracker
+- **AC5:** Recently closed issues (last 50, 90-day window) populated
+- **AC6:** SOUL.md Alignment Reference section with three-category classification and common misalignment patterns
+
+### Story 0.29: Envoy Operations Guide & Integration Documentation
+
+As the ThreeDoors development team,
+I want an envoy operations guide documenting patrol workflows, cross-agent protocols, staleness thresholds, and communication patterns,
+So that the envoy agent can operate consistently per team consensus.
+
+**Status:** Not Started
+
+**Acceptance Criteria:**
+- **AC1:** `docs/envoy-operations.md` exists with patrol cycle workflow, cross-agent protocols, triage authority matrix
+- **AC2:** Patrol cycle documented as 7-step workflow with PR-to-issue linkage patterns
+- **AC3:** Cross-agent communication protocols documented for supervisor, merge-queue, pr-shepherd, workers
+- **AC4:** Three-tier authority routing rules table (owner, contributor, community)
+- **AC5:** Staleness thresholds documented (14d/30d/21d) with escalation templates
+- **AC6:** Reporter communication milestone templates for all 5 stages
+- **AC7:** Duplicate detection and direction alignment handling documented
 
 ---
 
