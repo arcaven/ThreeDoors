@@ -37,12 +37,19 @@ People already have tasks in Apple Notes, Jira, Linear, text files. ThreeDoors
 integrates with existing tools — it doesn't ask users to migrate. The adapter
 pattern exists precisely for this: plug into what people already use.
 
-### Solo Dev Reality
+### Solo Human, Agent Team
 
-This is built by one person in limited hours per week. Every feature must justify
-its complexity. Prefer the simple solution that works today over the elegant
-solution that takes three sprints. If a feature requires more than one story
-to be useful, reconsider the decomposition.
+This is one human directing a team of AI agents. The human has limited hours
+per week; the agents don't. But complexity still costs — every feature must
+justify itself because the human must review, decide, and course-correct.
+Prefer the simple solution that works today over the elegant solution that
+takes three sprints. If a feature requires more than one story to be useful,
+reconsider the decomposition.
+
+This project is also an experiment in human-agent team collaboration. The
+agent governance infrastructure (watchdogs, envoy, party mode, decision
+tiers) is as much a part of the project as the TUI itself. Lessons learned
+here inform how future projects are structured.
 
 ### The Director's Role
 
