@@ -56,7 +56,7 @@ func modernRender(frameColor, selectedColor lipgloss.Color) func(string, int, in
 		}
 
 		// Door-like proportions using DoorAnatomy
-		return modernDoor(content, width, height, inner, hChar, vChar, style)
+		return modernDoor(content, width, height, inner, hChar, vChar, style, selected)
 	}
 }
 
@@ -118,7 +118,7 @@ func modernCompact(content string, inner int, hChar, vChar string, style lipglos
 	return b.String()
 }
 
-func modernDoor(content string, width, height, inner int, hChar, vChar string, style lipgloss.Style) string {
+func modernDoor(content string, width, height, inner int, hChar, vChar string, style lipgloss.Style, selected bool) string {
 	anatomy := NewDoorAnatomy(height)
 
 	// Word-wrap content with 3-char padding on each side
@@ -194,5 +194,5 @@ func modernDoor(content string, width, height, inner int, hChar, vChar string, s
 	threshold := strings.Repeat("▔", width)
 	fmt.Fprintf(&b, "\n%s", style.Render(threshold))
 
-	return b.String()
+	return ApplyShadow(b.String(), width, 15, selected)
 }

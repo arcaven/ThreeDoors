@@ -209,7 +209,7 @@ func shojiDoorRender(content string, width, height int, selected bool, frameColo
 	// Threshold line below the door
 	fmt.Fprintf(&b, "\n%s", style.Render(strings.Repeat("▔", width)))
 
-	return b.String()
+	return ApplyShadow(b.String(), width, 19, selected)
 }
 
 // shojiHBar builds a horizontal lattice bar: ├────────────────────────┤
