@@ -26,6 +26,18 @@ Door selection lacks tactile feedback and intuitive interaction patterns.
 
 Branch protection & merge queue optimization to reduce cascading CI reruns.
 
+### Story 0.28: Issue Tracker & Authority Configuration (P1)
+
+**Status:** Story created. Implementation not started.
+
+Local issue tracker file (`docs/issue-tracker.md`) with authority tier configuration for the envoy agent. Operationalizes party mode research from PRs #227, #232.
+
+### Story 0.29: Envoy Operations Guide (P1)
+
+**Status:** Story created. Implementation not started. Depends on Story 0.28.
+
+Operations documentation for the envoy agent: patrol workflows, cross-agent protocols, staleness thresholds, SOUL.md alignment patterns.
+
 ## Active Epics
 
 ### Epic 25: Todoist Integration (P1) — 0/4 stories done
@@ -121,7 +133,7 @@ Time-based seasonal theme variants that auto-switch based on current date. Exten
 
 | Epic | Title | Stories |
 |------|-------|---------|
-| 0 | Infrastructure & Process (Backfill) | 19/20 |
+| 0 | Infrastructure & Process (Backfill) | 19/24 |
 | 1 | Three Doors Technical Demo | 7/7 |
 | 2 | Apple Notes Integration | 6/6 |
 | 3 | Enhanced Interaction | 7/7 |
