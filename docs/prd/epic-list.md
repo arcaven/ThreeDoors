@@ -547,5 +547,6 @@
 | Epic 38: Dual Homebrew Distribution | 6 | In Progress (2/6) |
 | Epic 39: Keybinding Display System | 5 | Not Started |
 | Epic 40: Beautiful Stats Display | 10 | Not Started |
-| **Total** | **214** | **154 complete, 1 in progress, 59 not started** |
+| Epic 41: Keybinding Display System | 6 | In Progress (1/6) |
+| **Total** | **215** | **154 complete, 2 in progress, 59 not started** |
 ---

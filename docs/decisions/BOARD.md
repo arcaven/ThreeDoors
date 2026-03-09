@@ -134,6 +134,7 @@
 | D-102 | Independent stats palette (Phase 1), theme coupling (Phase 3) (Epic 40) | 2026-03-08 | Reduces Phase 1 scope; theme extension is cross-cutting change | [Artifact](../../_bmad-output/planning-artifacts/beautiful-stats-party-mode.md) |
 | D-103 | Trophy room deferred; milestones limited to 4 observation-language thresholds (Epic 40) | 2026-03-08 | Trophy room: high complexity, gamification risk; milestones: SOUL.md boundary | [Artifact](../../_bmad-output/planning-artifacts/beautiful-stats-party-mode.md) |
 | D-104 | Beautiful Stats Display assigned Epic 40 | 2026-03-08 | Originally Epic 39 but renumbered to avoid collision with Keybinding Display (Epic 39) | [Artifact](../../_bmad-output/planning-artifacts/beautiful-stats-party-mode.md) |
+| D-105 | Spacebar as Enter alias in doors view (Epic 39) | 2026-03-08 | 11-agent unanimous consensus; largest key = most common action; zero new state; consistent with onboarding spacebar behavior | [Artifact](../../_bmad-output/planning-artifacts/spacebar-action-debate.md) |
 
 ## Rejected
 
@@ -184,6 +185,10 @@
 | X-043 | Burnout indicators in TUI (Epic 40) | 2026-03-08 | Too judgmental for user-facing display; keep in MCP for AI agent consumption only | [Artifact](../../_bmad-output/planning-artifacts/beautiful-stats-party-mode.md) |
 | X-044 | Productivity scores/grades in stats (Epic 40) | 2026-03-08 | SOUL.md: "not a productivity report"; assigning scores implies judgment | [Artifact](../../_bmad-output/planning-artifacts/beautiful-stats-party-mode.md) |
 | X-045 | Braille pattern characters for high-res charts (Epic 40) | 2026-03-08 | Inconsistent rendering across terminals and fonts; Unicode blocks are universally safe | [Artifact](../../_bmad-output/planning-artifacts/beautiful-stats-party-mode.md) |
+| X-046 | Spacebar as context-sensitive select+confirm | 2026-03-08 | Adds state-dependent behavior diverging from Enter; creates door-1 bias when no selection; ambiguity generates bug reports | [Artifact](../../_bmad-output/planning-artifacts/spacebar-action-debate.md) |
+| X-047 | Spacebar as quick-complete from doors view | 2026-03-08 | Destructive action behind most easily-hit key; accidental completions; requires undo infrastructure that doesn't exist | [Artifact](../../_bmad-output/planning-artifacts/spacebar-action-debate.md) |
+| X-048 | Spacebar as knock/peek tooltip | 2026-03-08 | Adds step between user and task; new rendering mode needed; scope disproportionate to value | [Artifact](../../_bmad-output/planning-artifacts/spacebar-action-debate.md) |
+| X-049 | Spacebar as door cycle (tab equivalent) | 2026-03-08 | Adds parallel selection system alongside a/w/d; new cycle state tracking; confusing with existing positional keys | [Artifact](../../_bmad-output/planning-artifacts/spacebar-action-debate.md) |
 
 ## Superseded
 
