@@ -441,7 +441,7 @@
 **Epic 37: Persistent BMAD Agent Infrastructure**
 - **Goal:** Enable autonomous project governance by adding persistent BMAD agents and cron jobs that maintain story status, ROADMAP accuracy, architecture doc currency, and quality metrics
 - **Prerequisites:** None
-- **Status:** COMPLETE -- All 4 stories implemented (PR #271, PR #280, PR #279, PR #TBD)
+- **Status:** COMPLETE -- All 4 stories implemented (PR #271, PR #280, PR #279, PR #281)
 - **Deliverables:**
   - Agent definition files for project-watchdog and arch-watchdog (`agents/`)
   - Cron configuration for SM sprint health (4h) and QA coverage audit (weekly) (`docs/quality/cron-setup.md`)
