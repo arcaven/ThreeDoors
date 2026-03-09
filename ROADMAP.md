@@ -160,7 +160,7 @@ Parallel Homebrew distribution channels (stable + alpha) with signing parity, pu
 | 38.5 | Alpha Release Retention Cleanup | Done (PR #294) | P2 | None |
 | 38.6 | Fix Alpha Homebrew Formula Template DSL | Done (PR #312) | P1 | 38.1 |
 
-### Epic 39: Keybinding Display System (P1) — 10/12 stories done
+### Epic 39: Keybinding Display System (P1) — 11/12 stories done
 
 Toggleable keybinding bar and full overlay for TUI discoverability. Context-sensitive bottom bar shows key actions per view; `?` opens comprehensive reference overlay. Global command mode accessibility, command autocomplete, and inline key hints on interactive elements.
 
@@ -176,10 +176,10 @@ Toggleable keybinding bar and full overlay for TUI discoverability. Context-sens
 | 39.8 | Command Autocomplete/Completion | Done (PR #381) | P1 | None |
 | 39.9 | Inline Hint Rendering Infrastructure | Done (PR #374) | P1 | 39.1 |
 | 39.10 | Door View Inline Hints | Not Started | P1 | 39.9 |
-| 39.11 | Non-Door View Inline Hints | In Review | P1 | 39.9 |
+| 39.11 | Non-Door View Inline Hints | Done (PR #388) | P1 | 39.9 |
 | 39.12 | Auto-Fade After N Sessions | Not Started | P2 | 39.9, 39.10 |
 
-### Epic 40: Beautiful Stats Display (P1) — 4/10 stories done
+### Epic 40: Beautiful Stats Display (P1) — 5/10 stories done
 
 Transform the insights dashboard from plain text into a visually delightful, SOUL-aligned celebration of user activity using Lipgloss styled panels, gradient sparklines, bar charts, and fun facts.
 
@@ -192,7 +192,7 @@ Transform the insights dashboard from plain text into a visually delightful, SOU
 | 40.5 | GitHub-Style Activity Heatmap | Not Started | P2 | 40.1, 40.8 |
 | 40.6 | Surface Hidden Session Metrics | Not Started | P1 | 40.1 |
 | 40.7 | Animated Counter Reveals | Not Started | P2 | 40.1 |
-| 40.8 | Tab Navigation for Detail View | Not Started | P1 | 40.1 |
+| 40.8 | Tab Navigation for Detail View | Done (PR #367) | P1 | 40.1 |
 | 40.9 | Theme-Matched Stats Color Palettes | Not Started | P2 | 40.1, 40.2, Epic 17 |
 | 40.10 | Milestone Celebrations | Not Started | P2 | 40.1 |
 
@@ -247,6 +247,7 @@ Systematically adopt underutilized charmbracelet ecosystem components to reduce 
 | 29 | Task Dependencies & Blocked-Task Filtering | 4/4 |
 | 32 | Undo Task Completion | 3/3 |
 | 38 | Dual Homebrew Distribution | 6/6 |
+| 27 | Daily Planning Mode | 5/5 |
 | 28 | Snooze/Defer as First-Class Action | 4/4 |
 
 ## Icebox (Deferred Indefinitely)
