@@ -449,7 +449,20 @@
   - Monitoring, tuning, and Phase 1 evaluation framework (`docs/operations/agent-evaluation.md`)
 - **Stories:** 37.1-37.4 (4 stories)
 
-**Epic 38+: Advanced Features** (Voice interface, web interface, Apple Watch, iPad, trading mechanic, gamification)
+**Epic 38: Dual Homebrew Distribution** (P1)
+- **Goal:** Establish parallel Homebrew distribution channels (stable + alpha) with signing parity, publishing controls, verification, and retention management
+- **Prerequisites:** GoReleaser release pipeline (complete), Apple Developer ID signing infrastructure (complete)
+- **Status:** In Progress (1/5 in review)
+- **Deliverables:**
+  - Alpha Homebrew formula (`threedoors-a.rb`) auto-updated on every push to main
+  - Publishing toggle (`vars.ALPHA_TAP_ENABLED`) for controlled activation
+  - Code signing and notarization for stable GoReleaser releases
+  - Alpha formula verification via tap CI monitoring
+  - Alpha release retention cleanup (keep last 30)
+- **Stories:** 38.1-38.5 (5 stories)
+- **Research:** See `docs/research/dual-homebrew-distribution-research.md`, `_bmad-output/planning-artifacts/homebrew-dual-publish-course-correction.md`
+
+**Epic 39+: Advanced Features** (Voice interface, web interface, Apple Watch, iPad, trading mechanic, gamification)
 
 **Guiding Principle:** Each epic must deliver tangible user value and be informed by real usage patterns from previous phases. No speculation-driven development.
 
@@ -498,5 +511,6 @@
 | Epic 35: Door Visual Appearance | 7 | Complete |
 | Epic 36: Door Selection Feedback | 3 | Complete |
 | Epic 37: Persistent BMAD Agents | 4 | Complete |
-| **Total** | **194** | **154 complete, 0 partial, 40 not started** |
+| Epic 38: Dual Homebrew Distribution | 5 | In Progress (1/5) |
+| **Total** | **199** | **154 complete, 1 in progress, 44 not started** |
 ---

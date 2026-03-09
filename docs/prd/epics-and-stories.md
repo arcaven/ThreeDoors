@@ -2774,6 +2774,70 @@ So that I can objectively assess persistent agent value and adjust accordingly.
 
 ---
 
+## Epic 38: Dual Homebrew Distribution
+
+**Epic Goal:** Establish parallel Homebrew distribution channels — stable (`threedoors`) and alpha (`threedoors-a`) — with signing parity, publishing controls, verification, and retention management.
+
+**Prerequisites:** GoReleaser release pipeline (complete), Apple Developer ID signing infrastructure (complete)
+**Status:** In Progress (1/5 stories in review)
+
+**Deliverables:**
+- Alpha Homebrew formula (`threedoors-a.rb`) auto-updated on every push to main
+- Publishing toggle (`vars.ALPHA_TAP_ENABLED`) for controlled activation
+- Code signing and notarization for stable GoReleaser releases (signing parity)
+- Alpha formula verification via tap CI monitoring
+- Alpha release retention cleanup (keep last 30)
+
+**Stories:**
+
+### Story 38.1: Alpha Homebrew Formula (`threedoors-a`)
+- **Status:** In Review (PR #273)
+- **Priority:** P1
+- **Estimate:** M (3-5 hours)
+- **ACs:** Alpha binary naming (`threedoors-a-*`), formula in tap, CI auto-update, code signing, no conflicts with stable, channel identifier in `--version`, alpha release includes new binaries
+
+### Story 38.2: Alpha Publishing Toggle
+- **Status:** Not Started
+- **Priority:** P1
+- **Estimate:** S (1-2 hours)
+- **Depends on:** 38.1
+- **ACs:** `vars.ALPHA_TAP_ENABLED` toggle gates formula push, alpha release always created, optional template refactor
+
+### Story 38.3: Stable Release Signing & Notarization
+- **Status:** Not Started
+- **Priority:** P1
+- **Estimate:** L (5-8 hours)
+- **Depends on:** None (independent)
+- **ACs:** Post-GoReleaser signing job on macOS, darwin binary signing, notarization, re-upload signed archives, fail-open behavior, shared signing identity
+
+### Story 38.4: Alpha Release Verification
+- **Status:** Not Started
+- **Priority:** P2
+- **Estimate:** M (3-5 hours)
+- **Depends on:** 38.1, 38.2
+- **ACs:** Tap CI monitoring for alpha formula, issue creation on failure, graceful handling when toggle is off
+
+### Story 38.5: Alpha Release Retention Cleanup
+- **Status:** Not Started
+- **Priority:** P2
+- **Estimate:** S (1-2 hours)
+- **Depends on:** None (independent)
+- **ACs:** Keep last 30 alpha releases, delete older with `--cleanup-tag`, stable releases never affected, idempotent and safe
+
+---
+
+### Epic 38 Story Dependencies
+
+```
+38.1 Alpha Homebrew Formula (independent, PR #273)
+38.2 Alpha Publishing Toggle (depends on 38.1)
+38.3 Stable Release Signing (independent)
+38.4 Alpha Release Verification (depends on 38.1, 38.2)
+38.5 Alpha Release Retention (independent)
+```
+
+---
+
 ## Appendix: PR-Analysis-Derived Quality Acceptance Criteria
 
 > **Source:** Systematic analysis of all 49 PRs (#1–#49) in arcaven/ThreeDoors, examining every delta between initial PR submission and final merge. These ACs are derived from recurring defect patterns and MUST be included in all future stories.

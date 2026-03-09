@@ -89,6 +89,12 @@
 | D-060 | Content pre-styling for door selection contrast | 2026-03-08 | Style content before theme Render(); avoids modifying each theme; uses Bold/Faint + DoubleBorder for structural emphasis | [Story 36.1](../../docs/stories/36.1.story.md) |
 | D-061 | Replace softprops/action-gh-release with gh CLI | 2026-03-08 | Eliminates third-party supply chain risk; gh CLI is GitHub-maintained and pre-installed on runners | [Story 0.31](../stories/0.31.story.md) |
 | D-062 | Protected GitHub environment for release secrets | 2026-03-08 | Scopes signing/deployment secrets to release jobs only; requires manual environment setup by repo owner | [Story 0.31](../stories/0.31.story.md) |
+| D-063 | Post-GoReleaser signing job for stable releases | 2026-03-09 | Reuses proven alpha signing pipeline; doesn't replace GoReleaser; fail-open (unsigned is current baseline) | [Artifact](../../_bmad-output/planning-artifacts/homebrew-dual-publish-course-correction.md) |
+| D-064 | Single Apple Developer ID for both channels | 2026-03-09 | Certificate is per-team; bundle ID differentiates; no need for separate certs | [Artifact](../../_bmad-output/planning-artifacts/homebrew-dual-publish-course-correction.md) |
+| D-065 | `vars.ALPHA_TAP_ENABLED` toggle, default OFF | 2026-03-09 | Matches `SIGNING_ENABLED` pattern; conscious activation; prevents premature formula pushes | [Artifact](../../_bmad-output/planning-artifacts/homebrew-dual-publish-course-correction.md) |
+| D-066 | Two separate formulas (no shared template) | 2026-03-09 | GoReleaser controls stable formula; different structures; copying > dependency | [Artifact](../../_bmad-output/planning-artifacts/homebrew-dual-publish-course-correction.md) |
+| D-067 | Alpha release verification via tap CI monitoring | 2026-03-09 | Mirrors stable release-verify.yml pattern; lightweight; tap CI is primary gate | [Artifact](../../_bmad-output/planning-artifacts/homebrew-dual-publish-course-correction.md) |
+| D-068 | Keep last 30 alpha releases, delete older | 2026-03-09 | Prevents release pollution; formula always points to latest before cleanup; 2-6 days of history | [Artifact](../../_bmad-output/planning-artifacts/homebrew-dual-publish-course-correction.md) |
 
 ## Rejected
 
@@ -119,6 +125,11 @@
 | X-023 | Separate tap for alpha (`homebrew-tap-alpha`) | 2026-03-08 | Unnecessary complexity; single tap with two formulae is standard | [Artifact](../../_bmad-output/planning-artifacts/dual-homebrew-distribution-party-mode.md) |
 | X-024 | Per-view 'q' handler for universal quit | 2026-03-08 | Would require modifying 10+ view files; higher maintenance burden; centralized interception is simpler | [Story 36.3](../stories/36.3.story.md) |
 | X-025 | Per-theme Render() modification for selection contrast | 2026-03-08 | Content pre-styling at DoorsView level is simpler and requires no theme changes | [Story 36.1](../../docs/stories/36.1.story.md) |
+| X-026 | Move GoReleaser to macOS runner for stable signing | 2026-03-09 | Doesn't add signing by itself; loses native Linux builds | [Artifact](../../_bmad-output/planning-artifacts/homebrew-dual-publish-course-correction.md) |
+| X-027 | Replace GoReleaser with custom pipeline | 2026-03-09 | Throws away changelog, archiving, formula push, checksums; massive scope increase | [Artifact](../../_bmad-output/planning-artifacts/homebrew-dual-publish-course-correction.md) |
+| X-028 | Shared formula template for stable and alpha | 2026-03-09 | GoReleaser controls stable formula; different structures make sharing impractical | [Artifact](../../_bmad-output/planning-artifacts/homebrew-dual-publish-course-correction.md) |
+| X-029 | Per-push `brew install` verification for alpha | 2026-03-09 | Expensive (macOS runner + Homebrew install time); tap CI provides equivalent coverage | [Artifact](../../_bmad-output/planning-artifacts/homebrew-dual-publish-course-correction.md) |
+| X-030 | Default `ALPHA_TAP_ENABLED` to ON | 2026-03-09 | First push would attempt formula push before infrastructure is validated | [Artifact](../../_bmad-output/planning-artifacts/homebrew-dual-publish-course-correction.md) |
 
 ## Superseded
 
