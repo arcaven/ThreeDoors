@@ -155,6 +155,9 @@
 | D-119 | Breakpoint-based graceful degradation for small terminals | 2026-03-09 | Invisible to users; progressive collapse without error messages; respects D-094 bar hiding | [Artifact](../../_bmad-output/planning-artifacts/full-terminal-layout-party-mode.md) |
 | D-120 | Two-story implementation (MVP layout + follow-up refactor) | 2026-03-09 | MVP delivers 80% value; refactor separates header/footer from DoorsView cleanly | [Artifact](../../_bmad-output/planning-artifacts/full-terminal-layout-party-mode.md) |
 | D-121 | Layout engine is prerequisite for Story 39.2 (keybinding bar) | 2026-03-09 | Layout engine provides footer slot; building bar first would require rework | [Artifact](../../_bmad-output/planning-artifacts/full-terminal-layout-party-mode.md) |
+| D-122 | Global `:` command mode via MainModel-level interception | 2026-03-09 | Follows D-059/D-087 pattern; `isTextInputActive()` guard prevents conflicts; one change location; zero per-view modifications | [Artifact](../../_bmad-output/planning-artifacts/global-command-mode-analysis.md) |
+| D-123 | Custom lightweight command completion (not bubbles/list) | 2026-03-09 | Only 16 commands; prefix match sufficient; bubbles/list is heavyweight with fuzzy matching wrong for command completion; no new dependency | [Artifact](../../_bmad-output/planning-artifacts/global-command-mode-analysis.md) |
+| D-124 | Inline suggestion rendering for command autocomplete | 2026-03-09 | Consistent with SearchView pattern; push content down; no overlay infrastructure exists | [Artifact](../../_bmad-output/planning-artifacts/global-command-mode-analysis.md) |
 
 ## Rejected
 
@@ -241,6 +244,11 @@
 | X-063 | Fill space below doors with new content (mini-stats, context) | 2026-03-09 | SOUL.md: "Show less"; filling space ≠ filling with stuff; whitespace IS the design | [Artifact](../../_bmad-output/planning-artifacts/full-terminal-layout-party-mode.md) |
 | X-064 | "Terminal too small" warning messages | 2026-03-09 | Hostile UX; degradation should be invisible; users don't need to know about layout math | [Artifact](../../_bmad-output/planning-artifacts/full-terminal-layout-party-mode.md) |
 | X-065 | Single large story for full layout implementation | 2026-03-09 | Too much scope risk; MVP (AltScreen + layout + door cap) delivers 80% value alone | [Artifact](../../_bmad-output/planning-artifacts/full-terminal-layout-party-mode.md) |
+| X-066 | Per-view `:` handler for command mode | 2026-03-09 | Would require modifying 17 view Update() methods; higher maintenance burden; same approach rejected for `q` in X-024 | [Artifact](../../_bmad-output/planning-artifacts/global-command-mode-analysis.md) |
+| X-067 | Selective `:` command mode (add to "a few more" views) | 2026-03-09 | Half-measures create inconsistent behavior; users would need to memorize which views support `:`; global is simpler | [Artifact](../../_bmad-output/planning-artifacts/global-command-mode-analysis.md) |
+| X-068 | `bubbles/list` for command autocomplete | 2026-03-09 | Heavyweight for 16 items; fuzzy matching wrong for command completion (users expect prefix matching from vim muscle memory) | [Artifact](../../_bmad-output/planning-artifacts/global-command-mode-analysis.md) |
+| X-069 | Overlay-style dropdown for command suggestions | 2026-03-09 | No overlay rendering system exists; all existing patterns use inline rendering; would require Z-ordering infrastructure | [Artifact](../../_bmad-output/planning-artifacts/global-command-mode-analysis.md) |
+| X-070 | Argument-level completion for commands (MVP) | 2026-03-09 | Only 2 commands benefit (`:insights mood\|avoidance`, `:goals edit`); disproportionate complexity for MVP | [Artifact](../../_bmad-output/planning-artifacts/global-command-mode-analysis.md) |
 
 ## Epic Number Registry
 

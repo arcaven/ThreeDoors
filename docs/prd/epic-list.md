@@ -465,7 +465,7 @@
 **Epic 39: Keybinding Display System** (P1)
 - **Goal:** Add toggleable keybinding discoverability to the TUI: a concise context-sensitive bar at the bottom of every view, and a full keybinding overlay accessible via `?` key
 - **Prerequisites:** None (all required infrastructure exists)
-- **Status:** In Progress (2/6 done)
+- **Status:** In Progress (3/8 done)
 - **Deliverables:**
   - Compile-time keybinding registry mapping each ViewMode to its available key bindings
   - Concise bottom bar showing 5-6 priority keys per view, with Lipgloss dim styling
@@ -473,7 +473,7 @@
   - `h` key toggles bar visibility, persisted to config.yaml
   - Terminal size adaptation (auto-hide bar on small terminals, compact mode, width truncation)
   - Context-sensitive bar content (changes per view mode)
-- **Stories:** 39.1-39.6 (6 stories)
+- **Stories:** 39.1-39.8 (8 stories)
 - **Research:** See `_bmad-output/planning-artifacts/keybinding-display-party-mode.md`, `_bmad-output/planning-artifacts/keybinding-display-ux-review.md`, `_bmad-output/planning-artifacts/keybinding-display-architecture.md`
 
 **Epic 40: Beautiful Stats Display** (P1)
@@ -545,7 +545,7 @@
 | Epic 36: Door Selection Feedback | 3 | Complete |
 | Epic 37: Persistent BMAD Agents | 4 | Complete |
 | Epic 38: Dual Homebrew Distribution | 6 | In Progress (2/6) |
-| Epic 39: Keybinding Display System | 6 | In Progress (2/6) |
+| Epic 39: Keybinding Display System | 8 | In Progress (3/8) |
 | Epic 40: Beautiful Stats Display | 10 | Not Started |
-| **Total** | **207** | **146 complete, 3 epics in progress, 61 not started** |
+| **Total** | **209** | **146 complete, 3 epics in progress, 63 not started** |
 ---
