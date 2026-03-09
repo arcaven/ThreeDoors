@@ -1,0 +1,15 @@
+ThreeDoors - Technical Demo
+Pick one. Start small. That's progress.
+
+╭────────────────────────╮╔════════════════════════╗╭────────────────────────╮
+│                        │║                        ║│                        │
+│  [todo]                │║  [todo]                ║│  [todo]                │
+│                        │║                        ║│                        │
+│  Buy groceries         │║  Read Go book          ║│  Exercise for 30 min   │
+│                        │║                        ║│                        │
+╰────────────────────────╯╚════════════════════════╝╰────────────────────────╯
+
+[s] re-roll  [n] add task  [enter] confirm
+
+/ search | m mood | : command | ? help | q quit
+hints: on — :hints to hide
