@@ -46,7 +46,7 @@ Operations documentation for the envoy agent: patrol workflows, cross-agent prot
 
 ### Story 0.32: Help Display UX — Dedicated Help View (P1)
 
-**Status:** Not Started. Story created. Party mode artifact produced.
+**Status:** Done (PR #309).
 
 Replace broken `:help` flash message with dedicated scrollable help view. Content runs off-screen and disappears after 3 seconds. Fix: new `ViewHelp` mode, categorized two-column layout, `?` global keybinding.
 

@@ -39,6 +39,7 @@ type Task struct {
 	DeferUntil     *time.Time            `yaml:"defer_until,omitempty" json:"defer_until,omitempty"`
 	SourceProvider string                `yaml:"source_provider,omitempty" json:"source_provider,omitempty"`
 	SourceRefs     []SourceRef           `yaml:"source_refs,omitempty" json:"source_refs,omitempty"`
+	DependsOn      []string              `yaml:"depends_on,omitempty" json:"depends_on,omitempty"`
 	DevDispatch    *dispatch.DevDispatch `yaml:"dev_dispatch,omitempty" json:"dev_dispatch,omitempty"`
 }
 

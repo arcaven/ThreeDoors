@@ -245,6 +245,9 @@ type ProposalBatchApprovedMsg struct {
 	Count int
 }
 
+// ShowHelpMsg is sent to open the dedicated help view.
+type ShowHelpMsg struct{}
+
 // ShowDevQueueMsg is sent to open the dev queue view.
 type ShowDevQueueMsg struct{}
 
