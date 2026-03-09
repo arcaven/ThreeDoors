@@ -158,6 +158,9 @@
 | D-122 | Global `:` command mode via MainModel-level interception | 2026-03-09 | Follows D-059/D-087 pattern; `isTextInputActive()` guard prevents conflicts; one change location; zero per-view modifications | [Artifact](../../_bmad-output/planning-artifacts/global-command-mode-analysis.md) |
 | D-123 | Custom lightweight command completion (not bubbles/list) | 2026-03-09 | Only 16 commands; prefix match sufficient; bubbles/list is heavyweight with fuzzy matching wrong for command completion; no new dependency | [Artifact](../../_bmad-output/planning-artifacts/global-command-mode-analysis.md) |
 | D-124 | Inline suggestion rendering for command autocomplete | 2026-03-09 | Consistent with SearchView pattern; push content down; no overlay infrastructure exists | [Artifact](../../_bmad-output/planning-artifacts/global-command-mode-analysis.md) |
+| D-125 | Inline hints as frame decoration (doorknob metaphor), separate from bar toggle | 2026-03-09 | Hints are onboarding scaffolding (auto-fade), bar is reference tool (manual toggle); Approach B preserves door metaphor; no runtime toggle key — `:hints` command only; avoids 39.4 `h` toggle collision | [Artifact](../../_bmad-output/planning-artifacts/default-tooltips-mode-party-mode.md) |
+| D-126 | Session-based auto-fade for inline hints (default 5 sessions) | 2026-03-09 | Simpler than per-key tracking; 90% as effective; graceful dim at N-1 then disable at N; `:hints on` re-enables | [Artifact](../../_bmad-output/planning-artifacts/default-tooltips-mode-party-mode.md) |
+| D-127 | Inline tooltips as Epic 39 stories 39.9-39.12, not a new epic | 2026-03-09 | Same keybinding registry data source (39.1); same config infrastructure; same toggle ecosystem; new epic would fragment discoverability | [Artifact](../../_bmad-output/planning-artifacts/default-tooltips-mode-party-mode.md) |
 
 ## Rejected
 
