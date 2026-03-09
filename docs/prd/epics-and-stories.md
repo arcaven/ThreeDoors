@@ -4066,7 +4066,7 @@ Add a guided daily planning ritual that transforms ThreeDoors from a reactive ta
 | 27.2 | Review Incomplete Tasks Flow | Done (PR #339) | P1 | 27.1 |
 | 27.3 | Focus Selection Flow | Done (PR #352) | P1 | 27.1 |
 | 27.4 | Energy Level Matching & Time-of-Day Inference | Done (PR #354) | P1 | 27.1 |
-| 27.5 | Planning Session Metrics & CLI/TUI Commands | Done (PR #TBD) | P1 | 27.1-27.4 |
+| 27.5 | Planning Session Metrics & CLI/TUI Commands | Done (PR #360) | P1 | 27.1-27.4 |
 
 **FRs covered:** FR97-FR103
 **Research:** See `../../_bmad-output/planning-artifacts/ux-workflow-improvements-research.md`
