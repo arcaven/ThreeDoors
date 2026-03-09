@@ -50,6 +50,12 @@ Operations documentation for the envoy agent: patrol workflows, cross-agent prot
 
 Replace broken `:help` flash message with dedicated scrollable help view. Content runs off-screen and disappears after 3 seconds. Fix: new `ViewHelp` mode, categorized two-column layout, `?` global keybinding.
 
+### Story 0.34: Fix 'q' Key in Sub-Views — Go Back Instead of Quit (P1)
+
+**Status:** Ready. Triage complete (issue #330). Story created.
+
+Story 36.3 (PR #276) universal quit handler causes sub-views (dashboard, health, synclog, etc.) to exit on 'q' instead of going back. Fix: scope 'q' quit to doors view only; sub-views treat 'q' as go-back (D-128).
+
 ## Active Epics
 
 ### Epic 25: Todoist Integration (P1) — 3/4 stories done
@@ -75,14 +81,14 @@ Guided daily planning ritual for task review and focus selection. Transforms Thr
 | 27.4 | Energy Level Matching & Time-of-Day Inference | Not Started | P1 | 27.1 |
 | 27.5 | Planning Session Metrics & CLI/TUI Commands | Not Started | P1 | 27.1-27.4 |
 
-### Epic 28: Snooze/Defer as First-Class Action (P1) — 1/4 stories done
+### Epic 28: Snooze/Defer as First-Class Action (P1) — 2/4 stories done
 
 Surfaces existing `StatusDeferred` as a first-class user action with date-based snooze and auto-return.
 
 | Story | Title | Status | Priority | Depends On |
 |-------|-------|--------|----------|------------|
 | 28.1 | DeferUntil Field, Status Transitions, and Auto-Return Logic | Done (PR #310) | P1 | None |
-| 28.2 | Snooze TUI View and Z-Key Binding | Not Started | P1 | 28.1 |
+| 28.2 | Snooze TUI View and Z-Key Binding | Done (PR #338) | P1 | 28.1 |
 | 28.3 | Deferred List View and :deferred Command | Not Started | P1 | 28.1 |
 | 28.4 | Session Metrics Logging for Snooze Events | Not Started | P1 | 28.1 |
 
@@ -173,13 +179,13 @@ Toggleable keybinding bar and full overlay for TUI discoverability. Context-sens
 | 39.11 | Non-Door View Inline Hints | Not Started | P1 | 39.9 |
 | 39.12 | Auto-Fade After N Sessions | Not Started | P2 | 39.9, 39.10 |
 
-### Epic 40: Beautiful Stats Display (P1) — 0/10 stories done
+### Epic 40: Beautiful Stats Display (P1) — 1/10 stories done
 
 Transform the insights dashboard from plain text into a visually delightful, SOUL-aligned celebration of user activity using Lipgloss styled panels, gradient sparklines, bar charts, and fun facts.
 
 | Story | Title | Status | Priority | Depends On |
 |-------|-------|--------|----------|------------|
-| 40.1 | Stats Dashboard Shell with Lipgloss Panels | In Review | P1 | None |
+| 40.1 | Stats Dashboard Shell with Lipgloss Panels | Done (PR #343) | P1 | None |
 | 40.2 | Gradient Sparkline with Color-Blind Safe Palette | Not Started | P1 | 40.1 |
 | 40.3 | Fun Facts Engine | Not Started | P1 | 40.1 |
 | 40.4 | Horizontal Bar Charts for Mood Correlation | Not Started | P1 | 40.1 |
