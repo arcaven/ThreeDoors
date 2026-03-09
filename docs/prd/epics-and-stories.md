@@ -2869,7 +2869,7 @@ So that I can objectively assess persistent agent value and adjust accordingly.
 **Epic Goal:** Add toggleable keybinding discoverability to the ThreeDoors TUI — a concise context-sensitive bar at the bottom of every view showing available keys, and a full keybinding overlay (`?` key) as a comprehensive reference. Improves discoverability without adding decision complexity, aligning with SOUL.md's friction-reduction philosophy.
 
 **Prerequisites:** None (all required infrastructure exists — Lipgloss, config.yaml persistence, MainModel composition, isTextInputActive() guard)
-**Status:** In Progress (4/8)
+**Status:** In Progress (4/12)
 
 **Deliverables:**
 - Compile-time keybinding registry mapping each ViewMode to available key bindings with priority levels
@@ -2878,6 +2878,9 @@ So that I can objectively assess persistent agent value and adjust accordingly.
 - `h` key toggles bar visibility (persisted to config.yaml), `?` key opens/closes overlay
 - Terminal size adaptation: auto-hide bar < 10 lines, compact mode 10-15 lines, width truncation
 - Context-sensitive bar content (changes per view mode, sub-mode aware)
+- Inline key hints rendered directly on interactive elements (doorknob metaphor for doors)
+- Auto-fade after N sessions (default 5) with graceful dimming transition
+- `:hints` command for manual re-enable/disable
 
 **Design References:**
 - Party mode: `_bmad-output/planning-artifacts/keybinding-display-party-mode.md`
@@ -2940,6 +2943,34 @@ So that I can objectively assess persistent agent value and adjust accordingly.
 - **Depends on:** None (benefits from 39.7 but independent)
 - **ACs:** Command registry with names and descriptions, dynamic prefix-match filtering as user types, inline suggestion rendering with descriptions, arrow/Tab navigation and completion, table-driven tests, race detector passes
 
+### Story 39.9: Inline Hint Rendering Infrastructure
+- **Status:** Not Started
+- **Priority:** P1
+- **Estimate:** S (1-2 hours)
+- **Depends on:** 39.1
+- **ACs:** renderInlineHint() function, theme Render() signature extended with hint parameter, config model extension (show_inline_hints, session counter, fade threshold), `:hints` command registration, session counter logic with auto-fade, unit tests
+
+### Story 39.10: Door View Inline Hints
+- **Status:** Not Started
+- **Priority:** P1
+- **Estimate:** M (3-5 hours)
+- **Depends on:** 39.9
+- **ACs:** Door frame hints [a]/[w]/[d] via doorknob metaphor (Approach B), selection state awareness, additional action hints [s]/[n]/[enter], help text simplification when hints active, theme compatibility, golden file tests, race detector passes
+
+### Story 39.11: Non-Door View Inline Hints
+- **Status:** Not Started
+- **Priority:** P1
+- **Estimate:** M (3-5 hours)
+- **Depends on:** 39.9
+- **ACs:** Detail view hints (esc/c/b/e/f), search view hints (enter/esc/arrows), mood view numbered labels, add task hints, consistent styling via renderInlineHint(), golden file tests, race detector passes
+
+### Story 39.12: Auto-Fade After N Sessions
+- **Status:** Not Started
+- **Priority:** P2
+- **Estimate:** S (1-2 hours)
+- **Depends on:** 39.9, 39.10
+- **ACs:** Graceful dimming at session N-1 (ANSI 240), auto-disable at session N with flash message, re-enable via :hints on resets counter, configurable threshold (default 5, 0 = never fade), unit tests
+
 ---
 
 ### Epic 39 Story Dependencies
@@ -2953,6 +2984,10 @@ So that I can objectively assess persistent agent value and adjust accordingly.
 39.6 Spacebar as Enter Alias (independent)
 39.7 Global : Command Mode (independent)
 39.8 Command Autocomplete/Completion (independent, benefits from 39.7)
+39.9 Inline Hint Infrastructure (depends on 39.1)
+39.10 Door View Inline Hints (depends on 39.9)
+39.11 Non-Door View Inline Hints (depends on 39.9)
+39.12 Auto-Fade After N Sessions (depends on 39.9, 39.10)
 ```
 
 ---
