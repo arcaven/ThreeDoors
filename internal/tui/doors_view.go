@@ -13,6 +13,9 @@ import (
 	"github.com/lucasb-eyer/go-colorful"
 )
 
+// doorHintKeys maps door index to its selection key for inline hints.
+var doorHintKeys = [3]string{"a", "w", "d"}
+
 // typeIcon returns the emoji icon for a task type.
 func typeIcon(t core.TaskType) string {
 	switch t {
@@ -72,6 +75,7 @@ type DoorsView struct {
 	duplicateTaskIDs  map[string]bool
 	doorAnimation     *DoorAnimation
 	planningTimestamp *time.Time
+	inlineHintsConfig *core.InlineHintsConfig
 }
 
 // NewDoorsView creates a new DoorsView.
@@ -138,6 +142,11 @@ func (dv *DoorsView) SetDuplicateTaskIDs(ids map[string]bool) {
 // SetPlanningTimestamp sets the planning session timestamp for focus boost.
 func (dv *DoorsView) SetPlanningTimestamp(t *time.Time) {
 	dv.planningTimestamp = t
+}
+
+// SetInlineHintsConfig sets the inline hints configuration for door key hints.
+func (dv *DoorsView) SetInlineHintsConfig(cfg *core.InlineHintsConfig) {
+	dv.inlineHintsConfig = cfg
 }
 
 // SetPendingConflicts sets the number of unresolved sync conflicts.
@@ -276,6 +285,12 @@ func (dv *DoorsView) View() string {
 		return s.String()
 	}
 
+	// Resolve inline hint state for this render.
+	hintsEnabled, hintsFade := false, false
+	if dv.inlineHintsConfig != nil {
+		hintsEnabled, hintsFade = core.ResolveInlineHintState(dv.inlineHintsConfig)
+	}
+
 	doorWidth := 30
 	if dv.width > 20 {
 		doorWidth = (dv.width - 6) / 3
@@ -305,6 +320,7 @@ func (dv *DoorsView) View() string {
 	}
 
 	usePerDoorColors := dv.width >= 60
+	hasSelection := dv.selectedDoorIndex >= 0
 
 	var renderedDoors []string
 	for i, task := range dv.currentDoors {
@@ -362,7 +378,6 @@ func (dv *DoorsView) View() string {
 		// When animation is active, emphasis interpolates between states via spring physics.
 		// When settled, fall back to discrete selected/unselected styling.
 		isSelected := i == dv.selectedDoorIndex
-		hasSelection := dv.selectedDoorIndex >= 0
 		animating := dv.doorAnimation != nil && dv.doorAnimation.Active()
 
 		if animating {
@@ -375,9 +390,15 @@ func (dv *DoorsView) View() string {
 			}
 		}
 
+		// Build inline hint for this door with selection-state awareness.
+		hint := ""
+		if hintsEnabled && i < len(doorHintKeys) {
+			hint = renderDoorHint(doorHintKeys[i], true, hintsFade, isSelected, hasSelection)
+		}
+
 		// Use theme Render when a theme is active, otherwise fall back to lipgloss styles
 		if activeTheme != nil {
-			renderedDoors = append(renderedDoors, activeTheme.Render(content, doorWidth, doorHeight, isSelected, ""))
+			renderedDoors = append(renderedDoors, activeTheme.Render(content, doorWidth, doorHeight, isSelected, hint))
 		} else if animating {
 			// Spring-interpolated border color based on emphasis
 			emphasis := dv.doorAnimation.Emphasis(i)
@@ -422,10 +443,28 @@ func (dv *DoorsView) View() string {
 		s.WriteString(syncBar)
 	}
 
+	// Action hints between doors and help text when inline hints are active.
+	if hintsEnabled {
+		var actionParts []string
+		actionParts = append(actionParts, renderInlineHint("s", true, hintsFade)+" re-roll")
+		actionParts = append(actionParts, renderInlineHint("n", true, hintsFade)+" add task")
+		if hasSelection {
+			actionParts = append(actionParts, renderInlineHint("enter", true, hintsFade)+" confirm")
+		}
+		s.WriteString("\n\n")
+		s.WriteString(helpStyle.Render(strings.Join(actionParts, "  ")))
+	}
+
 	s.WriteString("\n\n")
-	s.WriteString(helpStyle.Render("a/left, w/up, d/right to select (again to deselect) | s/down to re-roll | Enter/Space to open | N feedback | / search | M mood | q quit"))
-	s.WriteString("\n")
-	s.WriteString(greetingStyle.Render(dv.footerMessage))
+	if hintsEnabled {
+		s.WriteString(helpStyle.Render("/ search | m mood | : command | ? help | q quit"))
+		s.WriteString("\n")
+		s.WriteString(greetingStyle.Render("hints: on — :hints to hide"))
+	} else {
+		s.WriteString(helpStyle.Render("a/left, w/up, d/right to select (again to deselect) | s/down to re-roll | Enter/Space to open | N feedback | / search | M mood | q quit"))
+		s.WriteString("\n")
+		s.WriteString(greetingStyle.Render(dv.footerMessage))
+	}
 
 	return s.String()
 }
@@ -442,18 +481,17 @@ func animatedDoorStyle(doorIndex int, emphasis float64, w, h int, usePerDoorColo
 	}
 
 	// Base color: per-door accent or default accent
-	var baseHex string
+	var baseTermColor lipgloss.TerminalColor
 	if usePerDoorColors && doorIndex < len(doorColors) {
-		baseHex = string(doorColors[doorIndex])
+		baseTermColor = doorColors[doorIndex]
 	} else {
-		baseHex = string(colorAccent)
+		baseTermColor = colorAccent
 	}
-	dimHex := "240" // same as unselectedDoorStyle border
 
 	// Parse colors for interpolation
-	baseColor, _ := colorful.MakeColor(lipgloss.Color(baseHex))
-	dimColor, _ := colorful.MakeColor(lipgloss.Color(dimHex))
-	brightColor, _ := colorful.MakeColor(lipgloss.Color(string(colorDoorBright)))
+	baseColor, _ := colorful.MakeColor(baseTermColor)
+	dimColor, _ := colorful.MakeColor(lipgloss.Color("240")) // same as unselectedDoorStyle border
+	brightColor, _ := colorful.MakeColor(colorDoorBright)
 
 	// Interpolate: dim → base at emphasis 0→0.5, base → bright at 0.5→1.0
 	var borderColor colorful.Color

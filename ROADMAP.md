@@ -175,7 +175,7 @@ Toggleable keybinding bar and full overlay for TUI discoverability. Context-sens
 | 39.7 | Global `:` Command Mode | Done (PR #365) | P1 | None |
 | 39.8 | Command Autocomplete/Completion | Done (PR #381) | P1 | None |
 | 39.9 | Inline Hint Rendering Infrastructure | Done (PR #374) | P1 | 39.1 |
-| 39.10 | Door View Inline Hints | Not Started | P1 | 39.9 |
+| 39.10 | Door View Inline Hints | Done (PR #387) | P1 | 39.9 |
 | 39.11 | Non-Door View Inline Hints | Done (PR #388) | P1 | 39.9 |
 | 39.12 | Auto-Fade After N Sessions | Not Started | P2 | 39.9, 39.10 |
 
@@ -207,7 +207,7 @@ Systematically adopt underutilized charmbracelet ecosystem components to reduce 
 | 41.3 | Viewport Adoption for Help View | Done (PR #364) | P2 | None (sequence after Epic 39 overlay work) |
 | 41.4 | Viewport Adoption for Synclog and Keybinding Overlay | Done (PR #379) | P2 | 41.3 |
 | 41.5 | Harmonica Door Transition Spike | Done (PR #369) | P2 | None |
-| 41.6 | Adaptive Color Profile Support | Not Started | P2 | None |
+| 41.6 | Adaptive Color Profile Support | In Review | P2 | None |
 
 ## Completed Epics
 

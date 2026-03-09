@@ -5,14 +5,11 @@ Pick one. Start small. That's progress.
 │                        ││                        ││                        │
 │  [todo]                ││  [todo]                ││  [todo]                │
 │                        ││                        ││                        │
-│  Write tests           ││  Review PRs            ││  Update docs           │
+│  Buy groceries         ││  Read Go book          ││  Exercise for 30 min   │
 │                        ││                        ││                        │
 ╰────────────────────────╯╰────────────────────────╯╰────────────────────────╯
-
-✓ Local
 
 [s] re-roll  [n] add task
 
 / search | m mood | : command | ? help | q quit
 hints: on — :hints to hide
-Focus  ·  Quality  ·  Balance

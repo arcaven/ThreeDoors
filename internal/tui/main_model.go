@@ -217,6 +217,7 @@ func NewMainModel(pool *core.TaskPool, tracker *core.SessionTracker, provider co
 	if planningTs != nil {
 		doorsView.SetPlanningTimestamp(planningTs)
 	}
+	doorsView.SetInlineHintsConfig(inlineHintsConfig)
 
 	m := &MainModel{
 		viewMode:          ViewDoors,
@@ -874,6 +875,7 @@ func (m *MainModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if configDir, err := core.GetConfigDirPath(); err == nil {
 			_ = core.SaveInlineHintsConfig(configDir, m.inlineHintsConfig)
 		}
+		m.doorsView.SetInlineHintsConfig(m.inlineHintsConfig)
 		m.viewMode = ViewDoors
 		return m, ClearFlashCmd()
 
