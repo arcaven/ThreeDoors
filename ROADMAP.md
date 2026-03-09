@@ -93,7 +93,7 @@ Native dependency graph support. Blocks tasks with unmet dependencies from door 
 | Story | Title | Status | Priority | Depends On |
 |-------|-------|--------|----------|------------|
 | 29.1 | DependsOn Field, DependencyResolver, and YAML Persistence | Done (PR #307) | P1 | None |
-| 29.2 | Door Selection Filter and Auto-Unblock on Completion | Done (PR #TBD) | P1 | 29.1 |
+| 29.2 | Door Selection Filter and Auto-Unblock on Completion | Done (PR #319) | P1 | 29.1 |
 | 29.3 | TUI Blocked-By Indicator and Dependency Management | Not Started | P1 | 29.1 |
 | 29.4 | Session Metrics Logging for Dependency Events | Not Started | P1 | 29.1 |
 
