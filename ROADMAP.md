@@ -70,7 +70,7 @@ Guided daily planning ritual for task review and focus selection. Transforms Thr
 | 27.4 | Energy Level Matching & Time-of-Day Inference | Done (PR #354) | P1 | 27.1 |
 | 27.5 | Planning Session Metrics & CLI/TUI Commands | Not Started | P1 | 27.1-27.4 |
 
-### Epic 28: Snooze/Defer as First-Class Action (P1) — 3/4 stories done
+### Epic 28: Snooze/Defer as First-Class Action (P1) — 4/4 stories done — COMPLETE
 
 Surfaces existing `StatusDeferred` as a first-class user action with date-based snooze and auto-return.
 
@@ -78,7 +78,7 @@ Surfaces existing `StatusDeferred` as a first-class user action with date-based 
 |-------|-------|--------|----------|------------|
 | 28.1 | DeferUntil Field, Status Transitions, and Auto-Return Logic | Done (PR #310) | P1 | None |
 | 28.2 | Snooze TUI View and Z-Key Binding | Done (PR #338) | P1 | 28.1 |
-| 28.3 | Deferred List View and :deferred Command | In Review | P1 | 28.1 |
+| 28.3 | Deferred List View and :deferred Command | Done (PR #358) | P1 | 28.1 |
 | 28.4 | Session Metrics Logging for Snooze Events | Done (PR #355) | P1 | 28.1 |
 
 ### Epic 29: Task Dependencies & Blocked-Task Filtering (P1) — 4/4 stories done — COMPLETE
@@ -185,16 +185,16 @@ Transform the insights dashboard from plain text into a visually delightful, SOU
 | 40.9 | Theme-Matched Stats Color Palettes | Not Started | P2 | 40.1, 40.2, Epic 17 |
 | 40.10 | Milestone Celebrations | Not Started | P2 | 40.1 |
 
-### Epic 41: Charm Ecosystem Adoption & TUI Polish (P2) — 3/6 stories done
+### Epic 41: Charm Ecosystem Adoption & TUI Polish (P2) — 5/6 stories done
 
 Systematically adopt underutilized charmbracelet ecosystem components to reduce custom code, improve UX consistency, and deliver on SOUL.md's "physical objects" promise.
 
 | Story | Title | Status | Priority | Depends On |
 |-------|-------|--------|----------|------------|
-| 41.1 | Spinner Component for Async Provider Operations | In Review | P2 | None |
+| 41.1 | Spinner Component for Async Provider Operations | Done (PR #372) | P2 | None |
 | 41.2 | Lipgloss Layout Utilities Adoption | Done (PR #370) | P2 | None |
 | 41.3 | Viewport Adoption for Help View | Done (PR #364) | P2 | None (sequence after Epic 39 overlay work) |
-| 41.4 | Viewport Adoption for Synclog and Keybinding Overlay | In Review | P2 | 41.3 |
+| 41.4 | Viewport Adoption for Synclog and Keybinding Overlay | Done (PR #379) | P2 | 41.3 |
 | 41.5 | Harmonica Door Transition Spike | Not Started | P2 | None |
 | 41.6 | Adaptive Color Profile Support | Not Started | P2 | None |
 
@@ -236,6 +236,7 @@ Systematically adopt underutilized charmbracelet ecosystem components to reduce 
 | 29 | Task Dependencies & Blocked-Task Filtering | 4/4 |
 | 32 | Undo Task Completion | 3/3 |
 | 38 | Dual Homebrew Distribution | 6/6 |
+| 28 | Snooze/Defer as First-Class Action | 4/4 |
 
 ## Icebox (Deferred Indefinitely)
 
