@@ -2920,7 +2920,7 @@ So that I can objectively assess persistent agent value and adjust accordingly.
 - **ACs:** Full keybinding audit (every case handler registered), sub-mode awareness (confirm-delete, expand input, command mode), overlay includes `:` commands section, visual polish, comprehensive golden files for all major views, edge case tests
 
 ### Story 39.6: Spacebar as Enter Alias in Doors View
-- **Status:** Done (PR #TBD)
+- **Status:** Done (PR #303)
 - **Priority:** P1
 - **Estimate:** XS (<1 hour)
 - **Depends on:** None

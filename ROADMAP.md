@@ -165,7 +165,7 @@ Toggleable keybinding bar and full overlay for TUI discoverability. Context-sens
 | 39.3 | Full Keybinding Overlay | Not Started | P1 | 39.1 |
 | 39.4 | Toggle Behavior, Config Persistence, and MainModel Integration | Not Started | P1 | 39.2, 39.3 |
 | 39.5 | View-Specific Keybinding Completeness and Polish | Not Started | P1 | 39.4 |
-| 39.6 | Spacebar as Enter Alias in Doors View | Done (PR #TBD) | P1 | None |
+| 39.6 | Spacebar as Enter Alias in Doors View | Done (PR #303) | P1 | None |
 
 ## Completed Epics
 
