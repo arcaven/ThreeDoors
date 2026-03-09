@@ -14,7 +14,7 @@ regeneratedFrom: "PRD v2.0 + Architecture v2.0 (post-party-mode-recommendations)
 
 This document provides the complete epic and story breakdown for ThreeDoors, decomposing the requirements from the PRD v2.0, UX Design, and Architecture v2.0 into implementable stories. This is a regeneration reflecting the 9 party mode recommendations integrated into the PRD and architecture.
 
-**Implementation Status:** Epics 1-15, 3.5, 17-24, 26, 34-37 are COMPLETE. Epic 0 is partial (10/12). Epic 16 is ICEBOX. Epic 38 is IN PROGRESS (1/5). Epics 25, 27-33, 39 are NOT STARTED. 275+ merged PRs total. Last audit: 2026-03-08.
+**Implementation Status:** Epics 1-15, 3.5, 17-24, 26, 34-37 are COMPLETE. Epic 0 is partial (11/13). Epic 16 is ICEBOX. Epic 38 is IN PROGRESS (2/5). Epics 25, 27-33, 39-40 are NOT STARTED. 275+ merged PRs total. Last audit: 2026-03-09.
 
 ## Requirements Inventory
 
@@ -4098,3 +4098,185 @@ Allow reversing accidental task completion via `complete -> todo` transition. Va
 | 32.3 | TUI & CLI Undo Experience | Not Started | P1 | 32.1, 32.2 |
 
 **FRs covered:** FR127-FR131
+
+---
+
+## Epic 40: Beautiful Stats Display
+
+**Priority:** P1
+**Status:** Not Started
+**Dependencies:** Epic 1 (session tracking) COMPLETE, Epic 4 (learning/analytics) COMPLETE, Epic 17 (themes) COMPLETE (for Phase 3 stories)
+
+### Epic Goal
+
+Transform the insights dashboard from plain text into a visually delightful, SOUL-aligned celebration of user activity. Three phases: visual polish of existing data, new chart types and hidden metric surfacing, thematic integration with door metaphor and theme system.
+
+### Stories
+
+| Story | Title | Status | Priority | Depends On |
+|-------|-------|--------|----------|------------|
+| 40.1 | Colorful Sparkline with Gradient Colors | Not Started | P1 | None |
+| 40.2 | Styled Insights Dashboard with Bordered Panels | Not Started | P1 | None |
+| 40.3 | Fun Facts Generator from Session History | Not Started | P1 | None |
+| 40.4 | Horizontal Bar Charts for Mood & Time-of-Day | Not Started | P1 | 40.2 |
+| 40.5 | GitHub-Style Activity Heatmap | Not Started | P2 | 40.2 |
+| 40.6 | Animated Counter Reveal on Insights Entry | Not Started | P2 | 40.2 |
+| 40.7 | Surface Hidden Metrics (Session Highlights) | Not Started | P1 | None |
+| 40.8 | Theme-Matched Stats Color Palettes | Not Started | P2 | 40.1, 40.2, Epic 17 |
+| 40.9 | Milestone Celebrations | Not Started | P2 | None |
+| 40.10 | "Trophy Room" Thematic Stats Integration | Not Started | P2 | 40.2, 40.8 |
+
+**Research:** See `_bmad-output/planning-artifacts/beautiful-stats-research.md`, `_bmad-output/planning-artifacts/beautiful-stats-epic-planning.md`
+
+### Story 40.1: Colorful Sparkline with Gradient Colors
+
+**Status:** Not Started
+
+As a user viewing my completion trends,
+I want the sparkline to use color gradients from cool (low) to warm (high),
+So that the visualization is visually delightful and instantly communicates relative performance.
+
+**Acceptance Criteria:**
+
+**Given** the insights view with 7-day completion data
+**When** the sparkline is rendered
+**Then** each bar character is individually colored using a gradient scale from cool/dim (low values) to warm/bright (high values) via `lipgloss.Blend1D()`
+**And** edge cases are handled: all-zero data, single data point, equal values, limited terminal colors
+
+### Story 40.2: Styled Insights Dashboard with Bordered Panels
+
+**Status:** Not Started
+
+As a user viewing the insights dashboard,
+I want each stats section wrapped in styled bordered panels with a structured 2-column layout,
+So that the dashboard feels polished and organized.
+
+**Acceptance Criteria:**
+
+**Given** the insights view is displayed
+**When** each stats section renders
+**Then** each section is wrapped in a Lipgloss bordered panel with styled header
+**And** panels are arranged in 2-column layout where terminal width permits, falling back to single column for narrow terminals
+
+### Story 40.3: Fun Facts Generator from Session History
+
+**Status:** Not Started
+
+As a user viewing my insights,
+I want to see a rotating "fun fact" line derived from my real session history,
+So that the stats feel personal, surprising, and celebratory.
+
+**Acceptance Criteria:**
+
+**Given** the user has session history data
+**When** the insights view renders
+**Then** a fun fact line appears derived from real data (not hardcoded), randomly selected
+**And** all facts use celebratory, observational language aligned with SOUL.md
+**And** minimal data shows a friendly fallback message
+
+### Story 40.4: Horizontal Bar Charts for Mood & Time-of-Day
+
+**Status:** Not Started
+
+As a user viewing mood and productivity correlations,
+I want proportional horizontal bar charts with color-coded fills,
+So that I can instantly compare mood and time-of-day impacts visually.
+
+**Acceptance Criteria:**
+
+**Given** mood correlation data
+**When** the mood section renders
+**Then** each mood displays a proportional horizontal bar with distinct color
+**And** a compact 24-hour activity bar shows session density with peak labels
+
+### Story 40.5: GitHub-Style Activity Heatmap
+
+**Status:** Not Started
+
+As a user viewing my activity patterns,
+I want a GitHub-style heatmap showing daily completions over 8 weeks,
+So that I can see consistency patterns at a glance.
+
+**Acceptance Criteria:**
+
+**Given** daily completion data
+**When** the heatmap renders
+**Then** a 7×N grid shows days of week × weeks with color intensity = completion count
+**And** empty days are visually neutral (no guilt-inducing styling)
+**And** a dependency decision (ntcharts vs in-tree) is recorded in BOARD.md before implementation
+
+### Story 40.6: Animated Counter Reveal on Insights Entry
+
+**Status:** Not Started
+
+As a user opening the insights view,
+I want numbers to count up from 0 to their final value with a brief animation,
+So that the stats reveal feels satisfying and deliberate.
+
+**Acceptance Criteria:**
+
+**Given** the user navigates to insights
+**When** the view opens
+**Then** numeric stats animate from 0 to final values over ~500ms using `tea.Tick`
+**And** animation is non-blocking and interruptible
+
+### Story 40.7: Surface Hidden Metrics (Session Highlights)
+
+**Status:** Not Started
+
+As a user viewing my insights,
+I want to see tracked-but-hidden data (session duration, fastest start, streak history),
+So that I can discover interesting patterns about my behavior.
+
+**Acceptance Criteria:**
+
+**Given** session history
+**When** insights renders
+**Then** a "Session Highlights" panel shows: avg session duration, fastest time-to-first-door, total doors/detail views, streak stats (current, longest, average)
+**And** personal bests are noted celebratorily
+
+### Story 40.8: Theme-Matched Stats Color Palettes
+
+**Status:** Not Started
+
+As a user who has selected a door theme,
+I want stats dashboard colors to match my theme,
+So that the application feels visually cohesive.
+
+**Acceptance Criteria:**
+
+**Given** a door theme is selected
+**When** insights renders
+**Then** sparklines, bars, panels, and heatmap colors match the theme palette
+**And** themes without stats colors use sensible defaults
+
+### Story 40.9: Milestone Celebrations
+
+**Status:** Not Started
+
+As a user who crosses a meaningful usage threshold,
+I want a one-time celebration banner in the insights view,
+So that I feel recognized without any pressure to achieve more.
+
+**Acceptance Criteria:**
+
+**Given** a milestone threshold is crossed
+**When** insights is next viewed
+**Then** a styled celebration banner appears (one-time only, persisted)
+**And** no milestone uses prescriptive or goal-setting language
+**And** SOUL.md anti-gamification principles are strictly followed
+
+### Story 40.10: "Trophy Room" Thematic Stats Integration
+
+**Status:** Not Started
+
+As a user navigating to stats,
+I want the insights view to feel like entering a themed "trophy room" behind the doors,
+So that viewing stats feels integrated with the door metaphor.
+
+**Acceptance Criteria:**
+
+**Given** the user opens insights
+**When** the view renders
+**Then** a themed outer frame with room-appropriate title wraps the dashboard
+**And** each door theme produces a distinct room feel (Sci-Fi="Mission Briefing", Golden="Treasury", etc.)

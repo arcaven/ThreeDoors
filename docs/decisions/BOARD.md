@@ -25,6 +25,7 @@
 | P-002 | Envoy three-layer firewall implementation | 2026-03-08 | Party mode (8 sessions) | [Artifact](../../_bmad-output/planning-artifacts/envoy-scope-and-firewall-design.md) | Story creation |
 | P-003 | GitHub issue labeling taxonomy and triage flow | 2026-03-08 | Party mode (5 sessions) | [Artifact](../../_bmad-output/planning-artifacts/issue-labeling-and-triage-strategy.md) | Story creation |
 | P-004 | Update pr-shepherd definition to remove fork references | 2026-03-08 | Investigation | [Research](../research/persistent-agent-communication-investigation.md) | Story creation |
+| P-005 | Evaluate ntcharts for activity heatmap (Story 40.5) | 2026-03-09 | Beautiful stats research | [Artifact](../../_bmad-output/planning-artifacts/beautiful-stats-epic-planning.md) | Implementation of Story 40.5 |
 
 ## Decided
 
@@ -124,6 +125,11 @@
 | D-092 | Bar defaults ON for new users (Epic 39) | 2026-03-08 | Progressive disclosure; bridges onboarding-to-mastery gap; power users press h to hide | [Artifact](../../_bmad-output/planning-artifacts/keybinding-display-ux-review.md) |
 | D-093 | Bar is theme-independent, dim styling only (Epic 39) | 2026-03-08 | Bar is chrome, not content; themed bars would require updating every theme for non-core feature | [Artifact](../../_bmad-output/planning-artifacts/keybinding-display-ux-review.md) |
 | D-094 | Auto-hide bar below 10 lines terminal height (Epic 39) | 2026-03-08 | Doors must have priority for screen space; bar is helpful but not essential | [Artifact](../../_bmad-output/planning-artifacts/keybinding-display-ux-review.md) |
+| D-095 | Lipgloss gradients for sparkline coloring (Epic 40) | 2026-03-09 | Already in dependencies; `Blend1D()` available; zero new deps needed | [Artifact](../../_bmad-output/planning-artifacts/beautiful-stats-epic-planning.md) |
+| D-096 | Custom in-tree bar charts over ntcharts bars (Epic 40) | 2026-03-09 | ~30 lines of proportional fill code; ntcharts overkill for simple bars | [Artifact](../../_bmad-output/planning-artifacts/beautiful-stats-epic-planning.md) |
+| D-097 | Milestone celebrations as one-time observations only (Epic 40) | 2026-03-09 | SOUL.md anti-gamification; celebrate past, never prescribe future; no badges/levels | [Artifact](../../_bmad-output/planning-artifacts/beautiful-stats-epic-planning.md) |
+| D-098 | Three-phase beautiful stats rollout (Epic 40) | 2026-03-09 | Quick wins first to validate; each phase independently valuable; polish→viz→integration | [Artifact](../../_bmad-output/planning-artifacts/beautiful-stats-epic-planning.md) |
+| D-099 | tea.Tick counter animation for stats reveal (Epic 40) | 2026-03-09 | Native Bubbletea pattern; already used in project for polling; ~500ms non-blocking | [Artifact](../../_bmad-output/planning-artifacts/beautiful-stats-epic-planning.md) |
 
 ## Rejected
 
@@ -166,6 +172,11 @@
 | X-035 | Single `?` key for both bar toggle and overlay (Epic 39) | 2026-03-08 | Conflates "persistent reference" with "help me now"; separate keys (h/?) are clearer | [Artifact](../../_bmad-output/planning-artifacts/keybinding-display-party-mode.md) |
 | X-036 | Overlay as new ViewMode (Epic 39) | 2026-03-08 | ViewMode transition clears previous view; overlay is ephemeral context-preserving layer | [Artifact](../../_bmad-output/planning-artifacts/keybinding-display-architecture.md) |
 | X-037 | Runtime keybinding registration / config-driven bindings (Epic 39) | 2026-03-08 | All bindings are known at compile time; runtime flexibility adds complexity for zero current benefit | [Artifact](../../_bmad-output/planning-artifacts/keybinding-display-architecture.md) |
+| X-038 | termdash as visualization framework (Epic 40) | 2026-03-09 | Incompatible event loop; conflicts with Bubbletea architecture | [Artifact](../../_bmad-output/planning-artifacts/beautiful-stats-epic-planning.md) |
+| X-039 | Achievement/badge system for stats (Epic 40) | 2026-03-09 | SOUL.md: "no gamification, no guilt"; badges create extrinsic pressure | [Artifact](../../_bmad-output/planning-artifacts/beautiful-stats-epic-planning.md) |
+| X-040 | Productivity scores/grades in stats (Epic 40) | 2026-03-09 | "Not a productivity report"; scores imply judgment | [Artifact](../../_bmad-output/planning-artifacts/beautiful-stats-epic-planning.md) |
+| X-041 | Daily/weekly goal targets (Epic 40) | 2026-03-09 | Creates pressure; violates "progress over perfection" | [Artifact](../../_bmad-output/planning-artifacts/beautiful-stats-epic-planning.md) |
+| X-042 | Comparative analytics with negative framing (Epic 40) | 2026-03-09 | "Less productive than..." violates encouraging SOUL.md tone | [Artifact](../../_bmad-output/planning-artifacts/beautiful-stats-epic-planning.md) |
 
 ## Superseded
 

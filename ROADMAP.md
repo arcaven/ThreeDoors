@@ -165,6 +165,23 @@ Toggleable keybinding bar and full overlay for TUI discoverability. Context-sens
 | 39.4 | Toggle Behavior, Config Persistence, and MainModel Integration | Not Started | P1 | 39.2, 39.3 |
 | 39.5 | View-Specific Keybinding Completeness and Polish | Not Started | P1 | 39.4 |
 
+### Epic 40: Beautiful Stats Display (P1) — 0/10 stories done
+
+Transform the insights dashboard from plain text into a visually delightful, SOUL-aligned celebration of user activity. Three phases: visual polish, new visualizations, thematic integration.
+
+| Story | Title | Status | Priority | Depends On |
+|-------|-------|--------|----------|------------|
+| 40.1 | Colorful Sparkline with Gradient Colors | Not Started | P1 | None |
+| 40.2 | Styled Insights Dashboard with Bordered Panels | Not Started | P1 | None |
+| 40.3 | Fun Facts Generator from Session History | Not Started | P1 | None |
+| 40.4 | Horizontal Bar Charts for Mood & Time-of-Day | Not Started | P1 | 40.2 |
+| 40.5 | GitHub-Style Activity Heatmap | Not Started | P2 | 40.2 |
+| 40.6 | Animated Counter Reveal on Insights Entry | Not Started | P2 | 40.2 |
+| 40.7 | Surface Hidden Metrics (Session Highlights) | Not Started | P1 | None |
+| 40.8 | Theme-Matched Stats Color Palettes | Not Started | P2 | 40.1, 40.2, Epic 17 (done) |
+| 40.9 | Milestone Celebrations | Not Started | P2 | None |
+| 40.10 | "Trophy Room" Thematic Stats Integration | Not Started | P2 | 40.2, 40.8 |
+
 ## Completed Epics
 
 | Epic | Title | Stories |

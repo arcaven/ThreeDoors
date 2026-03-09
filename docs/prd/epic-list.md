@@ -476,7 +476,18 @@
 - **Stories:** 39.1-39.5 (5 stories)
 - **Research:** See `_bmad-output/planning-artifacts/keybinding-display-party-mode.md`, `_bmad-output/planning-artifacts/keybinding-display-ux-review.md`, `_bmad-output/planning-artifacts/keybinding-display-architecture.md`
 
-**Epic 40+: Advanced Features** (Voice interface, web interface, Apple Watch, iPad, trading mechanic, gamification)
+**Epic 40: Beautiful Stats Display** (P1)
+- **Goal:** Transform the insights dashboard from plain text into a visually delightful, SOUL-aligned celebration of user activity using Lipgloss gradients, bordered panels, activity heatmaps, animated counters, and fun facts
+- **Prerequisites:** Epic 1 (session tracking — complete), Epic 4 (learning — complete), Epic 17 (themes — complete for Phase 3 stories)
+- **Status:** Not Started
+- **Deliverables:**
+  - Phase 1: Colorful sparkline with gradient colors, styled bordered dashboard layout, fun facts generator
+  - Phase 2: Horizontal bar charts for mood/time-of-day, GitHub-style activity heatmap, animated counter reveal, hidden metrics surfaced
+  - Phase 3: Theme-matched stats color palettes, milestone celebrations (SOUL-aligned), "trophy room" thematic integration
+- **Stories:** 40.1-40.10 (10 stories)
+- **Research:** See `_bmad-output/planning-artifacts/beautiful-stats-research.md`, `_bmad-output/planning-artifacts/beautiful-stats-epic-planning.md`
+
+**Epic 41+: Advanced Features** (Voice interface, web interface, Apple Watch, iPad, trading mechanic, gamification)
 
 **Guiding Principle:** Each epic must deliver tangible user value and be informed by real usage patterns from previous phases. No speculation-driven development.
 
@@ -527,5 +538,6 @@
 | Epic 37: Persistent BMAD Agents | 4 | Complete |
 | Epic 38: Dual Homebrew Distribution | 5 | In Progress (1/5) |
 | Epic 39: Keybinding Display System | 5 | Not Started |
-| **Total** | **204** | **154 complete, 1 in progress, 49 not started** |
+| Epic 40: Beautiful Stats Display | 10 | Not Started |
+| **Total** | **214** | **154 complete, 1 in progress, 59 not started** |
 ---
