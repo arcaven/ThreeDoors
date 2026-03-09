@@ -14,7 +14,7 @@ regeneratedFrom: "PRD v2.0 + Architecture v2.0 (post-party-mode-recommendations)
 
 This document provides the complete epic and story breakdown for ThreeDoors, decomposing the requirements from the PRD v2.0, UX Design, and Architecture v2.0 into implementable stories. This is a regeneration reflecting the 9 party mode recommendations integrated into the PRD and architecture.
 
-**Implementation Status:** Epics 1-15, 3.5, 17-24, 26-29, 32, 34-38, 41 are COMPLETE. Epic 0 is partial (10/13). Epic 16 is ICEBOX. Epics 25, 30-31, 33, 39-40 are NOT STARTED or IN PROGRESS. 390+ merged PRs total. Last audit: 2026-03-09.
+**Implementation Status:** Epics 1-15, 3.5, 17-24, 26-29, 32, 34-38, 41 are COMPLETE. Epic 0 is partial (10/13). Epic 16 is ICEBOX. Epics 25, 30-31, 33, 39-40, 42 are NOT STARTED or IN PROGRESS. 390+ merged PRs total. Last audit: 2026-03-09.
 
 ## Requirements Inventory
 
@@ -4345,3 +4345,103 @@ Terminal-aware color degradation via lipgloss color profiles. Replace hardcoded 
 ### Research
 
 - Audit & Party Mode: `_bmad-output/planning-artifacts/bubbletea-feature-audit-party-mode.md`
+
+---
+
+## Epic 42: ThreeDoors Doctor — Self-Diagnosis Command
+
+**Goal:** Comprehensive self-diagnosis command (`threedoors doctor`) with flutter-style category-based output, conservative auto-repair via `--fix`, and channel-aware version checking. Supersedes existing `health` command (`internal/cli/health.go`).
+
+**Prerequisites:** Epic 23 (CLI Interface — complete)
+
+**Status:** Not Started (0/10 stories)
+
+**Priority:** P1
+
+### Stories
+
+#### Story 42.1: Doctor Command Skeleton & Health Alias
+
+Create `internal/cli/doctor.go` with cobra command, `internal/core/doctor.go` with `DoctorChecker` struct and result types. Implement category-based output with flutter-style icons (`[✓]`/`[!]`/`[✗]`/`[i]`/`[ ]`). Register `doctor` as primary, `health` as alias. Support `--json` output. Implement Environment category only.
+
+**AC:** `threedoors doctor` runs and shows Environment category. `threedoors health` is an alias. `--json` produces valid JSON with envelope pattern.
+
+#### Story 42.2: Environment Checks
+
+Expand environment checks: config directory existence/permissions, config file YAML validation + schema version, terminal capability detection (size, color profile), Go runtime version.
+
+**AC:** Environment category shows config dir, config file, terminal info. Missing dir = FAIL. Bad schema = FAIL. Narrow terminal = WARN. ASCII color = INFO.
+
+#### Story 42.3: Task Data Integrity Checks
+
+Task file existence and YAML validity. Per-task `Validate()`. Duplicate ID detection. Dependency reference validation. Blocker/CompletedAt consistency. Legacy migration detection (`tasks.txt`, `source_provider`).
+
+**AC:** Task Data category reports all validation results. Duplicate IDs = FAIL. Dangling deps = WARN. Blocker/status mismatch = WARN.
+
+#### Story 42.4: Provider Health Checks
+
+Integrate existing `HealthChecker` checks. Multi-provider iteration with per-provider results. Provider-specific connectivity tests with timeout. Aggregate category status from worst individual.
+
+**AC:** Providers category shows health of all configured providers. No provider = FAIL. LoadTasks failure = FAIL. Partial failure = WARN.
+
+#### Story 42.5: Session & Analytics Checks
+
+`sessions.jsonl` line-by-line JSON validation with corrupt line tracking. `patterns.json` validity. Session count and required field checks.
+
+**AC:** Session Data category reports file health and stats. Corrupt lines = WARN with line numbers. Corrupt cache = WARN.
+
+#### Story 42.6: Sync & Offline Queue Checks
+
+Sync state file validation and staleness (>24h). WAL queue validation (stuck entries with retries ≥ 10, size > 10,000). Sync log JSONL validation. Orphaned `.tmp` file detection (age > 1 hour).
+
+**AC:** Sync category reports queue health and temp file status. Stale sync = WARN. Stuck entries = WARN. Orphaned temps = WARN.
+
+#### Story 42.7: Enrichment Database Checks
+
+SQLite open/close test (read-only). Schema version check. `PRAGMA integrity_check`. WAL file presence reporting.
+
+**AC:** Database category reports DB health. Missing DB = WARN. Failed integrity = FAIL. Schema mismatch = WARN.
+
+#### Story 42.8: Auto-Repair (`--fix` flag)
+
+Add `--fix` flag. Auto-repair safe operations: orphaned temp cleanup, corrupt patterns.json deletion, missing config generation, legacy migration (with .bak), stale version cache deletion, directory permission repair. NEVER auto-fix: corrupt tasks/sessions/DB, stuck WAL, provider auth, duplicate IDs, dangling deps.
+
+**AC:** `--fix` repairs safe issues and reports what was fixed. Summary shows fixed vs manual counts.
+
+#### Story 42.9: Channel-Aware Version Checking
+
+GitHub Releases API integration (lightweight, no go-github). Channel-aware filtering (stable/beta/alpha). 24-hour cached background check. Opt-out via `THREEDOORS_NO_UPDATE_CHECK` env var and `update_check` config. CI auto-disable.
+
+**AC:** Version category shows current vs latest, respects channel. Alpha sees newer stable if base semver is higher. Dev build skips check. Opt-out works.
+
+#### Story 42.10: Verbose Mode, Category Filter & Polish
+
+`-v`/`--verbose` for detailed sub-check output. `--category` for selective checking (comma-separated). `--skip-version` flag. Colored icons (green/yellow/red/cyan/gray). Summary line with issue counts. Exit codes (0=clean, 1=warn, 2=error).
+
+**AC:** All flags work. Output matches UX mockups from research. Exit codes set correctly.
+
+### Dependencies
+
+```
+Story 42.1 (skeleton) → Stories 42.2-42.7 (check categories, parallelizable)
+Stories 42.2-42.7 → Story 42.8 (--fix needs checks to exist)
+Story 42.1 → Story 42.9 (version check is independent category)
+Stories 42.2-42.9 → Story 42.10 (polish after all checks exist)
+```
+
+### Design Decisions
+
+- D-141: Command name `doctor`; supersedes `health` (alias kept)
+- D-142: Flutter-style icon output as default format
+- D-143: Conservative auto-fix with `--fix` flag
+- D-144: 24-hour cached version check (gh CLI pattern)
+- D-145: Channel-aware version: show within channel + cross-channel if higher
+- X-074: Rejected interactive repair wizard
+- X-075: Rejected doctor as part of every command startup
+- X-076: Rejected telemetry/crash reporting integration
+- X-077: Rejected `health` and `doctor` coexisting as separate commands
+- X-078: Rejected `check`/`diagnose` as command names
+
+### Research
+
+- Doctor Research: `_bmad-output/planning-artifacts/threedoors-doctor-research.md`

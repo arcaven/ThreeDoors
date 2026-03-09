@@ -238,6 +238,11 @@
 | D-135 | Proactive persistent agent restart policy | 2026-03-09 | Context exhaustion caused 30-min merge outage; restart every 4-6 hours or ~15-20 merges | [Ops Guide](../operations/persistent-agent-ops.md) |
 | D-136 | GO: Harmonica spring animations for door transitions | 2026-03-09 | Spike validated: spring physics works well for door selection emphasis; animation model is fully deterministic and testable; zero performance impact (~180 float ops/sec); testing pattern documented; recommend limited adoption (selection emphasis only, not view transitions). Rejected: full animation system (overkill for 3-door UI), mid-animation golden files (non-deterministic in CI) | [Testing Guide](../architecture/frame-animation-testing.md) |
 | D-137 | Space/Enter as toggle in DetailView (Story 36.4) | 2026-03-09 | Consistent with a/w/d toggle pattern (D-105, Story 36.2); SOUL.md "physical objects" — doors open AND close with same gesture; `isTextInputActive()` guard prevents text input conflicts; ~3-line change; preserves escape as alternative | [Party Mode](../../_bmad-output/planning-artifacts/space-enter-toggle-party-mode.md) |
+| D-141 | Command name `doctor`; supersedes existing `health` command (Epic 42) | 2026-03-09 | Most widely recognized pattern (brew, flutter, npm); `health` too new to have scripting dependents; absorb into doctor, keep `health` as alias | [Research](../../_bmad-output/planning-artifacts/threedoors-doctor-research.md) |
+| D-142 | Flutter-style icon output as default format (Epic 42) | 2026-03-09 | Best scanability; `[✓]`/`[!]`/`[✗]`/`[i]` well-established UX pattern; rejected: npm table (harder to scan), brew paragraphs (too verbose) | [Research](../../_bmad-output/planning-artifacts/threedoors-doctor-research.md) |
+| D-143 | Conservative auto-fix with `--fix` flag (Epic 42) | 2026-03-09 | Only fix safe, reversible operations (temp files, derived caches, permissions); user data never auto-modified; rejected: aggressive auto-fix (risky), no auto-fix (misses easy wins) | [Research](../../_bmad-output/planning-artifacts/threedoors-doctor-research.md) |
+| D-144 | 24-hour cached version check, gh CLI pattern (Epic 42) | 2026-03-09 | Proven pattern; respects rate limits; non-blocking; opt-out via env var and config; rejected: check every run (chatty), weekly (too stale) | [Research](../../_bmad-output/planning-artifacts/threedoors-doctor-research.md) |
+| D-145 | Channel-aware version: show within channel + cross-channel if higher (Epic 42) | 2026-03-09 | Alpha users should know about newer stable releases; matches rustup approach; rejected: strict isolation (misses important releases), all channels (noisy) | [Research](../../_bmad-output/planning-artifacts/threedoors-doctor-research.md) |
 
 ## Rejected
 
@@ -282,6 +287,11 @@
 | X-071 | Exemption list for 'q' quit (Option A for #330) | 2026-03-09 | Growing maintenance list; wrong default (quit is dangerous, should require opt-in not opt-out) | [Triage](../../_bmad-output/planning-artifacts/issue-330-dashboard-q-triage.md) |
 | X-072 | Sub-view consumes 'q' before universal handler (Option B for #330) | 2026-03-09 | Architecturally impossible — universal handler at line 910 fires before view delegation at line 921 | [Triage](../../_bmad-output/planning-artifacts/issue-330-dashboard-q-triage.md) |
 | X-073 | Different key for universal quit (Option D for #330) | 2026-03-09 | 'q' is THE standard TUI quit key; problem is scope not key choice; changing it violates muscle memory | [Triage](../../_bmad-output/planning-artifacts/issue-330-dashboard-q-triage.md) |
+| X-074 | Interactive repair wizard for doctor command (Epic 42) | 2026-03-09 | Too complex for v1; doctor should be non-interactive; if repair needs user input, print instructions | [Research](../../_bmad-output/planning-artifacts/threedoors-doctor-research.md) |
+| X-075 | Doctor as part of every command startup (Epic 42) | 2026-03-09 | Too slow; version check is background-only via cache; doctor is explicit command | [Research](../../_bmad-output/planning-artifacts/threedoors-doctor-research.md) |
+| X-076 | Telemetry/crash reporting in doctor (Epic 42) | 2026-03-09 | Out of scope; doctor is local-only diagnostics; telemetry is a separate concern | [Research](../../_bmad-output/planning-artifacts/threedoors-doctor-research.md) |
+| X-077 | `health` and `doctor` coexist as separate commands (Epic 42) | 2026-03-09 | User confusion about which to run; health is new enough to absorb into doctor | [Research](../../_bmad-output/planning-artifacts/threedoors-doctor-research.md) |
+| X-078 | Command name `check` or `diagnose` instead of `doctor` (Epic 42) | 2026-03-09 | `check` too generic (conflicts with linter terminology); `diagnose` too verbose; `doctor` is the established pattern | [Research](../../_bmad-output/planning-artifacts/threedoors-doctor-research.md) |
 
 ## Epic Number Registry
 
@@ -290,7 +300,8 @@
 | Epic | Feature | Allocated | Status |
 |------|---------|-----------|--------|
 | 41 | Charm Ecosystem Adoption & TUI Polish | 2026-03-09 | Proposed (pending PM approval) |
-| 42 | *(next available)* | — | — |
+| 42 | ThreeDoors Doctor — Self-Diagnosis Command | 2026-03-09 | Allocated (stories created) |
+| 43 | *(next available)* | — | — |
 
 **Rules:**
 1. Before creating a new epic, check this table for the next available number

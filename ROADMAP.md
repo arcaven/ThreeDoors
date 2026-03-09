@@ -216,6 +216,23 @@ Systematically adopt underutilized charmbracelet ecosystem components to reduce 
 | 41.5 | Harmonica Door Transition Spike | Done (PR #369) | P2 | None |
 | 41.6 | Adaptive Color Profile Support | Done (PR #373) | P2 | None |
 
+### Epic 42: ThreeDoors Doctor — Self-Diagnosis Command (P1) — 0/10 stories done
+
+Comprehensive self-diagnosis command with flutter-style category-based output, conservative auto-repair, and channel-aware version checking. Supersedes existing `health` command.
+
+| Story | Title | Status | Priority | Depends On |
+|-------|-------|--------|----------|------------|
+| 42.1 | Doctor Command Skeleton & Health Alias | Not Started | P1 | None |
+| 42.2 | Environment Checks | Not Started | P1 | 42.1 |
+| 42.3 | Task Data Integrity Checks | Not Started | P1 | 42.1 |
+| 42.4 | Provider Health Checks | Not Started | P1 | 42.1 |
+| 42.5 | Session & Analytics Checks | Not Started | P1 | 42.1 |
+| 42.6 | Sync & Offline Queue Checks | Not Started | P1 | 42.1 |
+| 42.7 | Enrichment Database Checks | Not Started | P1 | 42.1 |
+| 42.8 | Auto-Repair (`--fix` flag) | Not Started | P1 | 42.2-42.7 |
+| 42.9 | Channel-Aware Version Checking | Not Started | P1 | 42.1 |
+| 42.10 | Verbose Mode, Category Filter & Polish | Not Started | P1 | 42.2-42.9 |
+
 ### Epic 36: Door Selection Interaction Feedback (P1) — 4/4 stories done — COMPLETE
 
 Make door selection feel responsive and satisfying. Reopened for Story 36.4 (space/enter toggle).

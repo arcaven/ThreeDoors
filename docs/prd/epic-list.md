@@ -513,7 +513,23 @@
 - **Research:** See `_bmad-output/planning-artifacts/bubbletea-feature-audit-party-mode.md`
 - **Decisions:** D-128 (viewport), D-129 (spinner), D-130 (layout), D-131 (harmonica spike), D-132 (reject list), D-133 (reject textarea/table/etc.), D-134 (epic number 41)
 
-**Epic 42+: Advanced Features** (Voice interface, web interface, Apple Watch, iPad, trading mechanic, gamification)
+**Epic 42: ThreeDoors Doctor — Self-Diagnosis Command** (P1)
+- **Goal:** Comprehensive self-diagnosis command (`threedoors doctor`) with flutter-style category-based output, conservative auto-repair, and channel-aware version checking. Supersedes existing `health` command.
+- **Prerequisites:** Epic 23 (CLI Interface — complete)
+- **Status:** Not Started
+- **Deliverables:**
+  - Doctor command skeleton with DoctorChecker framework and `health` alias
+  - 6 check categories: Environment, Task Data, Providers, Sessions, Sync, Database
+  - Channel-aware version checking with 24h cache (gh CLI pattern)
+  - Conservative auto-repair via `--fix` flag (safe/reversible ops only)
+  - Verbose mode (`-v`), category filter (`--category`), JSON output (`--json`)
+  - flutter-style icons: `[✓]` pass, `[!]` warn, `[✗]` fail, `[i]` info, `[ ]` skip
+- **Stories:** 42.1-42.10 (10 stories)
+- **Estimated Effort:** 2-3 weeks at 2-4 hrs/week
+- **Research:** See `_bmad-output/planning-artifacts/threedoors-doctor-research.md`
+- **Decisions:** D-141 (doctor supersedes health), D-142 (flutter-style icons), D-143 (conservative auto-fix), D-144 (24h cached version check), D-145 (channel-aware version)
+
+**Epic 43+: Advanced Features** (Voice interface, web interface, Apple Watch, iPad, trading mechanic, gamification)
 
 **Guiding Principle:** Each epic must deliver tangible user value and be informed by real usage patterns from previous phases. No speculation-driven development.
 
@@ -566,5 +582,6 @@
 | Epic 39: Keybinding Display System | 13 | COMPLETE (12/13, 1 cancelled) |
 | Epic 40: Beautiful Stats Display | 10 | Complete |
 | Epic 41: Charm Ecosystem Adoption | 6 | Not Started |
-| **Total** | **216** | **146 complete, 4 epics in progress, 70 not started** |
+| Epic 42: ThreeDoors Doctor | 10 | Not Started |
+| **Total** | **226** | **146 complete, 4 epics in progress, 80 not started** |
 ---
