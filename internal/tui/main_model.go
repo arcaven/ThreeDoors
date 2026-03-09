@@ -965,6 +965,17 @@ func (m *MainModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, func() tea.Msg { return ShowHelpMsg{} }
 	}
 
+	// Global ':' opens command mode from any non-text-input view
+	if keyMsg, ok := msg.(tea.KeyMsg); ok && keyMsg.String() == ":" && !m.isTextInputActive() {
+		m.searchView = m.newSearchView()
+		m.searchView.SetWidth(m.width)
+		m.searchView.textInput.SetValue(":")
+		m.searchView.checkCommandMode()
+		m.previousView = m.viewMode
+		m.viewMode = ViewSearch
+		return m, nil
+	}
+
 	// Delegate to current view
 	switch m.viewMode {
 	case ViewDoors:
@@ -1085,14 +1096,6 @@ func (m *MainModel) updateDoors(msg tea.Msg) (tea.Model, tea.Cmd) {
 				task := m.doorsView.currentDoors[m.doorsView.selectedDoorIndex]
 				return m, func() tea.Msg { return ShowSnoozeMsg{Task: task} }
 			}
-		case ":":
-			m.searchView = m.newSearchView()
-			m.searchView.SetWidth(m.width)
-			m.searchView.textInput.SetValue(":")
-			m.searchView.checkCommandMode()
-			m.viewMode = ViewSearch
-			m.previousView = ViewDoors
-			return m, nil
 		}
 	}
 	return m, nil
