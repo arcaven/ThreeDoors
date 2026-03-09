@@ -2869,7 +2869,7 @@ So that I can objectively assess persistent agent value and adjust accordingly.
 **Epic Goal:** Add toggleable keybinding discoverability to the ThreeDoors TUI — a concise context-sensitive bar at the bottom of every view showing available keys, and a full keybinding overlay (`?` key) as a comprehensive reference. Improves discoverability without adding decision complexity, aligning with SOUL.md's friction-reduction philosophy.
 
 **Prerequisites:** None (all required infrastructure exists — Lipgloss, config.yaml persistence, MainModel composition, isTextInputActive() guard)
-**Status:** In Progress (2/6)
+**Status:** In Progress (4/8)
 
 **Deliverables:**
 - Compile-time keybinding registry mapping each ViewMode to available key bindings with priority levels
@@ -2926,6 +2926,20 @@ So that I can objectively assess persistent agent value and adjust accordingly.
 - **Depends on:** None
 - **ACs:** Spacebar opens selected door (Enter alias), no-op when no selection, help text updated, table-driven tests, race detector passes
 
+### Story 39.7: Global `:` Command Mode
+- **Status:** Not Started
+- **Priority:** P1
+- **Estimate:** S (1-2 hours)
+- **Depends on:** None
+- **ACs:** `:` intercepted at MainModel level with `isTextInputActive()` guard (same as D-059/D-087 pattern), removed from `updateDoors()`, `previousView` tracks originating view, text input views unaffected, table-driven tests, race detector passes
+
+### Story 39.8: Command Autocomplete/Completion
+- **Status:** Not Started
+- **Priority:** P1
+- **Estimate:** M (3-5 hours)
+- **Depends on:** None (benefits from 39.7 but independent)
+- **ACs:** Command registry with names and descriptions, dynamic prefix-match filtering as user types, inline suggestion rendering with descriptions, arrow/Tab navigation and completion, table-driven tests, race detector passes
+
 ---
 
 ### Epic 39 Story Dependencies
@@ -2937,6 +2951,8 @@ So that I can objectively assess persistent agent value and adjust accordingly.
 39.4 Toggle + Integration (depends on 39.2, 39.3)
 39.5 Completeness + Polish (depends on 39.4)
 39.6 Spacebar as Enter Alias (independent)
+39.7 Global : Command Mode (independent)
+39.8 Command Autocomplete/Completion (independent, benefits from 39.7)
 ```
 
 ---
