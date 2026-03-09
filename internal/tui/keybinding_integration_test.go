@@ -17,6 +17,9 @@ func TestHKey_TogglesBarVisibility(t *testing.T) {
 	m.width = 80
 	m.height = 24
 
+	// Disable inline hints so "? help" only appears in the keybinding bar.
+	m.doorsView.SetInlineHintsConfig(&core.InlineHintsConfig{ShowInlineHints: false})
+
 	// Bar is on by default.
 	if !m.showKeybindingBar {
 		t.Fatal("expected bar visible by default")

@@ -5,14 +5,9 @@ Pick one. Start small. That's progress.
 │                        ││                        ││                        │
 │  [todo]                ││  [todo]                ││  [todo]                │
 │                        ││                        ││                        │
-│  Write tests           ││  Review PRs            ││  Update docs           │
+│  Buy groceries         ││  Read Go book          ││  Exercise for 30 min   │
 │                        ││                        ││                        │
 ╰────────────────────────╯╰────────────────────────╯╰────────────────────────╯
 
-✓ Local
-
-[s] re-roll  [n] add task
-
-/ search | m mood | : command | ? help | q quit
-hints: on — :hints to hide
-Focus  ·  Quality  ·  Balance
+a/left, w/up, d/right to select (again to deselect) | s/down to re-roll | Enter/Space to open | N feedback | / search | M mood | q quit
+Three doors. One choice. Zero wrong answers.
