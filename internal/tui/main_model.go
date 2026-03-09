@@ -40,6 +40,7 @@ const (
 	ViewThemePicker
 	ViewDevQueue
 	ViewProposals
+	ViewHelp
 )
 
 // MainModel is the root Bubbletea model that orchestrates view transitions.
@@ -64,6 +65,7 @@ type MainModel struct {
 	themePickerView     *ThemePicker
 	devQueueView        *DevQueueView
 	proposalsView       *ProposalsView
+	helpView            *HelpView
 	configPath          string
 	pool                *core.TaskPool
 	tracker             *core.SessionTracker
@@ -296,6 +298,9 @@ func (m *MainModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if m.proposalsView != nil {
 			m.proposalsView.SetWidth(msg.Width)
 			m.proposalsView.SetHeight(msg.Height)
+		}
+		if m.helpView != nil {
+			m.helpView.SetWidth(msg.Width)
 		}
 		return m, nil
 
@@ -816,6 +821,14 @@ func (m *MainModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.doorsView.SetPendingProposals(PendingProposalCount(m.proposalStore))
 		return m, ClearFlashCmd()
 
+	case ShowHelpMsg:
+		hv := NewHelpView()
+		hv.SetWidth(m.width)
+		m.helpView = hv
+		m.previousView = m.viewMode
+		m.viewMode = ViewHelp
+		return m, nil
+
 	case ShowDevQueueMsg:
 		if m.devQueue == nil || m.dispatcher == nil {
 			m.flash = "Dev queue not available"
@@ -862,6 +875,11 @@ func (m *MainModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, func() tea.Msg { return RequestQuitMsg{} }
 	}
 
+	// Global '?' opens help from any non-text-input view
+	if keyMsg, ok := msg.(tea.KeyMsg); ok && keyMsg.String() == "?" && !m.isTextInputActive() {
+		return m, func() tea.Msg { return ShowHelpMsg{} }
+	}
+
 	// Delegate to current view
 	switch m.viewMode {
 	case ViewDoors:
@@ -900,6 +918,8 @@ func (m *MainModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m.updateDevQueue(msg)
 	case ViewProposals:
 		return m.updateProposals(msg)
+	case ViewHelp:
+		return m.updateHelp(msg)
 	}
 
 	return m, nil
@@ -1087,6 +1107,14 @@ func (m *MainModel) updateSyncLog(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, nil
 	}
 	cmd := m.syncLogView.Update(msg)
+	return m, cmd
+}
+
+func (m *MainModel) updateHelp(msg tea.Msg) (tea.Model, tea.Cmd) {
+	if m.helpView == nil {
+		return m, nil
+	}
+	cmd := m.helpView.Update(msg)
 	return m, cmd
 }
 
@@ -1543,6 +1571,10 @@ func (m *MainModel) View() string {
 	case ViewProposals:
 		if m.proposalsView != nil {
 			view = m.proposalsView.View()
+		}
+	case ViewHelp:
+		if m.helpView != nil {
+			view = m.helpView.View()
 		}
 	default:
 		view = m.doorsView.View()
