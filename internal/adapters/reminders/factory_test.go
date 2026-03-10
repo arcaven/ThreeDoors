@@ -63,6 +63,7 @@ func TestNewFactory_DarwinCreatesProvider(t *testing.T) {
 	}
 	if provider == nil {
 		t.Fatal("factory returned nil provider")
+		return
 	}
 
 	rp, ok := provider.(*RemindersProvider)

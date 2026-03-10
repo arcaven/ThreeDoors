@@ -336,9 +336,11 @@ func TestBuildTaskPool_ValidProvider(t *testing.T) {
 	}
 	if pool == nil {
 		t.Fatal("expected non-nil pool")
+		return
 	}
 	if provider == nil {
 		t.Fatal("expected non-nil provider")
+		return
 	}
 	if len(pool.GetAvailableForDoors()) != 1 {
 		t.Errorf("pool has %d available tasks, want 1", len(pool.GetAvailableForDoors()))
