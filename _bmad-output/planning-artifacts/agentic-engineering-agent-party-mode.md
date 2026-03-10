@@ -1,9 +1,11 @@
-# Party Mode Artifact: Agentic Engineering Agent Design
+# Party Mode Artifact: SLAES — Self-Learning Agentic Engineering System
 
 **Date:** 2026-03-10
 **Participants:** Winston (Architect), John (PM), Murat (TEA), Mary (Analyst), Bob (SM), Amelia (Dev), Dr. Quinn (Problem Solver)
-**Topic:** Design the Agentic Engineering Agent — a continuous improvement meta-agent
-**Rounds:** 3 (initial design, supervisor amendment, consensus)
+**Topic:** Design SLAES — a continuous improvement meta-system
+**Rounds:** 5 (initial design, supervisor amendment, consensus, prevention-vs-detection, naming)
+**System Name:** SLAES (Self-Learning Agentic Engineering System)
+**Primary Agent Name:** `retrospector`
 
 ---
 
@@ -36,16 +38,18 @@ Additionally, the supervisor identified three operational efficiency gaps:
 - **Three focused agents** (X-A1): Would push agent count to 8, create coordination overhead, and duplicate the analytical pipeline across three context windows
 - **Two agents (spec-chain + operational)** (X-A2): Cleaner separation but still adds 2 agents. The operational analysis (conflict rates, CI failures) feeds into the same recommendation engine as spec-chain analysis
 
-### D-2: Agent Name — `retrospector`
+### D-2: System Name — SLAES; Agent Name — `retrospector`
 
-**Adopted:** `retrospector`
+**Adopted:** System is **SLAES** (Self-Learning Agentic Engineering System). Primary agent is **`retrospector`**.
 
 **Rationale:**
-- Captures the core mechanism: retrospection — looking backward through the spec chain from shipped code to fundamentals
+- SLAES captures the full vision: self-learning, agentic, engineering improvements, system-level (not just one agent)
+- `retrospector` names the specific multiclaude persistent agent within SLAES
+- Clean taxonomy: SLAES is what it is, retrospector is what runs in tmux
+- `retrospector` captures the core mechanism: retrospection — looking backward through the spec chain
 - Real English word (one who retrospects), unique in agent namespace
-- Not as dry as "auditor," not as pretentious as "kaizen," not as narrow as "retro-agent"
 
-**Rejected alternatives:**
+**Rejected agent name alternatives:**
 - `kaizen-agent` (X-A3): Philosophically perfect but potentially pretentious
 - `root-cause` (X-A4): Descriptive but too narrow — the agent does more than root cause analysis
 - `improvement-engine` (X-A5): Accurate but generic
@@ -279,6 +283,113 @@ The retrospector's most important long-term job: **detect when existing solution
 
 ---
 
+## Naming Taxonomy
+
+**SLAES** = Self-Learning Agentic Engineering System (the overall system)
+- **Self-Learning**: Learns from shipped code, CI failures, merge conflicts, incident patterns
+- **Agentic**: Operates as an autonomous agent (or system of agents)
+- **Engineering**: Engineers improvements to the spec chain, agent definitions, and process
+- **System**: Not just one agent — potentially spans multiple repos and projects
+
+**`retrospector`** = The primary agent within SLAES (the persistent multiclaude agent)
+
+SLAES is the system. The retrospector agent is one component. Other components include:
+- The responsibility+WHY definition methodology
+- The JSONL findings log (data layer)
+- The BOARD.md recommendation pipeline (output layer)
+- Future: cross-repo pattern detection, cross-project learning
+
+---
+
+## D-10: Prevention Over Detection — Responsibility+WHY Definitions
+
+**Adopted:** Agent definition rewrite as SLAES bootstrap task (Phase 0)
+
+### The Insight
+
+A research agent found that pivoting agent definitions from **procedural** (do X then Y) to **responsibility+WHY** (you own X because Y, with incident-hardened guardrails) would reduce the need for a meta-agent by making definitions *self-correcting*.
+
+**Procedural** (INC-002 failure mode):
+> "Run `git rebase origin/main` before starting work"
+> Agent follows instruction blindly → causes damage in wrong context
+
+**Responsibility+WHY** (self-correcting):
+> "You own worktree isolation because shared checkouts create contamination risk (see INC-001). Never modify git state outside your assigned worktree."
+> Agent can reason about novel situations from first principles
+
+### Party Mode Consensus
+
+**Q1: Should SLAES's first job be rewriting all agent definitions?**
+
+**Yes — scoped to multiclaude operational agents, not all BMAD agents.** This becomes "Phase 0" — a bootstrap task before SLAES starts its monitoring loop.
+
+Priority order for rewriting:
+1. `merge-queue.md` (research example already exists)
+2. `pr-shepherd.md` (INC-001 origin)
+3. `worker.md` (INC-002 origin)
+4. `project-watchdog.md` (INC-003 relates to its mutex role)
+5. `retrospector.md` (SLAES's own definition — written fresh in responsibility+WHY from day one)
+
+**Q2: Would better definitions reduce SLAES's ongoing workload?**
+
+**Yes.** INC-001, INC-002, INC-003 were all definition failures. If definitions include WHY reasoning + incident guardrails, agents self-correct in novel situations. Fewer incidents → fewer investigations → SLAES focuses on *improvement* not *firefighting*. Shifts from reactive to proactive.
+
+**Q3: Does this reduce the need for SLAES?**
+
+**No — it changes the nature of SLAES's work.** Better definitions prevent *category errors* (doing the wrong thing entirely). SLAES still catches:
+- *Degree errors* (doing the right thing suboptimally)
+- *System-level patterns* (cross-agent observations no individual agent can make)
+- *Scale limit detection* (solutions approaching failure thresholds)
+
+**Swiss Cheese Model (Dr. Quinn):** Better definitions make holes smaller at layer 1 (prevention). SLAES catches what slips through at layer 2 (detection). Both layers needed — but layer 1 has higher ROI.
+
+**Antibody Generator Model:** Each incident produces specific "never do X because Y happened" guardrail clauses. These accumulate in definitions like antibodies. SLAES's role: generate the antibody text, citing the specific incident, with the specific WHY. Over time, definitions become increasingly resistant to known failure modes.
+
+### Updated Phasing
+
+**Phase 0 (Bootstrap):** Rewrite 5 operational agent definitions in responsibility+WHY format. SLAES's own definition written fresh in this format. This is a one-time task before monitoring begins.
+
+**Phase 1 (MVP):** Post-merge retro, saga detection, doc consistency, BOARD.md recommendations (unchanged).
+
+**Phase 2+:** As previously defined, but with reduced incident investigation load due to better definitions.
+
+---
+
+## Cross-Project Considerations
+
+> **Note:** A parallel research agent is investigating SLAES cross-project deployment in depth. This section captures the party mode's architectural hooks for that research. Findings will be merged when the cross-repo research completes.
+
+### Deployment Model Options
+
+| Model | Description | Pro | Con |
+|---|---|---|---|
+| **Per-project** | One SLAES/retrospector instance per repo | Simple, isolated, no cross-contamination | No cross-project learning |
+| **Cross-project** | One SLAES instance monitoring all user's repos | Shared learning, pattern transfer | Context window strain, mixed concerns |
+| **Hierarchical** | Per-project agents feed into a cross-project learner | Best of both — local detection + global learning | Most complex to build |
+
+### Party Mode Position
+
+The party mode consensus is that **MVP should be per-project** (Phase 1), with **hooks designed for hierarchical** (Phase 3+).
+
+Rationale (Winston): The retrospector agent's context window is already loaded with one project's spec chain. Cross-project monitoring would multiply that load. Better to have per-project agents that *export* their findings (JSONL logs, BOARD.md entries) and a separate cross-project learner that *imports* from multiple projects.
+
+### Architectural Hooks for Cross-Project
+
+1. **JSONL findings log is portable**: The per-PR findings log uses a self-contained schema (PR number, story ID, AC match, CI status). Adding a `repo` field makes it cross-project ready.
+2. **BOARD.md recommendations are project-scoped**: Recommendations reference project-specific files. A cross-project learner would need to abstract these into *patterns* (e.g., "projects with >5 concurrent workers see 3x conflict rate") rather than file-specific recommendations.
+3. **multiclaude-enhancements repo**: Already serves as a cross-project sharing mechanism. SLAES findings that apply broadly (e.g., improved worker.md template, better agent definition methodology) could be propagated via `/sync-enhancements`.
+4. **Definition methodology is project-agnostic**: The responsibility+WHY definition format works for any multiclaude project, not just ThreeDoors. Phase 0's definition rewrites could become a template for other repos.
+
+### Open Hooks (to be filled by cross-repo research)
+
+- [ ] Cross-repo JSONL schema standardization
+- [ ] Cross-project pattern abstraction methodology
+- [ ] Centralized knowledge base vs federated findings
+- [ ] Public repo monitoring feasibility and ethics
+- [ ] gastown integration points
+
+---
+
 ## Open Questions for Human Decision
 
 1. **JSONL log location**: `docs/operations/retrospector-findings.jsonl` or `_bmad-output/retrospector/findings.jsonl`?
@@ -286,3 +397,5 @@ The retrospector's most important long-term job: **detect when existing solution
 3. **Phase 1 duration**: 2 weeks before Phase 2, or wait for explicit human approval?
 4. **Integration with merge-queue**: Should merge-queue notify retrospector on merge (event-driven), or should retrospector poll `gh pr list --state merged`?
 5. **Report format**: Should batch analysis produce a markdown report file, or only BOARD.md entries + supervisor messages?
+6. **Phase 0 scope**: Should the definition rewrite be done by the retrospector agent itself (after it's spawned), or by a worker before the retrospector is spawned?
+7. **Definition rewrite authority**: Who reviews the rewritten definitions — supervisor only, or also the project owner?
