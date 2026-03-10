@@ -380,13 +380,46 @@ Rationale (Winston): The retrospector agent's context window is already loaded w
 3. **multiclaude-enhancements repo**: Already serves as a cross-project sharing mechanism. SLAES findings that apply broadly (e.g., improved worker.md template, better agent definition methodology) could be propagated via `/sync-enhancements`.
 4. **Definition methodology is project-agnostic**: The responsibility+WHY definition format works for any multiclaude project, not just ThreeDoors. Phase 0's definition rewrites could become a template for other repos.
 
-### Open Hooks (to be filled by cross-repo research)
+### Cross-Project Architecture (from parallel research)
 
-- [ ] Cross-repo JSONL schema standardization
-- [ ] Cross-project pattern abstraction methodology
-- [ ] Centralized knowledge base vs federated findings
-- [ ] Public repo monitoring feasibility and ethics
-- [ ] gastown integration points
+The cross-repo research agent completed its investigation. Key findings integrated below.
+
+**Recommended: Hub + Spoke Model (Option C — Hierarchical)**
+
+```
+ThreeDoors retrospector ──┐
+                          ├──► Central Learning Agent (persistent, 30-min poll)
+Future Project agents ────┘    └──► ~/.multiclaude/learning-hub/ (JSONL knowledge base)
+                                    └──► Recommendations back to per-project agents
+```
+
+- **Spoke agents**: Per-project retrospector instances (or existing project-watchdog/arch-watchdog). Collect per-PR findings, detect project-specific patterns.
+- **Hub agent**: Central Learning Agent. Aggregates findings across repos, identifies cross-project patterns, generates transferable recommendations.
+- **Knowledge base**: JSONL format at `~/.multiclaude/learning-hub/`. Stores abstracted patterns, not raw per-project data.
+
+**Data sources (all via GitHub API, read-only):**
+- Merged PR diffs + file lists
+- CI run pass/fail rates + flaky test patterns
+- Story file AC revisions (estimation gap detection)
+- Agent health metrics from multiclaude `state.json`
+
+**Key decision: Multi-repo from the start?**
+
+Party mode consensus: **Design for multi-repo, build for single-repo.**
+
+Concretely:
+- Phase 1 (MVP): ThreeDoors only. Single retrospector agent. But JSONL schema includes a `repo` field from day one.
+- Phase 2: Add cross-project knowledge base (`~/.multiclaude/learning-hub/`). Single retrospector exports to it.
+- Phase 3: Central Learning Agent reads from multiple project learning-hubs. Generates cross-project recommendations.
+- Phase 4: Public repo benchmarking (low ROI initially, defer).
+
+This means no wasted work — Phase 1's JSONL log is immediately usable by Phase 3's hub. But we don't build the hub until we have multiple repos generating data.
+
+**Gastown note:** Gastown (Steve Yegge's orchestrator) exists locally but doesn't provide cross-repo aggregation. multiclaude + learning-hub is the simpler path.
+
+**multiclaude-enhancements repo:** Already shares patterns manually across projects. SLAES Phase 2+ automates this — learnings from ThreeDoors (390+ PRs) automatically inform future projects via the enhancements repo.
+
+**Privacy:** Start internal-only (user's repos). Public repo monitoring is technically possible but low ROI for MVP. Defer to Phase 4.
 
 ---
 
