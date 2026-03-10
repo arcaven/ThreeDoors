@@ -256,6 +256,7 @@ func TestDecomposeAndWrite(t *testing.T) {
 			}
 			if result == nil {
 				t.Fatal("expected non-nil result")
+				return
 			}
 			if len(result.Stories) != tt.wantStories {
 				t.Errorf("got %d stories, want %d", len(result.Stories), tt.wantStories)

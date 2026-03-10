@@ -87,6 +87,7 @@ func TestMoodCorrelationAnalysis(t *testing.T) {
 
 	if result == nil {
 		t.Fatal("expected non-nil result")
+		return
 	}
 
 	if len(result.Entries) == 0 {
