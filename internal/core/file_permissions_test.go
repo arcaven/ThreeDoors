@@ -24,6 +24,7 @@ func TestSyncLogCreatesFileWith0600(t *testing.T) {
 	info, err := os.Stat(filepath.Join(tmpDir, "sync.log"))
 	if err != nil {
 		t.Fatalf("stat: %v", err)
+		return
 	}
 	perm := info.Mode().Perm()
 	if perm != 0o600 {
@@ -42,6 +43,7 @@ func TestImprovementWriterCreatesFileWith0600(t *testing.T) {
 	info, err := os.Stat(filepath.Join(tmpDir, "improvements.txt"))
 	if err != nil {
 		t.Fatalf("stat: %v", err)
+		return
 	}
 	perm := info.Mode().Perm()
 	if perm != 0o600 {
@@ -65,6 +67,7 @@ func TestPlanningMetricsCreatesFileWith0600(t *testing.T) {
 	info, err := os.Stat(sessionsPath)
 	if err != nil {
 		t.Fatalf("stat: %v", err)
+		return
 	}
 	perm := info.Mode().Perm()
 	if perm != 0o600 {
@@ -88,6 +91,7 @@ func TestMetricsWriterCreatesFileWith0600(t *testing.T) {
 	info, err := os.Stat(filepath.Join(tmpDir, "sessions.jsonl"))
 	if err != nil {
 		t.Fatalf("stat: %v", err)
+		return
 	}
 	perm := info.Mode().Perm()
 	if perm != 0o600 {
@@ -108,6 +112,7 @@ func TestSaveProviderConfigCreatesFileWith0600(t *testing.T) {
 	info, err := os.Stat(configPath)
 	if err != nil {
 		t.Fatalf("stat: %v", err)
+		return
 	}
 	perm := info.Mode().Perm()
 	if perm != 0o600 {
@@ -128,6 +133,7 @@ func TestSaveValuesConfigCreatesFileWith0600(t *testing.T) {
 	info, err := os.Stat(configPath)
 	if err != nil {
 		t.Fatalf("stat: %v", err)
+		return
 	}
 	perm := info.Mode().Perm()
 	if perm != 0o600 {
@@ -149,6 +155,7 @@ func TestPatternAnalyzerSavePatternsCreatesFileWith0600(t *testing.T) {
 	info, err := os.Stat(path)
 	if err != nil {
 		t.Fatalf("stat: %v", err)
+		return
 	}
 	perm := info.Mode().Perm()
 	if perm != 0o600 {
@@ -165,11 +172,13 @@ func TestDedupStoreCreatesDirectoryWith0700(t *testing.T) {
 	_, err := NewDedupStore(storePath)
 	if err != nil {
 		t.Fatalf("NewDedupStore: %v", err)
+		return
 	}
 
 	info, err := os.Stat(subDir)
 	if err != nil {
 		t.Fatalf("stat: %v", err)
+		return
 	}
 	perm := info.Mode().Perm()
 	if perm != 0o700 {

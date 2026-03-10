@@ -15,11 +15,13 @@ func TestEnsureConfigDir_CreatesWithRestrictivePermissions(t *testing.T) {
 	configPath, err := EnsureConfigDir()
 	if err != nil {
 		t.Fatalf("EnsureConfigDir: %v", err)
+		return
 	}
 
 	info, err := os.Stat(configPath)
 	if err != nil {
 		t.Fatalf("stat config dir: %v", err)
+		return
 	}
 
 	perm := info.Mode().Perm()
@@ -44,6 +46,7 @@ func TestEnsureConfigDir_MigratesPermissiveDirectory(t *testing.T) {
 	info, err := os.Stat(configPath)
 	if err != nil {
 		t.Fatalf("stat config dir: %v", err)
+		return
 	}
 	if info.Mode().Perm() != 0o755 {
 		t.Fatalf("setup: expected 0755, got %o", info.Mode().Perm())
@@ -53,6 +56,7 @@ func TestEnsureConfigDir_MigratesPermissiveDirectory(t *testing.T) {
 	result, err := EnsureConfigDir()
 	if err != nil {
 		t.Fatalf("EnsureConfigDir: %v", err)
+		return
 	}
 	if result != configPath {
 		t.Fatalf("EnsureConfigDir returned %q, want %q", result, configPath)
@@ -61,6 +65,7 @@ func TestEnsureConfigDir_MigratesPermissiveDirectory(t *testing.T) {
 	info, err = os.Stat(configPath)
 	if err != nil {
 		t.Fatalf("stat after migration: %v", err)
+		return
 	}
 	perm := info.Mode().Perm()
 	if perm != 0o700 {
@@ -83,11 +88,13 @@ func TestEnsureConfigDir_NoChangeWhenAlreadyRestrictive(t *testing.T) {
 	_, err := EnsureConfigDir()
 	if err != nil {
 		t.Fatalf("EnsureConfigDir: %v", err)
+		return
 	}
 
 	info, err := os.Stat(configPath)
 	if err != nil {
 		t.Fatalf("stat config dir: %v", err)
+		return
 	}
 	perm := info.Mode().Perm()
 	if perm != 0o700 {
