@@ -269,6 +269,7 @@ func TestCloseIssueNotFound(t *testing.T) {
 	err := client.CloseIssue(context.Background(), "o", "r", 999)
 	if err == nil {
 		t.Fatal("expected error for 404")
+		return
 	}
 }
 
@@ -327,6 +328,7 @@ func TestRateLimitHandling(t *testing.T) {
 	_, err := client.ListIssues(context.Background(), "o", "r", "")
 	if err == nil {
 		t.Fatal("expected rate limit error")
+		return
 	}
 
 	var rle *RateLimitError
@@ -377,6 +379,7 @@ func TestNewGitHubClientNoToken(t *testing.T) {
 	}
 	if client.client == nil {
 		t.Fatal("expected non-nil underlying go-github client")
+		return
 	}
 }
 
@@ -390,6 +393,7 @@ func TestNewGitHubClientWithToken(t *testing.T) {
 	client := NewGitHubClient(cfg)
 	if client == nil {
 		t.Fatal("expected non-nil client")
+		return
 	}
 }
 
