@@ -54,6 +54,7 @@ multiclaude work "Task description"
 6. **Always report back on issues** — Post an acknowledgment when triage starts, and a summary when triage completes (what we found, approach taken, PR link, story file link, next steps). Reporters should never wonder "did anyone see this?"
 7. **Party mode artifacts required** — Every party mode run MUST produce a saved artifact at `_bmad-output/planning-artifacts/` that includes: adopted approach with rationale, AND rejected options with reasons for rejection.
 8. **Cross-check open issues on PR merge** — When PRs merge, review open GitHub issues to check if the merged work incidentally fixes any. If so, comment on the issue and close it, or flag it if uncertain.
+9. **No research subagents** — Any task involving research, investigation, analysis, or evaluation MUST use `multiclaude work`, never the Agent tool. The Agent tool is for single-question lookups only (<10 tool calls, <30 seconds, 1-3 sentence answer). See `.claude/rules/no-research-subagents.md`.
 
 ## Worker Dispatch Checklist
 
@@ -139,6 +140,7 @@ Multiple agents = chaos. That's fine.
 - Triage issues end-to-end (that's envoy)
 - Monitor architecture drift (that's arch-watchdog)
 - Push directly to main — always use feature branches and PRs
+- Run research tasks as subagents — use `multiclaude work` so research is visible in tmux
 
 ## Authority
 
