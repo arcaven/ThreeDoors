@@ -26,9 +26,9 @@
 | P-006 | In-app bug reporting via `:bug` command — browser URL primary, PAT upgrade, file fallback | 2026-03-09 | Party mode (4 rounds: PM, Architect, UX, Dev) | [Party Mode](../../_bmad-output/planning-artifacts/in-app-bug-reporting-party-mode.md), [Research](../../_bmad-output/planning-artifacts/in-app-bug-reporting-research.md) | **Done** — Epic 50 created (3 stories) |
 | P-001 | Migrate from Makefile to Justfile | 2026-03-04 | Research spike | [Analysis](../../_bmad-output/planning-artifacts/makefile-vs-justfile-analysis.md) | Owner sign-off |
 | P-002 | Envoy three-layer firewall implementation | 2026-03-08 | Party mode (8 sessions) | [Plan](../../_bmad-output/planning-artifacts/envoy-three-layer-firewall-plan.md), [Party Mode](../../_bmad-output/planning-artifacts/envoy-rules-of-behavior-party-mode.md) | **Done** — Epic 52 created (4 stories). Original artifact missing; plan reconstructed from available sources. Epic number provisional. |
-| P-003 | GitHub issue labeling taxonomy and triage flow | 2026-03-08 | Party mode (5 sessions) | [Artifact](../../_bmad-output/planning-artifacts/issue-labeling-and-triage-strategy.md) | Story creation |
+| P-003 | GitHub issue labeling taxonomy and triage flow | 2026-03-08 | Party mode (5 sessions) | [Artifact](../../_bmad-output/planning-artifacts/issue-labeling-and-triage-strategy.md) | **Done** — Story 0.46 (triage flow docs) |
 | P-004 | Update pr-shepherd definition to remove fork references | 2026-03-08 | Investigation | [Research](../../_bmad-output/planning-artifacts/persistent-agent-communication-research.md) | **Approved** — update then run `/sync-enhancements` after merge |
-| P-005 | Scoped label taxonomy: 27 labels with `.` separator, migration plan | 2026-03-08 | Party mode (3 rounds) + research spike | [Party Mode](../../_bmad-output/planning-artifacts/scoped-labels-party-mode.md), [Research](../../_bmad-output/planning-artifacts/scoped-labels-research.md) | Story creation for migration |
+| P-005 | Scoped label taxonomy: 27 labels with `.` separator, migration plan | 2026-03-08 | Party mode (3 rounds) + research spike | [Party Mode](../../_bmad-output/planning-artifacts/scoped-labels-party-mode.md), [Research](../../_bmad-output/planning-artifacts/scoped-labels-research.md) | **Done** — Stories 0.44 (migration), 0.45 (agent defs), 0.46 (authority docs) |
 
 ## Decided
 
@@ -258,6 +258,7 @@
 | D-160 | Shell script for CI metrics, not GitHub Action (Story 0.37) | 2026-03-10 | No external deps beyond `gh`; can be promoted to Action later; immediately runnable by retrospector agent (Story 51.8) | [Research](../../_bmad-output/planning-artifacts/ci-churn-reduction-research.md) |
 | D-161 | Project-watchdog batches governance sync PRs (resolves Q-003) | 2026-03-10 | One-per-story creates PR fatigue and merge ordering issues; batching reduces churn and conflicts. Rejected: one-per-story (current, too many small PRs) | [Investigation](../../_bmad-output/planning-artifacts/epic-39-governance-sync-investigation.md) |
 | D-162 | Workers update ONLY story files; project-watchdog owns all planning docs (resolves Q-004, Option B) | 2026-03-10 | Eliminates concurrent edit conflicts between workers and project-watchdog on ROADMAP.md, epic-list.md, epics-and-stories.md. Workers update their story file status only. project-watchdog initiates all planning doc updates. ROADMAP.md ownership belongs to PM role. Future SLAES (Epic 51) handles CLAUDE.md/SOUL.md updates. Rejected: Option A (workers update everything — concurrent edit conflicts with project-watchdog), Option C (mixed approach with locking — high complexity, not justified) | [Investigation](../../_bmad-output/planning-artifacts/epic-39-governance-sync-investigation.md) |
+| D-163 | HHMMSS timecode for alpha version sorting (Story 0.47) | 2026-03-10 | Insert UTC HHMMSS between date and SHA in alpha versions so SemVer numeric sorting produces chronological order; rejected: auto-increment semver (needs state tracking, overkill for alpha), unix epoch (human-unreadable, loses date grouping), daily build counter (race conditions, needs state) | [Artifact](../../_bmad-output/planning-artifacts/alpha-versioning-improvement.md) |
 
 ## Rejected
 
@@ -268,7 +269,6 @@
 | X-061 | Time-bounded breadcrumb buffer | 2026-03-09 | Variable memory; hard to reason about edge cases (idle vs active); count-bounded is simpler | [Party Mode](../../_bmad-output/planning-artifacts/in-app-bug-reporting-party-mode.md) |
 | X-062 | Blocklist approach for bug report privacy | 2026-03-09 | Blocklists risk leaks from new data types; allowlist at capture level is defense in depth | [Research](../../_bmad-output/planning-artifacts/in-app-bug-reporting-research.md) |
 | X-063 | Configurable target repo for bug reports | 2026-03-09 | YAGNI; ThreeDoors reports to ThreeDoors; adds config complexity for no validated need | [Party Mode](../../_bmad-output/planning-artifacts/in-app-bug-reporting-party-mode.md) |
-
 | X-050 | `epic.N` per-epic labels | 2026-03-08 | GitHub milestones serve this purpose; 40+ labels is bloat | [Artifact](../../_bmad-output/planning-artifacts/scoped-labels-party-mode.md) |
 | X-051 | `sprint.*` labels | 2026-03-08 | No fixed sprints in ThreeDoors workflow | [Artifact](../../_bmad-output/planning-artifacts/scoped-labels-party-mode.md) |
 | X-052 | `effort.*` Fibonacci labels | 2026-03-08 | Effort tracked in story files, not issues | [Artifact](../../_bmad-output/planning-artifacts/scoped-labels-party-mode.md) |

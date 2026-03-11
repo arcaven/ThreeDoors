@@ -1,8 +1,11 @@
 package core
 
 import (
+	"context"
 	"fmt"
+	"net/http"
 	"os"
+	"path/filepath"
 	"runtime"
 	"sort"
 	"time"
@@ -90,9 +93,11 @@ type TerminalInfo struct {
 
 // DoctorChecker performs category-based system diagnostics.
 type DoctorChecker struct {
-	configDir  string
-	terminal   TerminalInfo
-	categories []registeredCategory
+	configDir    string
+	terminal     TerminalInfo
+	registry     *Registry
+	categories   []registeredCategory
+	versionCheck *VersionChecker
 }
 
 type registeredCategory struct {
@@ -152,12 +157,54 @@ func NewDoctorChecker(configDir string) *DoctorChecker {
 	dc.RegisterCategory("Environment", dc.checkEnvironment)
 	dc.RegisterCategory("Task Data", dc.checkTaskData)
 	dc.RegisterCategory("Sync", dc.checkSync)
+	dc.RegisterCategory("Database", dc.checkDatabase)
+	dc.RegisterCategory("Version", dc.checkVersion)
+	dc.RegisterSessionDataChecks()
 	return dc
 }
 
 // SetTerminalInfo sets the terminal capability information for environment checks.
 func (dc *DoctorChecker) SetTerminalInfo(info TerminalInfo) {
 	dc.terminal = info
+}
+
+// SetVersionInfo configures the version checker with the current version and channel.
+// If not called, the Version category reports "dev build" by default.
+// The httpClient and releasesURL parameters are optional — pass nil/"" for defaults.
+func (dc *DoctorChecker) SetVersionInfo(version, channel string, httpClient *http.Client, releasesURL string) {
+	vc := NewVersionChecker(version, channel, dc.configDir)
+	if httpClient != nil {
+		vc.HTTPClient = httpClient
+	}
+	if releasesURL != "" {
+		vc.ReleasesURL = releasesURL
+	}
+	dc.versionCheck = vc
+}
+
+// checkVersion runs the Version category checks.
+func (dc *DoctorChecker) checkVersion() CategoryResult {
+	if dc.versionCheck == nil {
+		// No version info configured — treat as dev build
+		return CategoryResult{
+			Checks: []CheckResult{{
+				Name:    "Current version",
+				Status:  CheckInfo,
+				Message: "Running dev build",
+			}},
+		}
+	}
+	return CategoryResult{Checks: dc.versionCheck.Check()}
+}
+
+// providerCheckTimeout is the maximum time to wait for a provider health check.
+const providerCheckTimeout = 10 * time.Second
+
+// SetRegistry configures the provider registry and registers the Providers
+// check category. This must be called before Run() for provider checks to execute.
+func (dc *DoctorChecker) SetRegistry(reg *Registry) {
+	dc.registry = reg
+	dc.RegisterCategory("Providers", dc.checkProviders)
 }
 
 // RegisterCategory adds a check category that runs in registration order.
@@ -380,6 +427,148 @@ func checkGoVersion() CheckResult {
 		Status:  CheckInfo,
 		Message: fmt.Sprintf("Built with %s", runtime.Version()),
 	}
+}
+
+// checkProviders runs the Providers category checks.
+func (dc *DoctorChecker) checkProviders() CategoryResult {
+	configPath := filepath.Join(dc.configDir, "config.yaml")
+	cfg, err := LoadProviderConfig(configPath)
+	if err != nil {
+		return CategoryResult{
+			Checks: []CheckResult{{
+				Name:       "Config",
+				Status:     CheckFail,
+				Message:    fmt.Sprintf("Cannot load config: %v", err),
+				Suggestion: "Check config.yaml for syntax errors",
+			}},
+		}
+	}
+
+	entries := dc.resolveProviderEntries(cfg)
+	if len(entries) == 0 {
+		return CategoryResult{
+			Checks: []CheckResult{{
+				Name:       "Provider configuration",
+				Status:     CheckFail,
+				Message:    "No provider configured",
+				Suggestion: "Add a provider to config.yaml (e.g., provider: textfile)",
+			}},
+		}
+	}
+
+	var checks []CheckResult
+	for _, entry := range entries {
+		checks = append(checks, dc.checkSingleProvider(entry, cfg)...)
+	}
+	return CategoryResult{Checks: checks}
+}
+
+// resolveProviderEntries returns the list of provider entries from the config.
+// Handles both the new providers list and legacy flat provider field.
+func (dc *DoctorChecker) resolveProviderEntries(cfg *ProviderConfig) []ProviderEntry {
+	if len(cfg.Providers) > 0 {
+		return cfg.Providers
+	}
+	name := cfg.Provider
+	if name == "" {
+		return nil
+	}
+	return []ProviderEntry{{Name: name}}
+}
+
+// checkSingleProvider runs health checks for one provider entry.
+func (dc *DoctorChecker) checkSingleProvider(entry ProviderEntry, cfg *ProviderConfig) []CheckResult {
+	providerName := entry.Name
+
+	// Check provider-specific pre-conditions before attempting initialization
+	if preCheck := dc.checkProviderPreConditions(entry); preCheck != nil {
+		return []CheckResult{*preCheck}
+	}
+
+	// Check if provider is registered
+	if dc.registry == nil || !dc.registry.IsRegistered(providerName) {
+		return []CheckResult{{
+			Name:       fmt.Sprintf("Provider: %s", providerName),
+			Status:     CheckFail,
+			Message:    fmt.Sprintf("Provider %q is not registered", providerName),
+			Suggestion: fmt.Sprintf("Check that %q is a valid provider name", providerName),
+		}}
+	}
+
+	// Attempt to initialize and load tasks with a timeout
+	provider, err := dc.registry.InitProvider(providerName, cfg)
+	if err != nil {
+		return []CheckResult{{
+			Name:       fmt.Sprintf("Provider: %s", providerName),
+			Status:     CheckFail,
+			Message:    fmt.Sprintf("Provider %q failed to initialize: %v", providerName, err),
+			Suggestion: fmt.Sprintf("Check %s configuration in config.yaml", providerName),
+		}}
+	}
+
+	// Try LoadTasks with a timeout
+	type loadResult struct {
+		count int
+		err   error
+	}
+	ch := make(chan loadResult, 1)
+	ctx, cancel := context.WithTimeout(context.Background(), providerCheckTimeout)
+	defer cancel()
+
+	go func() {
+		tasks, loadErr := provider.LoadTasks()
+		ch <- loadResult{count: len(tasks), err: loadErr}
+	}()
+
+	select {
+	case <-ctx.Done():
+		return []CheckResult{{
+			Name:       fmt.Sprintf("Provider: %s", providerName),
+			Status:     CheckFail,
+			Message:    fmt.Sprintf("Provider %q timed out after %s", providerName, providerCheckTimeout),
+			Suggestion: "Check network connectivity or provider availability",
+		}}
+	case res := <-ch:
+		if res.err != nil {
+			return []CheckResult{{
+				Name:       fmt.Sprintf("Provider: %s", providerName),
+				Status:     CheckFail,
+				Message:    fmt.Sprintf("Provider %q: %v", providerName, res.err),
+				Suggestion: fmt.Sprintf("Check %s configuration and accessibility", providerName),
+			}}
+		}
+		return []CheckResult{{
+			Name:    fmt.Sprintf("Provider: %s", providerName),
+			Status:  CheckOK,
+			Message: fmt.Sprintf("Provider %q healthy (%d tasks loaded)", providerName, res.count),
+		}}
+	}
+}
+
+// checkProviderPreConditions checks provider-specific pre-conditions that can
+// be verified without initializing the provider (e.g., Obsidian vault path).
+func (dc *DoctorChecker) checkProviderPreConditions(entry ProviderEntry) *CheckResult {
+	switch entry.Name {
+	case "obsidian":
+		vaultPath := entry.GetSetting("vault_path", "")
+		if vaultPath == "" {
+			return &CheckResult{
+				Name:       "Provider: obsidian",
+				Status:     CheckFail,
+				Message:    "Obsidian vault path not configured",
+				Suggestion: "Add vault_path to obsidian provider settings in config.yaml",
+			}
+		}
+		if _, err := os.Stat(vaultPath); os.IsNotExist(err) {
+			return &CheckResult{
+				Name:       "Provider: obsidian",
+				Status:     CheckFail,
+				Message:    fmt.Sprintf("Obsidian vault path not found: %s", vaultPath),
+				Suggestion: "Check that the vault_path in config.yaml points to an existing directory",
+			}
+		}
+	}
+	return nil
 }
 
 // worstCheckStatus returns the worst (highest severity) status in a list of checks.
