@@ -374,6 +374,57 @@ The following components are introduced as the architecture evolves beyond the T
 - Color-coded by provider for quick visual identification
 - Integrated into existing door rendering
 
+### Connection Management Components (Epic 43)
+
+#### Component: ConnectionManager (`internal/core/connection/`)
+
+**Responsibility:** Manage the lifecycle of data source connections — creation, state transitions, credential storage, health checks, and sync event auditing. This is the infrastructure layer that adapters plug into for multi-source task aggregation.
+
+**Package Structure:**
+- `connection.go` — `Connection` model with ULID IDs, provider name, label, settings, state, sync metadata
+- `state.go` — `ConnectionState` enum (Disconnected → Connecting → Connected → Syncing / Paused / Error / AuthExpired) with validated state machine transitions
+- `manager.go` — `ConnectionManager` — thread-safe in-memory connection store with state change callbacks
+- `service.go` — `ConnectionService` — high-level CRUD orchestrator with credential storage, config persistence, and rollback on failure
+- `credential.go` — `CredentialStore` interface with `EnvCredentialStore` (env var lookup with provider aliases) and `ChainCredentialStore` (priority chain with fallback)
+- `credential_ring.go` — OS keyring `CredentialStore` implementation (macOS Keychain, Linux keyring)
+- `health.go` — `HealthChecker` and `Syncer` interfaces for provider-specific operations
+- `sync_event.go` — `SyncEventLog` — per-connection JSONL audit log with rolling retention (1000 events max, atomic truncation)
+- `oauth/` — OAuth device code flow and browser launcher
+
+**Key Interfaces:**
+
+```go
+// CredentialStore — pluggable credential backends
+type CredentialStore interface {
+    Get(connID string) (string, error)
+    Set(connID, value string) error
+    Delete(connID string) error
+}
+
+// HealthChecker — provider-specific health verification
+type HealthChecker interface {
+    CheckHealth(conn *Connection, credential string) (HealthCheckResult, error)
+}
+
+// Syncer — provider-specific immediate sync
+type Syncer interface {
+    Sync(conn *Connection, credential string) error
+}
+```
+
+**Key Behaviors:**
+- `ConnectionService.Add()` creates connection, stores credential, persists config — rolls back all on any failure
+- `ConnectionService.Remove()` deletes connection, credential, updates config — best-effort credential cleanup
+- `ConnectionManager.Transition()` validates state machine before applying, emits `StateChangeEvent` callback
+- `SyncEventLog` uses atomic writes (write to `.tmp`, fsync, rename) for truncation — consistent with project patterns
+- Credential resolution: connection-specific env var → provider env var → provider aliases (e.g., `GH_TOKEN`)
+
+**Design Patterns:**
+- **State machine** with explicit valid transition map — prevents invalid lifecycle states
+- **Chain of responsibility** for credential resolution (`ChainCredentialStore`)
+- **Factory functions** for all exported types (`NewConnectionManager`, `NewConnectionService`, `NewEnvCredentialStore`)
+- **Rollback on failure** in `ConnectionService.Add()` — transactional semantics across manager + credential store + config
+
 ### Adapter Layer Components
 
 #### Component: AdapterRegistry (Epic 7)
@@ -862,6 +913,9 @@ graph TB
         StatusMgr[StatusManager]
         Enrichment[EnrichmentStore<br/>SQLite]
         DupDetector[DuplicateDetector]
+        ConnMgr[ConnectionManager<br/>Lifecycle & State Machine]
+        ConnSvc[ConnectionService<br/>CRUD Orchestrator]
+        CredStore[CredentialStore<br/>Keyring + Env Chain]
     end
 
     subgraph Adapters[Adapter Layer - internal/adapters]
@@ -919,6 +973,10 @@ graph TB
     SyncEngine --> SyncLog
     SyncEngine --> Registry
     SyncStatus --> SyncEngine
+
+    ConnSvc --> ConnMgr
+    ConnSvc --> CredStore
+    Registry -.-> ConnSvc
 
     Enrichment -.-> DupDetector
     Learning -.-> Enrichment
