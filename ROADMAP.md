@@ -140,14 +140,14 @@ Time-based seasonal theme variants that auto-switch based on current date. Exten
 | 33.3 | Auto-Switch Integration in DoorsView and Config | Done (PR #410) | P2 | 33.1 |
 | 33.4 | Seasonal Theme Picker and `:seasonal` Command | Done (PR #447) | P2 | 33.2, 33.3 |
 
-### Epic 48: Door-Like Doors — Visual Door Metaphor Enhancement (P2) — 0/4 stories done (2 In Review)
+### Epic 48: Door-Like Doors — Visual Door Metaphor Enhancement (P2) — 2/4 stories done
 
 Transform rectangular card/panel doors into visually convincing doors using side-mounted handles, hinge marks, threshold lines, crack-of-light selection feedback, and handle turn micro-animations. Based on 5-round party mode research with 7 agents.
 
 | Story | Title | Status | Priority | Depends On |
 |-------|-------|--------|----------|------------|
-| 48.1 | Side-Mounted Handle + Hinge Marks | In Review | P2 | Epic 35 (done), Epic 17 (done) |
-| 48.2 | Continuous Threshold / Floor Line | In Review | P2 | None |
+| 48.1 | Side-Mounted Handle + Hinge Marks | Done (PR #451) | P2 | Epic 35 (done), Epic 17 (done) |
+| 48.2 | Continuous Threshold / Floor Line | Done (PR #483) | P2 | None |
 | 48.3 | Crack of Light Effect on Selection | Not Started | P2 | 48.1 |
 | 48.4 | Handle Turn Micro-Animation | Not Started | P2 | 48.1 |
 
@@ -322,14 +322,14 @@ Continuous improvement meta-system with a persistent `retrospector` agent that m
 
 **Dependency graph:** Stories 51.1 & 51.2 can parallelize. Stories 51.3-51.5 can parallelize after 51.1. Story 51.6 depends on 51.3-51.5. Phase 2 stories depend on Phase 1 validation.
 
-### Epic 54: Gemini Research Supervisor — Deep Research Agent Infrastructure (Rearchitected) (P2) — 0/5 stories done
+### Epic 54: Gemini Research Supervisor — Deep Research Agent Infrastructure (Rearchitected) (P2) — 2/5 stories done
 
 Persistent research-supervisor agent that wraps the official Gemini CLI (`@google/gemini-cli`) with OAuth authentication for web-grounded research. **Rearchitected** from the original Python/API-key approach (D-154 → D-164). Uses free tier: 50 Pro/day + 1,000 Flash/day. Features context packaging (8 bundles, `--include-directories`), three-layer result shielding, and dual-tier budget management. No Python, no API key, no third-party tools.
 
 | Story | Title | Status | Priority | Depends On |
 |-------|-------|--------|----------|------------|
-| 54.1 | Research-Supervisor Agent Definition (Gemini CLI + OAuth) | Not Started | P2 | None |
-| 54.2 | Gemini CLI Installation, OAuth Setup & Wrapper Script | Not Started | P2 | None |
+| 54.1 | Research-Supervisor Agent Definition (Gemini CLI + OAuth) | Done (PR #537) | P2 | None |
+| 54.2 | Gemini CLI Installation, OAuth Setup & Wrapper Script | Done (PR #538) | P2 | None |
 | 54.3 | Context Packaging & Prompt Engineering (Gemini CLI) | Not Started | P2 | 54.1 |
 | 54.4 | Result Shielding & Artifact Storage (Gemini CLI JSON) | Not Started | P2 | 54.1, 54.2 |
 | 54.5 | Rate Limiting, Budget Management & Model Selection | Not Started | P2 | 54.1, 54.2 |
