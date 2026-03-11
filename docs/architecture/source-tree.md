@@ -101,7 +101,20 @@ ThreeDoors/
 │   │   ├── door_selector.go         # Intelligent door selection (learning + calendar)
 │   │   ├── status_manager.go        # Status transition validator
 │   │   ├── enrichment_store.go      # SQLite enrichment DB (Epic 6)
-│   │   └── config.go                # Configuration model, config.yaml loader
+│   │   ├── doctor.go                # System diagnostics checker (Epic 49)
+│   │   ├── config.go                # Configuration model, config.yaml loader
+│   │   └── connection/              # Connection lifecycle management (Epic 43)
+│   │       ├── connection.go        # Connection model (ULID ID, state, settings)
+│   │       ├── state.go             # ConnectionState enum, state machine transitions
+│   │       ├── manager.go           # ConnectionManager — thread-safe CRUD + state transitions
+│   │       ├── service.go           # ConnectionService — orchestrates CRUD with rollback
+│   │       ├── credential.go        # CredentialStore interface + Env/Chain implementations
+│   │       ├── credential_ring.go   # OS keyring CredentialStore (keychain/keyring)
+│   │       ├── health.go            # HealthChecker, Syncer interfaces + HealthCheckResult
+│   │       ├── sync_event.go        # SyncEventLog — per-connection JSONL audit log
+│   │       └── oauth/               # OAuth device code flow
+│   │           ├── devicecode.go    # Device code grant implementation
+│   │           └── browser.go       # Cross-platform browser launcher
 │   │
 │   ├── tasks/                        # Domain Layer (Phase 1 - Tech Demo)
 │   │   ├── task.go                  # Task model (Tech Demo)
