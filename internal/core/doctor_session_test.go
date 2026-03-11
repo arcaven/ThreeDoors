@@ -221,11 +221,20 @@ func TestSessionDataCategory_RegisteredAutomatically(t *testing.T) {
 	dc := NewDoctorChecker(t.TempDir())
 	result := dc.Run()
 
-	if len(result.Categories) < 5 {
-		t.Fatalf("expected at least 5 categories, got %d", len(result.Categories))
+	// Verify "Session Data" exists as a category without assuming a specific index.
+	found := false
+	for _, cat := range result.Categories {
+		if cat.Name == "Session Data" {
+			found = true
+			break
+		}
 	}
-	if result.Categories[4].Name != "Session Data" {
-		t.Errorf("fifth category = %q, want %q", result.Categories[4].Name, "Session Data")
+	if !found {
+		names := make([]string, len(result.Categories))
+		for i, cat := range result.Categories {
+			names[i] = cat.Name
+		}
+		t.Fatalf("category %q not found in %v", "Session Data", names)
 	}
 }
 
