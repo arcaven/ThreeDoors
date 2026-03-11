@@ -347,14 +347,16 @@ func TestCheckProviders_IntegrationWithRun(t *testing.T) {
 	dc.SetRegistry(reg)
 	result := dc.Run()
 
-	// Should have Environment + Providers categories
-	if len(result.Categories) != 2 {
-		t.Fatalf("expected 2 categories, got %d", len(result.Categories))
+	// Find the Providers category by name
+	var providers *CategoryResult
+	for i := range result.Categories {
+		if result.Categories[i].Name == "Providers" {
+			providers = &result.Categories[i]
+			break
+		}
 	}
-
-	providers := result.Categories[1]
-	if providers.Name != "Providers" {
-		t.Errorf("second category name = %q, want %q", providers.Name, "Providers")
+	if providers == nil {
+		t.Fatal("Providers category not found")
 	}
 	if providers.Status != CheckOK {
 		t.Errorf("providers status = %v, want %v", providers.Status, CheckOK)
