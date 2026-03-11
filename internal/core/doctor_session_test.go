@@ -221,11 +221,11 @@ func TestSessionDataCategory_RegisteredAutomatically(t *testing.T) {
 	dc := NewDoctorChecker(t.TempDir())
 	result := dc.Run()
 
-	if len(result.Categories) < 2 {
-		t.Fatalf("expected at least 2 categories, got %d", len(result.Categories))
+	if len(result.Categories) < 3 {
+		t.Fatalf("expected at least 3 categories, got %d", len(result.Categories))
 	}
-	if result.Categories[1].Name != "Session Data" {
-		t.Errorf("second category = %q, want %q", result.Categories[1].Name, "Session Data")
+	if result.Categories[2].Name != "Session Data" {
+		t.Errorf("third category = %q, want %q", result.Categories[2].Name, "Session Data")
 	}
 }
 
