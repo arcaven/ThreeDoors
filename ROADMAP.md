@@ -153,7 +153,7 @@ Transform rectangular card/panel doors into visually convincing doors using side
 
 **Dependency graph:** Stories 48.1 & 48.2 can parallelize. Stories 48.3 & 48.4 can parallelize after 48.1 completes.
 
-### Epic 43: Connection Manager Infrastructure (P1) — 4/6 stories done
+### Epic 43: Connection Manager Infrastructure (P1) — 5/6 stories done
 
 Connection lifecycle layer for data source integrations. State machine, credential storage (system keychain), config schema v3 (named connections), CRUD operations, sync event logging, and migration of existing adapters to the new pattern.
 
@@ -161,7 +161,7 @@ Connection lifecycle layer for data source integrations. State machine, credenti
 |-------|-------|--------|----------|------------|
 | 43.1 | Connection State Machine and ConnectionManager Type | Done (PR #428) | P1 | None |
 | 43.2 | Keyring Integration with Environment Variable Fallback | Done (PR #442) | P1 | None |
-| 43.3 | Config Schema v3 Migration with Connections Support | In Review (PR #441) | P1 | None |
+| 43.3 | Config Schema v3 Migration with Connections Support | Done (PR #467) | P1 | None |
 | 43.4 | Connection CRUD Operations | Not Started | P1 | 43.1, 43.2, 43.3 |
 | 43.5 | Sync Event Logging Infrastructure | Done (PR #439) | P1 | None |
 | 43.6 | Migrate Existing Adapters to ConnectionManager Pattern | Not Started | P1 | 43.1-43.5 |
@@ -321,6 +321,20 @@ Continuous improvement meta-system with a persistent `retrospector` agent that m
 **Phasing:** Phase 0 (stories 51.1-51.2): Bootstrap — rewrite agent definitions. Phase 1 (stories 51.3-51.6): MVP monitoring. Phase 2 (stories 51.7-51.10): Advanced analysis after 2 weeks of MVP validation.
 
 **Dependency graph:** Stories 51.1 & 51.2 can parallelize. Stories 51.3-51.5 can parallelize after 51.1. Story 51.6 depends on 51.3-51.5. Phase 2 stories depend on Phase 1 validation.
+
+### Epic 54: Gemini Research Supervisor — Deep Research Agent Infrastructure (P2) — 0/5 stories done
+
+Persistent research-supervisor agent that manages Gemini Deep Research queries on behalf of the multiclaude agent system. Uses `24601/agent-deep-research` as the execution layer (D-154). Features context-aware grounding (8 curated bundles, 60KB budget), three-layer result shielding (executive summary → detailed report → raw data), and budget management (50 queries/day, priority queue, batch optimization).
+
+| Story | Title | Status | Priority | Depends On |
+|-------|-------|--------|----------|------------|
+| 54.1 | Research-Supervisor Agent Definition | Not Started | P2 | None |
+| 54.2 | agent-deep-research CLI Integration & Tool Setup | Not Started | P2 | None |
+| 54.3 | Context Packaging & Prompt Engineering | Not Started | P2 | 54.1 |
+| 54.4 | Result Shielding & Artifact Storage | Not Started | P2 | 54.1, 54.2 |
+| 54.5 | Rate Limiting, Budget Management & Query Scheduling | Not Started | P2 | 54.1, 54.2 |
+
+**Dependency graph:** Stories 54.1 & 54.2 can parallelize. Stories 54.3, 54.4, 54.5 can parallelize after 54.1+54.2 complete.
 
 ## Icebox (Deferred Indefinitely)
 
