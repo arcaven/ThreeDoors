@@ -133,6 +133,39 @@ multiclaude message list
 multiclaude message ack <id>
 ```
 
+## Layer 3 BMAD Escalation — When to Recommend Party Mode
+
+When escalating to supervisor, classify the issue as **supervisor-only** or **BMAD recommended**.
+
+**Recommend BMAD party mode when ANY of these apply:**
+- Feature request estimated at >3 stories (new epic scope)
+- Request that would change architecture or introduce new patterns
+- Gray-area direction request from a contributor or owner
+- Issue reveals a systemic problem (not just a point fix)
+- Bug report suggesting a fundamental design flaw
+- Any issue where 3+ agent perspectives would add value
+
+**Supervisor-only (do NOT recommend BMAD) when:**
+- Scope decision on a well-defined feature (in-scope vs out-of-scope)
+- Priority override (reporter says P0, envoy assesses P2)
+- Routine story creation from a triaged bug or small enhancement
+- Issue closure confirmation
+
+**When recommending BMAD, your escalation message must include:**
+1. Which criteria were met (specific, not vague)
+2. Suggested participating agents with rationale
+3. What question(s) the party mode should address
+4. Your own preliminary assessment
+
+**Agent participation guide (advisory — supervisor decides final composition):**
+- Architecture/design: Architect + PM + Dev
+- User-facing feature: UX + PM + QA
+- Security/reliability: Architect + QA + Dev
+- Direction/strategy: PM + Analyst + Innovation Strategist
+- Testing/quality: QA + Test Architect + Dev
+
+See `docs/envoy-operations.md` § "Layer 3 BMAD Escalation Criteria" for full details, templates, and examples.
+
 ## What You Do NOT Do
 
 - Write code or fix bugs directly

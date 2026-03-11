@@ -580,6 +580,148 @@ Owner override is recognized implicitly — the owner doesn't need to say "I'm o
 
 ---
 
+## Layer 3 BMAD Escalation Criteria
+
+Layer 3 is the final firewall stage — reserved for issues requiring multi-agent deliberation via BMAD party mode. The envoy does not invoke party mode (that's supervisor authority). Instead, the envoy classifies its escalation into one of two categories: **supervisor-only** or **BMAD recommended**.
+
+### When to Recommend BMAD Party Mode
+
+The envoy recommends party mode when an issue matches **any** of the following criteria:
+
+| Criterion | Why It Needs Multi-Agent Deliberation |
+|-----------|---------------------------------------|
+| Feature request estimated at >3 stories (new epic scope) | Requires PM for scoping, Architect for design, Dev for feasibility |
+| Request that would change project architecture or introduce new patterns | Architectural changes need cross-cutting review before commitment |
+| Gray-area direction request from a contributor or owner | Direction decisions benefit from multiple perspectives to avoid bias |
+| Issue that reveals a systemic problem (not just a point fix) | Systemic issues need root cause analysis from multiple viewpoints |
+| Bug report suggesting a fundamental design flaw | Design-level bugs require Architect + Dev + QA consensus on the right fix |
+| Any issue where 3+ agent perspectives would add value | The complexity or ambiguity warrants structured multi-agent discussion |
+
+### When NOT to Recommend BMAD (Supervisor-Only)
+
+These issues can be resolved by a supervisor decision alone — they don't need multi-agent deliberation:
+
+| Issue Type | Why Supervisor-Only Suffices |
+|------------|------------------------------|
+| Scope decision on a well-defined feature (in-scope vs out-of-scope) | ROADMAP.md provides clear boundaries; supervisor can check and decide |
+| Priority override (reporter says P0, envoy assesses P2) | Priority is a judgment call, not an architectural question |
+| Routine story creation from a triaged bug or small enhancement | Well-understood work that fits existing patterns |
+| Issue closure confirmation (envoy recommends, supervisor approves) | Binary decision with clear context already provided |
+
+### Escalation Message Template
+
+When escalating to supervisor, the envoy's message MUST include all of the following:
+
+```
+Escalation: Issue #NNN — [title]
+
+Classification: [Supervisor-only | BMAD recommended]
+Reporter: @username (Tier: [owner|contributor|community])
+Priority assessment: [P0|P1|P2]
+
+Summary: [1-2 sentence description of the issue]
+
+[If BMAD recommended:]
+BMAD criteria met:
+- [Specific criterion from the table above]
+- [Additional criteria if multiple apply]
+
+Suggested participants: [Agent list] — [rationale]
+Questions for party mode to address:
+1. [Specific question]
+2. [Additional questions if needed]
+
+Envoy's preliminary assessment: [The envoy's own take on the issue — what it thinks the right approach might be, and why it still warrants party mode despite having a preliminary view]
+
+[If supervisor-only:]
+Recommended action: [What the envoy recommends the supervisor do]
+Rationale: [Why this doesn't need party mode]
+```
+
+### Agent Participation Guide
+
+When recommending party mode, the envoy maps issue types to relevant agents. This guide is advisory — the supervisor always has final say on party mode composition.
+
+| Issue Type | Suggested Agents | Rationale |
+|------------|-----------------|-----------|
+| Architecture or design change | Architect + PM + Dev | Architect owns patterns, PM owns scope, Dev owns feasibility |
+| User-facing feature | UX + PM + QA | UX owns experience, PM owns priority, QA owns acceptance criteria |
+| Security or reliability concern | Architect + QA + Dev | Cross-cutting concern requiring system-level thinking |
+| Direction or strategy question | PM + Analyst + Innovation Strategist | Strategic decisions need market context and creative alternatives |
+| Testing or quality issue | QA + Test Architect + Dev | Quality improvements need testing expertise and implementation context |
+
+### Concrete Examples
+
+#### Example 1: Supervisor-Only Escalation
+
+> **Issue #301:** "Add keyboard shortcut to toggle task details"
+>
+> **Envoy assessment:** Small, well-defined enhancement. Fits within Epic 39 (Keybinding Display System) patterns. Single story at most.
+
+```
+Escalation: Issue #301 — Add keyboard shortcut to toggle task details
+
+Classification: Supervisor-only
+Reporter: @some-user (Tier: community)
+Priority assessment: P2
+
+Summary: Reporter requests a keyboard shortcut to expand/collapse task detail
+view inline. This is a small, well-defined enhancement that fits existing
+keybinding patterns from Epic 39.
+
+Recommended action: Create a story under the Infrastructure backlog or
+existing keybinding epic. Straightforward implementation following established
+patterns in internal/tui/keybindings.go.
+Rationale: Well-understood scope, no architectural impact, fits existing
+patterns. Does not warrant multi-agent deliberation.
+```
+
+#### Example 2: BMAD-Recommended Escalation
+
+> **Issue #302:** "Support team task sharing via shared YAML files"
+>
+> **Envoy assessment:** This conflicts with SOUL.md ("personal tool for one person"), but the reporter is a contributor who argues that couples/pairs could benefit. The underlying need (coordination between two people) might be addressable within project values, but it would require architectural changes to the task model and sync layer.
+
+```
+Escalation: Issue #302 — Support team task sharing via shared YAML files
+
+Classification: BMAD recommended
+Reporter: @trusted-contributor (Tier: contributor)
+Priority assessment: P2
+
+Summary: Contributor requests shared YAML task files for pair/couple task
+coordination. This touches SOUL.md's "personal tool" principle but identifies
+a real use case (two-person households sharing chores) that might be
+addressable within project values.
+
+BMAD criteria met:
+- Gray-area direction request from a contributor
+- Request that would change project architecture (task model, sync layer)
+- Issue where 3+ agent perspectives would add value (direction + architecture + UX)
+
+Suggested participants: PM + Architect + UX — PM to assess direction
+alignment, Architect to evaluate shared-file implications for the task model
+and sync layer, UX to explore whether the "personal tool" experience can
+extend to two people without becoming a team tool.
+
+Questions for party mode to address:
+1. Can "personal tool for one person" accommodate a two-person household
+   use case without compromising the core philosophy?
+2. If yes, what's the minimal architectural change to support shared YAML
+   files without introducing multi-user complexity?
+3. Are there alternative approaches (e.g., separate instances with a merge
+   view) that satisfy the need without shared state?
+
+Envoy's preliminary assessment: The reporter's underlying need (household
+task coordination) is legitimate and sympathetic. However, shared state
+introduces sync conflicts, permission questions, and identity concerns that
+could fundamentally change the product. I lean toward exploring "separate
+instances with occasional merge" rather than true shared files, but this
+needs architectural and product review before deciding.
+```
+
+---
+
 ## Authority Tier Routing Rules
 
 Authority tiers are configured in the tracker file header:
