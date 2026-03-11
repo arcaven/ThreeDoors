@@ -28,9 +28,21 @@ Renovate manages Go module dependencies (grouping, auto-merge, OSV vulnerability
 
 ### Story 0.20: CI Churn Reduction (P1)
 
-**Status:** Story created (PR #231). Research complete (PR #233). Implementation not started.
+**Status:** Done (PR #260).
 
-Branch protection & merge queue optimization to reduce cascading CI reruns.
+Branch protection & merge queue optimization to reduce cascading CI reruns. Relaxed up-to-date requirement, added path filtering for docs-only PRs, deferred GitHub merge queue (ADR-0030).
+
+### Story 0.36: CI Circuit Breaker — Post-Merge Main Branch Monitoring (P1)
+
+**Status:** Not Started.
+
+Operationalize merge-queue emergency mode: proactively check push-to-main CI after each merge, halt merges if main is red. Prerequisite safety net for the relaxed up-to-date rule (Story 0.20).
+
+### Story 0.37: CI Efficiency Metrics — Track Runs Per Merged PR (P2)
+
+**Status:** Not Started.
+
+Shell script to measure CI efficiency (runs per merged PR, churn ratio, docs-skip rate). Validates Story 0.20 improvements and monitors ADR-0030 re-entry gate for GitHub merge queue.
 
 ### Story 0.31: CI/Security Hardening — Secrets, Supply Chain & Reproducibility (P1)
 
@@ -119,7 +131,7 @@ Connection lifecycle layer for data source integrations. State machine, credenti
 |-------|-------|--------|----------|------------|
 | 43.1 | Connection State Machine and ConnectionManager Type | Done (PR #428) | P1 | None |
 | 43.2 | Keyring Integration with Environment Variable Fallback | In Review | P1 | None |
-| 43.3 | Config Schema v3 Migration with Connections Support | Not Started | P1 | None |
+| 43.3 | Config Schema v3 Migration with Connections Support | In Review (PR #441) | P1 | None |
 | 43.4 | Connection CRUD Operations | Not Started | P1 | 43.1, 43.2, 43.3 |
 | 43.5 | Sync Event Logging Infrastructure | Not Started | P1 | None |
 | 43.6 | Migrate Existing Adapters to ConnectionManager Pattern | Not Started | P1 | 43.1-43.5 |
@@ -219,7 +231,7 @@ In-app `:bug` command for frictionless bug reporting without leaving the TUI. Br
 
 | Epic | Title | Stories |
 |------|-------|---------|
-| 0 | Infrastructure & Process (Backfill) | 11/13 |
+| 0 | Infrastructure & Process (Backfill) | 12/16 |
 | 1 | Three Doors Technical Demo | 7/7 |
 | 2 | Apple Notes Integration | 6/6 |
 | 3 | Enhanced Interaction | 7/7 |
