@@ -63,9 +63,10 @@ func runDoctor(cmd *cobra.Command) error {
 
 	dc := core.NewDoctorChecker(configDir)
 
+
 	// Detect terminal capabilities
 	dc.SetTerminalInfo(detectTerminalInfo())
-
+	dc.SetVersionInfo(Version, Channel, nil, "")
 	result := dc.Run()
 
 	if isJSON {
