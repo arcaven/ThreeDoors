@@ -1058,6 +1058,7 @@ func TestProviderConfig_GetConnection(t *testing.T) {
 	conn := cfg.GetConnection("b")
 	if conn == nil {
 		t.Fatal("GetConnection() returned nil for existing ID")
+		return
 	}
 	if conn.Provider != "todoist" {
 		t.Errorf("Provider = %q, want %q", conn.Provider, "todoist")
