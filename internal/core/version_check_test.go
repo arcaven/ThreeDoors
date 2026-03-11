@@ -11,6 +11,17 @@ import (
 	"time"
 )
 
+// clearCIEnvVars unsets CI environment variables so version check tests
+// actually exercise the check logic instead of short-circuiting.
+// Must be called BEFORE t.Parallel() since t.Setenv doesn't work with parallel.
+func clearCIEnvVars(t *testing.T) {
+	t.Helper()
+	for _, v := range ciEnvVars {
+		t.Setenv(v, "")
+	}
+	t.Setenv("THREEDOORS_NO_UPDATE_CHECK", "")
+}
+
 func TestCompareSemver(t *testing.T) {
 	t.Parallel()
 
@@ -250,7 +261,7 @@ func TestVersionChecker_Check_DevBuild(t *testing.T) {
 }
 
 func TestVersionChecker_Check_StableUpdateAvailable(t *testing.T) {
-	t.Parallel()
+	clearCIEnvVars(t)
 
 	releases := []githubRelease{
 		{TagName: "v1.3.0"},
@@ -295,7 +306,7 @@ func TestVersionChecker_Check_StableUpdateAvailable(t *testing.T) {
 }
 
 func TestVersionChecker_Check_AlphaSeesNewerStable(t *testing.T) {
-	t.Parallel()
+	clearCIEnvVars(t)
 
 	releases := []githubRelease{
 		{TagName: "v1.3.0"},
@@ -338,7 +349,7 @@ func TestVersionChecker_Check_AlphaSeesNewerStable(t *testing.T) {
 }
 
 func TestVersionChecker_Check_AlphaIgnoresOlderStable(t *testing.T) {
-	t.Parallel()
+	clearCIEnvVars(t)
 
 	releases := []githubRelease{
 		{TagName: "v1.1.0"},
@@ -369,7 +380,7 @@ func TestVersionChecker_Check_AlphaIgnoresOlderStable(t *testing.T) {
 }
 
 func TestVersionChecker_Check_UpToDate(t *testing.T) {
-	t.Parallel()
+	clearCIEnvVars(t)
 
 	releases := []githubRelease{
 		{TagName: "v1.3.0"},
@@ -400,6 +411,7 @@ func TestVersionChecker_Check_UpToDate(t *testing.T) {
 }
 
 func TestVersionChecker_Check_UsesFreshCache(t *testing.T) {
+	clearCIEnvVars(t)
 	tmpDir := t.TempDir()
 
 	// Write a fresh cache
@@ -435,6 +447,7 @@ func TestVersionChecker_Check_UsesFreshCache(t *testing.T) {
 }
 
 func TestVersionChecker_Check_StaleCache_FetchesFresh(t *testing.T) {
+	clearCIEnvVars(t)
 	tmpDir := t.TempDir()
 
 	// Write a stale cache
@@ -483,6 +496,7 @@ func TestVersionChecker_Check_StaleCache_FetchesFresh(t *testing.T) {
 }
 
 func TestVersionChecker_Check_NetworkError_UsesStaleCache(t *testing.T) {
+	clearCIEnvVars(t)
 	tmpDir := t.TempDir()
 
 	// Write a stale cache with valid data
@@ -525,7 +539,7 @@ func TestVersionChecker_Check_NetworkError_UsesStaleCache(t *testing.T) {
 }
 
 func TestVersionChecker_Check_NetworkError_NoCache(t *testing.T) {
-	t.Parallel()
+	clearCIEnvVars(t)
 
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusServiceUnavailable)
