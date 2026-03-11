@@ -86,6 +86,24 @@ Story 36.3 (PR #276) universal quit handler causes sub-views (dashboard, health,
 
 Fix data accuracy in BOARD.md Epic Number Registry (wrong epic mappings, missing epics), backfill all active epics 39-51, and strengthen enforcement rules to reference project-watchdog as MUTEX. Implements D-112.
 
+### Story 0.44: Scoped Label Migration — Rename and Create GitHub Labels (P1)
+
+**Status:** Not Started.
+
+Migrate all 21 GitHub labels to scoped `.` separator format per finalized 27-label taxonomy (D-106, D-107). Rename-first strategy preserves label-issue associations (D-110). Create 6 new labels, delete 2 obsolete ones.
+
+### Story 0.45: Agent Definition Updates for Scoped Labels (P1)
+
+**Status:** Not Started. Depends on Story 0.44.
+
+Update all agent definition files (envoy, merge-queue, pr-shepherd) to reference new scoped label names. Text-only changes — agents must be restarted after merge.
+
+### Story 0.46: Label Authority & Triage Flow Documentation (P1)
+
+**Status:** Not Started. Depends on Stories 0.44, 0.45.
+
+Document label authority matrix (who sets/removes each label) and end-to-end triage flow. Covers BOARD recommendations P-003 and P-005. Consolidates party mode consensus into operational reference.
+
 ## Active Epics
 
 ### Epic 30: Linear Integration (P2) — 0/4 stories done
@@ -207,7 +225,7 @@ Comprehensive self-diagnosis command with flutter-style category-based output, c
 | 49.1 | Doctor Command Skeleton & Health Alias | In Review | P1 | None |
 | 49.2 | Environment Checks | Done (PR #473) | P1 | 49.1 |
 | 49.3 | Task Data Integrity Checks | Done (PR #471) | P1 | 49.1 |
-| 49.4 | Provider Health Checks | Not Started | P1 | 49.1 |
+| 49.4 | Provider Health Checks | In Review | P1 | 49.1 |
 | 49.5 | Session & Analytics Checks | Not Started | P1 | 49.1 |
 | 49.6 | Sync & Offline Queue Checks | Not Started | P1 | 49.1 |
 | 49.7 | Enrichment Database Checks | Not Started | P1 | 49.1 |
@@ -243,7 +261,7 @@ In-app `:bug` command for frictionless bug reporting without leaving the TUI. Br
 
 | Epic | Title | Stories |
 |------|-------|---------|
-| 0 | Infrastructure & Process (Backfill) | 12/16 |
+| 0 | Infrastructure & Process (Backfill) | 12/19 |
 | 1 | Three Doors Technical Demo | 7/7 |
 | 2 | Apple Notes Integration | 6/6 |
 | 3 | Enhanced Interaction | 7/7 |
