@@ -25,6 +25,7 @@ type Finding struct {
 	StoryRef     string    `json:"story_ref,omitempty"`
 	ACMatch      ACMatch   `json:"ac_match"`
 	CIFirstPass  bool      `json:"ci_first_pass"`
+	CIFailures   []string  `json:"ci_failures,omitempty"`
 	Conflicts    int       `json:"conflicts"`
 	RebaseCount  int       `json:"rebase_count"`
 	Timestamp    time.Time `json:"timestamp"`
