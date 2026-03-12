@@ -142,6 +142,28 @@ func (m *ConnectionManager) GetByLabel(label string) (*Connection, error) {
 	return nil, fmt.Errorf("get connection by label %q: %w", label, ErrConnectionNotFound)
 }
 
+// NeedsAttention returns connections in Error or AuthExpired state,
+// sorted by priority: AuthExpired first, then Error, then by label.
+func (m *ConnectionManager) NeedsAttention() []*Connection {
+	m.mu.RLock()
+	defer m.mu.RUnlock()
+
+	var result []*Connection
+	for _, conn := range m.connections {
+		if conn.State == StateError || conn.State == StateAuthExpired {
+			result = append(result, conn)
+		}
+	}
+	sort.Slice(result, func(i, j int) bool {
+		// AuthExpired is higher priority than Error
+		if result[i].State != result[j].State {
+			return result[i].State == StateAuthExpired
+		}
+		return result[i].Label < result[j].Label
+	})
+	return result
+}
+
 // Count returns the number of connections.
 func (m *ConnectionManager) Count() int {
 	m.mu.RLock()
