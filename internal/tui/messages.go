@@ -436,6 +436,7 @@ type OrphanedTaskActionMsg struct {
 	TaskID string
 	Action string // "keep" or "delete"
 }
+
 // ClearFlashCmd returns a command that clears the flash after a delay.
 func ClearFlashCmd() tea.Cmd {
 	return tea.Tick(flashDuration, func(_ time.Time) tea.Msg {
