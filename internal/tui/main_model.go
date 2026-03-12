@@ -54,6 +54,7 @@ const (
 	ViewImport
 	ViewBugReport
 	ViewBreakdown
+	ViewExtract
 )
 
 // String returns the human-readable name of the view mode.
@@ -117,6 +118,8 @@ func (v ViewMode) String() string {
 		return "BugReport"
 	case ViewBreakdown:
 		return "Breakdown"
+	case ViewExtract:
+		return "Extract"
 	default:
 		return "Unknown"
 	}
@@ -155,7 +158,9 @@ type MainModel struct {
 	importView          *ImportView
 	bugReportView       *BugReportView
 	breakdownView       *BreakdownView
+	extractView         *ExtractView
 	breakdownService    *services.BreakdownService
+	extractor           *services.TaskExtractor
 	planningMode        bool // CLI --plan: exit after planning instead of showing doors
 	planningTimestamp   *time.Time
 	configPath          string
@@ -517,6 +522,9 @@ func (m *MainModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if m.syncLogDetailView != nil {
 			m.syncLogDetailView.SetWidth(msg.Width)
 			m.syncLogDetailView.SetHeight(msg.Height)
+		}
+		if m.extractView != nil {
+			m.extractView.SetWidth(msg.Width)
 		}
 		return m, nil
 
@@ -1190,6 +1198,58 @@ func (m *MainModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.breakdownView = nil
 		m.setViewMode(m.previousView)
 		return m, nil
+
+	case ShowExtractMsg:
+		ev := NewExtractView()
+		ev.SetWidth(m.width)
+		m.extractView = ev
+		m.previousView = m.viewMode
+		m.setViewMode(ViewExtract)
+		return m, nil
+
+	case ExtractStartMsg:
+		if m.extractor == nil {
+			if m.extractView != nil {
+				m.extractView.SetError("LLM service unavailable — configure an LLM backend to use :extract")
+			}
+			return m, nil
+		}
+		return m, m.runExtraction(msg.Source, msg.Input)
+
+	case ExtractResultMsg:
+		if m.extractView == nil {
+			return m, nil
+		}
+		if msg.Err != nil {
+			m.extractView.SetError(msg.Err.Error())
+			return m, nil
+		}
+		if len(msg.Tasks) == 0 {
+			m.extractView.SetResult(nil, msg.BackendName)
+			return m, nil
+		}
+		m.extractView.SetResult(msg.Tasks, msg.BackendName)
+		return m, nil
+
+	case ExtractImportMsg:
+		for _, et := range msg.Tasks {
+			t := core.NewTask(et.Text)
+			m.pool.AddTask(t)
+		}
+		if err := m.saveTasks(); err != nil {
+			fmt.Fprintf(os.Stderr, "warning: failed to save tasks after extract import: %v\n", err)
+		}
+		m.extractView = nil
+		m.flash = fmt.Sprintf("Imported %d tasks from %s", len(msg.Tasks), msg.Source)
+		m.doorsView.RefreshDoors()
+		m.setViewMode(ViewDoors)
+		return m, ClearFlashCmd()
+
+	case ExtractCancelMsg:
+		m.extractView = nil
+		m.setViewMode(m.previousView)
+		return m, nil
+
 	case EnrichStartMsg:
 		if m.enriching {
 			m.flash = "Enrichment already in progress"
@@ -1714,6 +1774,8 @@ func (m *MainModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m.updateBugReport(msg)
 	case ViewBreakdown:
 		return m.updateBreakdown(msg)
+	case ViewExtract:
+		return m.updateExtract(msg)
 	}
 
 	return m, nil
@@ -1957,6 +2019,14 @@ func (m *MainModel) updateBreakdown(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, cmd
 }
 
+func (m *MainModel) updateExtract(msg tea.Msg) (tea.Model, tea.Cmd) {
+	if m.extractView == nil {
+		return m, nil
+	}
+	cmd := m.extractView.Update(msg)
+	return m, cmd
+}
+
 func (m *MainModel) updateSearch(msg tea.Msg) (tea.Model, tea.Cmd) {
 	if m.searchView == nil {
 		return m, nil
@@ -2109,6 +2179,11 @@ func (m *MainModel) isTextInputActive() bool {
 		return true
 	case ViewImport:
 		return m.importView != nil && m.importView.step == importStepPath
+	case ViewExtract:
+		return m.extractView != nil &&
+			(m.extractView.step == extractStepFileInput ||
+				m.extractView.step == extractStepPasteInput ||
+				m.extractView.step == extractStepEditing)
 	case ViewBugReport:
 		return m.bugReportView != nil && m.bugReportView.state == bugReportInput
 	case ViewFeedback:
@@ -2516,6 +2591,39 @@ func (m *MainModel) SetBreakdownService(svc *services.BreakdownService) {
 	m.breakdownService = svc
 }
 
+// SetExtractor sets the task extractor for LLM task extraction.
+func (m *MainModel) SetExtractor(ext *services.TaskExtractor) {
+	m.extractor = ext
+}
+
+// runExtraction returns a tea.Cmd that runs LLM extraction asynchronously.
+func (m *MainModel) runExtraction(source, input string) tea.Cmd {
+	ext := m.extractor
+	return func() tea.Msg {
+		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+		defer cancel()
+
+		var tasks []services.ExtractedTask
+		var err error
+
+		switch source {
+		case "text":
+			tasks, err = ext.ExtractFromText(ctx, input)
+		case "file":
+			tasks, err = ext.ExtractFromFile(ctx, input)
+		case "clipboard":
+			tasks, err = ext.ExtractFromClipboard(ctx)
+		default:
+			err = fmt.Errorf("unknown extraction source: %s", source)
+		}
+
+		return ExtractResultMsg{
+			Tasks: tasks,
+			Err:   err,
+		}
+	}
+}
+
 // View implements tea.Model.
 func (m *MainModel) View() string {
 	// Overlay takes over the entire screen when visible.
@@ -2641,6 +2749,10 @@ func (m *MainModel) View() string {
 	case ViewBreakdown:
 		if m.breakdownView != nil {
 			view = m.breakdownView.View()
+		}
+	case ViewExtract:
+		if m.extractView != nil {
+			view = m.extractView.View()
 		}
 	default:
 		view = m.doorsView.View()
