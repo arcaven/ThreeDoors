@@ -107,7 +107,7 @@ brew install arcaven/tap/threedoors
 brew install arcaven/tap/threedoors-a
 ```
 
-Both can be installed side-by-side. Stable runs as `threedoors`, alpha runs as `threedoors-a`.
+Both can be installed side-by-side. Stable runs as `threedoors`, alpha as `threedoors-a`.
 
 ### Option 2: Download Pre-built Binary
 
@@ -143,6 +143,8 @@ make build
 # Binary at bin/threedoors
 ```
 
+[↑ Back to top](#threedoors-)
+
 ---
 
 ## 🚀 Quick Start
@@ -168,6 +170,8 @@ threedoors task list --status todo
 threedoors doors                    # Show three doors in the terminal
 threedoors stats --daily
 ```
+
+[↑ Back to top](#threedoors-)
 
 ---
 
@@ -268,6 +272,8 @@ threedoors stats --daily
 - 🔏 **Signed & Notarized** — macOS binaries are code-signed and Apple-notarized
 - 💻 **Cross-Platform Binaries** — Pre-built for macOS (ARM & Intel) and Linux (x86_64)
 - 🚀 **GitHub Releases** — Automatic releases on every merge to main
+
+[↑ Back to top](#threedoors-)
 
 ---
 
@@ -385,6 +391,9 @@ The dashboard shows:
 
 ### Configuring Providers
 
+<details>
+<summary>Provider YAML configuration examples</summary>
+
 Edit `~/.threedoors/config.yaml` to configure task sources:
 
 ```yaml
@@ -448,6 +457,8 @@ threedoors config set theme modern
 
 Multiple providers can run simultaneously — tasks are aggregated and deduplicated across all sources.
 
+</details>
+
 ### Themes
 
 Switch door themes with `:theme` in the TUI or by setting the `theme` key in config:
@@ -465,9 +476,14 @@ Switch door themes with `:theme` in the TUI or by setting the `theme` key in con
 
 Seasonal themes auto-switch based on the current date. Use `:seasonal` to open the seasonal theme picker, or `:theme` for base themes.
 
+[↑ Back to top](#threedoors-)
+
 ---
 
 ## ⌨️ Key Bindings
+
+<details>
+<summary>Key binding tables for all views and command palette</summary>
 
 ### Three Doors View
 | Key | Action |
@@ -538,9 +554,16 @@ Seasonal themes auto-switch based on the current date. Use `:seasonal` to open t
 | `:help` | Show all commands |
 | `:quit` / `:exit` | Exit application |
 
+</details>
+
+[↑ Back to top](#threedoors-)
+
 ---
 
 ## 💻 CLI Reference
+
+<details>
+<summary>Full CLI command reference</summary>
 
 ThreeDoors includes a full CLI for headless/scripted usage. All commands support `--json` for machine-readable output.
 
@@ -620,9 +643,16 @@ threedoors completion zsh            # Generate zsh completions
 threedoors completion fish           # Generate fish completions
 ```
 
+</details>
+
+[↑ Back to top](#threedoors-)
+
 ---
 
 ## 🤖 MCP Server
+
+<details>
+<summary>MCP setup, available tools, and Claude Desktop configuration</summary>
 
 ThreeDoors ships a separate MCP (Model Context Protocol) server binary that exposes tasks and analytics to LLM agents like Claude.
 
@@ -671,9 +701,16 @@ Add to your Claude Desktop `claude_desktop_config.json`:
 }
 ```
 
+</details>
+
+[↑ Back to top](#threedoors-)
+
 ---
 
 ## 📁 Data Directory
+
+<details>
+<summary>File layout for <code>~/.threedoors/</code></summary>
 
 All data is stored locally in `~/.threedoors/`:
 
@@ -692,6 +729,10 @@ All data is stored locally in `~/.threedoors/`:
 └── onboarding.lock     # First-run marker
 ```
 
+</details>
+
+[↑ Back to top](#threedoors-)
+
 ---
 
 ## 🔒 Data & Privacy
@@ -701,6 +742,8 @@ All data is stored locally in `~/.threedoors/`:
 - **No accounts** — No sign-ups, no servers, no tracking
 - **Offline-first** — Works without network; syncs when available
 - **Your API tokens stay local** — Provider credentials in `config.yaml` are never transmitted beyond the configured service
+
+[↑ Back to top](#threedoors-)
 
 ---
 
@@ -713,9 +756,14 @@ All data is stored locally in `~/.threedoors/`:
 5. **Power Users Welcome** — Vi-style commands without sacrificing simplicity
 6. **Local-First** — Your data stays on your machine, no accounts, no telemetry
 
+[↑ Back to top](#threedoors-)
+
 ---
 
 ## 🛠️ Development
+
+<details>
+<summary>Tech stack, project structure, and make targets</summary>
 
 ### Tech Stack
 
@@ -782,6 +830,10 @@ make fmt    # Format code
 make lint   # Run linter (must pass with zero warnings)
 ```
 
+</details>
+
+[↑ Back to top](#threedoors-)
+
 ---
 
 ## 🤝 Contributing
@@ -804,6 +856,8 @@ make lint   # Run linter (must pass with zero warnings)
 - `golangci-lint` passes with zero warnings
 - Unit tests for new logic
 - No `//nolint` without justification
+
+[↑ Back to top](#threedoors-)
 
 ---
 
