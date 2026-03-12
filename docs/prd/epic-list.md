@@ -757,6 +757,24 @@
 - **Research:** See `_bmad-output/planning-artifacts/full-terminal-layout-research.md` and `full-terminal-layout-party-mode.md`
 - **Decisions:** D-114 (AltScreen), D-115 (layout model), D-116 (door cap), D-117 (40/60 padding), D-118 (dynamic height), D-119 (degradation), D-120 (two-story split), D-121 (prerequisite for 39.2)
 
+**Epic 61: GitHub Pages User Guide** (P2)
+- **Goal:** Publish ThreeDoors documentation as a professional GitHub Pages site using MkDocs + Material for MkDocs, making the user guide discoverable via search engines and accessible without cloning the repo
+- **Prerequisites:** None
+- **Status:** Not Started
+- **Deliverables:**
+  - MkDocs + Material for MkDocs infrastructure in `docs-site/` directory
+  - GitHub Actions workflow for automatic deployment on push to main
+  - Getting started guides (installation, quickstart, core concepts)
+  - Core user guide pages (task management, search, doors interaction, keybindings, sessions)
+  - Per-integration setup guides (8 provider pages with consistent structure)
+  - CLI reference, MCP server docs, configuration reference
+  - Advanced guides (task dependencies, custom providers), troubleshooting, changelog
+  - Dark/light mode, client-side search, responsive navigation
+- **Stories:** 61.1-61.4 (4 stories: infrastructure, getting started + core, integrations, CLI/config/advanced)
+- **Research:** PRs #481 and #500; see `_bmad-output/planning-artifacts/gh-pages-user-guide-plan.md`
+- **Decisions:** D-174 (MkDocs + Material for MkDocs)
+- **Note:** Story 61.1 PR requires manual merge by project owner (workflow scope limitation)
+
 **Epic 60+: Advanced Features** (Voice interface, web interface, Apple Watch, iPad, trading mechanic, gamification)
 
 **Guiding Principle:** Each epic must deliver tangible user value and be informed by real usage patterns from previous phases. No speculation-driven development.
@@ -828,5 +846,6 @@
 | Epic 57: LLM CLI Services | 8 | Not Started |
 | Epic 58: Supervisor Shift Handover | 7 | Not Started |
 | Epic 59: Full-Terminal Vertical Layout | 2 | Not Started |
-| **Total** | **312** | **152 complete, 9 epics in progress, 152 not started** |
+| Epic 61: GitHub Pages User Guide | 4 | Not Started |
+| **Total** | **316** | **152 complete, 9 epics in progress, 156 not started** |
 ---
