@@ -293,7 +293,7 @@ Document and enable remote collaboration with multiclaude via SSH, with future M
 | 53.4 | Remote Worker Dispatch | Not Started | P2 | 53.2, 53.3 |
 | 53.5 | MCP Bridge Prototype | Not Started | P2 | 53.1 |
 
-### Epic 51: SLAES — Self-Learning Agentic Engineering System (P1) — 5/10 stories done
+### Epic 51: SLAES — Self-Learning Agentic Engineering System (P1) — 5/11 stories done
 
 Continuous improvement meta-system with a persistent `retrospector` agent that monitors PR merges, detects process waste, audits doc consistency, and files improvement recommendations to BOARD.md. Dual-loop architecture: spec-chain quality (did we build the right thing?) and operational efficiency (are we building efficiently?).
 
@@ -309,6 +309,7 @@ Continuous improvement meta-system with a persistent `retrospector` agent that m
 | 51.8 | CI Failure Rate Analysis & Coding Standard Proposals | Done (PR #505) | P2 | 51.3, 51.6 |
 | 51.9 | Research Lifecycle Tracking | Done (PR #507) | P2 | 51.3, 51.6 |
 | 51.10 | PR Creation Authority & Trend Reporting | Done (PR #509) | P2 | 51.1-51.9 |
+| 51.11 | Retrospector Autonomy Fixes — Agent Definition Rewrite | Not Started | P1 | 51.1 |
 
 **Phasing:** Phase 0 (stories 51.1-51.2): Bootstrap — rewrite agent definitions. Phase 1 (stories 51.3-51.6): MVP monitoring. Phase 2 (stories 51.7-51.10): Advanced analysis after 2 weeks of MVP validation.
 
@@ -339,6 +340,23 @@ Reduce PR CI wall clock time from 3m33s to ~2m08s through CI configuration chang
 | 55.3 | Local Dev Acceleration (make test-fast + CI Cache) | Done (PR #580) | P1 | None |
 
 **Dependency graph:** All three stories are fully independent and can be implemented in parallel.
+
+### Epic 57: LLM CLI Services (P1) — 0/8 stories done
+
+Enable ThreeDoors to invoke LLM CLI tools (Claude CLI, Gemini CLI, Ollama CLI) as subprocess-based service providers for intelligent task operations. ThreeDoors as CLIENT calling LLMs (Direction 1), complementing Epic 24's MCP server (Direction 2). Extends existing `LLMBackend` interface with CLI-based implementations via `os/exec`. Two-layer architecture: Services (what: extract, enrich, breakdown) + Backends (how: which CLI tool). Auto-discovery with fallback chain, privacy-tiered model (local default, cloud opt-in).
+
+| Story | Title | Status | Priority | Depends On |
+|-------|-------|--------|----------|------------|
+| 57.1 | CLIProvider + CLISpec + CommandRunner Abstraction | Not Started | P0 | None |
+| 57.2 | Auto-Discovery and Fallback Chain | Not Started | P0 | 57.1 |
+| 57.3 | TaskExtractor Service + Extraction Prompt | Not Started | P0 | 57.1 |
+| 57.4 | Extraction TUI (`:extract` + review screen) | Not Started | P0 | 57.3 |
+| 57.5 | Extraction CLI (`threedoors extract`) | Not Started | P0 | 57.3 |
+| 57.6 | TaskEnricher Service + Enrichment TUI | Not Started | P1 | 57.1 |
+| 57.7 | TaskBreakdown Service (extend Epic 14) | Not Started | P1 | 57.1 |
+| 57.8 | `threedoors llm status` Command | Not Started | P1 | 57.1, 57.2 |
+
+**Dependency graph:** 57.1 is foundation. 57.2-57.7 parallelize after 57.1 (except 57.4/57.5 depend on 57.3). 57.8 depends on 57.1 + 57.2.
 
 ### Epic 58: Supervisor Shift Handover — Context-Aware Supervisor Rotation (P2) — 0/7 stories done
 
