@@ -14,10 +14,11 @@ func NewAutumnTheme() *DoorTheme {
 	frameColor := lipgloss.CompleteColor{TrueColor: "#cc7722", ANSI256: "172", ANSI: "3"}
 	selectedColor := lipgloss.CompleteColor{TrueColor: "#eebb55", ANSI256: "179", ANSI: "11"}
 
+	handleOverride := new(string)
 	return &DoorTheme{
 		Name:        "autumn",
 		Description: "Autumn harvest — layered block elements, angular textures",
-		Render:      autumnRender(frameColor, selectedColor),
+		Render:      autumnRender(frameColor, selectedColor, handleOverride),
 		Colors: ThemeColors{
 			Frame:    frameColor,
 			Fill:     lipgloss.CompleteColor{TrueColor: "#1a0f00", ANSI256: "52", ANSI: "0"},
@@ -34,10 +35,17 @@ func NewAutumnTheme() *DoorTheme {
 		Season:      "autumn",
 		SeasonStart: MonthDay{9, 1},
 		SeasonEnd:   MonthDay{11, 30},
+		HandleFrames: HandleFrames{
+			Rest:       "●",
+			Turning:    "◐",
+			Turned:     "○",
+			SpringBack: "◑",
+		},
+		handleOverride: handleOverride,
 	}
 }
 
-func autumnRender(frameColor, selectedColor lipgloss.TerminalColor) func(string, int, int, bool, string) string {
+func autumnRender(frameColor, selectedColor lipgloss.TerminalColor, handleOverride *string) func(string, int, int, bool, string) string {
 	return func(content string, width int, height int, selected bool, hint string) string {
 		color := frameColor
 		hChar := "─"
@@ -62,7 +70,7 @@ func autumnRender(frameColor, selectedColor lipgloss.TerminalColor) func(string,
 			return autumnCompact(content, inner, hChar, vChar, tl, tr, bl, br, style, hint)
 		}
 
-		return autumnDoor(content, width, height, inner, hChar, vChar, tl, tr, bl, br, style, selected, hint)
+		return autumnDoor(content, width, height, inner, hChar, vChar, tl, tr, bl, br, style, selected, hint, handleOverride)
 	}
 }
 
@@ -118,7 +126,7 @@ func autumnCompact(content string, inner int, hChar, vChar, tl, tr, bl, br strin
 	return b.String()
 }
 
-func autumnDoor(content string, width, height, inner int, hChar, vChar, tl, tr, bl, br string, style lipgloss.Style, selected bool, hint string) string {
+func autumnDoor(content string, width, height, inner int, hChar, vChar, tl, tr, bl, br string, style lipgloss.Style, selected bool, hint string, handleOverride *string) string {
 	anatomy := NewDoorAnatomy(height)
 
 	contentWidth := inner - 6
@@ -179,7 +187,11 @@ func autumnDoor(content string, width, height, inner int, hChar, vChar, tl, tr, 
 			if knobPad < 1 {
 				knobPad = 1
 			}
-			knobLine := renderHandleWithHint(inner, knobPad, "●", hint)
+			handleSym := "●"
+			if handleOverride != nil && *handleOverride != "" {
+				handleSym = *handleOverride
+			}
+			knobLine := renderHandleWithHint(inner, knobPad, handleSym, hint)
 			fmt.Fprintf(&b, "%s%s%s", style.Render(hingeV), knobLine, style.Render(openV))
 
 		case row == textureBotRow:

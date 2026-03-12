@@ -17,10 +17,11 @@ func NewModernTheme() *DoorTheme {
 	frameColor := lipgloss.CompleteColor{TrueColor: "#444444", ANSI256: "238", ANSI: "8"}
 	selectedColor := lipgloss.CompleteColor{TrueColor: "#eeeeee", ANSI256: "255", ANSI: "15"}
 
+	handleOverride := new(string)
 	return &DoorTheme{
 		Name:        "modern",
 		Description: "Modern minimalist — clean lines, generous whitespace",
-		Render:      modernRender(frameColor, selectedColor),
+		Render:      modernRender(frameColor, selectedColor, handleOverride),
 		Colors: ThemeColors{
 			Frame:    frameColor,
 			Fill:     lipgloss.CompleteColor{TrueColor: "#000000", ANSI256: "0", ANSI: "0"},
@@ -33,10 +34,17 @@ func NewModernTheme() *DoorTheme {
 		},
 		MinWidth:  15,
 		MinHeight: 12,
+		HandleFrames: HandleFrames{
+			Rest:       "○",
+			Turning:    "◑",
+			Turned:     "●",
+			SpringBack: "◐",
+		},
+		handleOverride: handleOverride,
 	}
 }
 
-func modernRender(frameColor, selectedColor lipgloss.TerminalColor) func(string, int, int, bool, string) string {
+func modernRender(frameColor, selectedColor lipgloss.TerminalColor, handleOverride *string) func(string, int, int, bool, string) string {
 	return func(content string, width int, height int, selected bool, hint string) string {
 		color := frameColor
 		hChar := "─"
@@ -60,7 +68,7 @@ func modernRender(frameColor, selectedColor lipgloss.TerminalColor) func(string,
 		}
 
 		// Door-like proportions using DoorAnatomy
-		return modernDoor(content, width, height, inner, hChar, vChar, style, selected, hint)
+		return modernDoor(content, width, height, inner, hChar, vChar, style, selected, hint, handleOverride)
 	}
 }
 
@@ -122,7 +130,7 @@ func modernCompact(content string, inner int, hChar, vChar string, style lipglos
 	return b.String()
 }
 
-func modernDoor(content string, width, height, inner int, hChar, vChar string, style lipgloss.Style, selected bool, hint string) string {
+func modernDoor(content string, width, height, inner int, hChar, vChar string, style lipgloss.Style, selected bool, hint string, handleOverride *string) string {
 	anatomy := NewDoorAnatomy(height)
 
 	// Word-wrap content with 3-char padding on each side
@@ -170,12 +178,16 @@ func modernDoor(content string, width, height, inner int, hChar, vChar string, s
 			fmt.Fprintf(&b, "%s", style.Render(hingeTee+divBar+openTee))
 
 		case row == anatomy.HandleRow:
-			// Minimalist handle: ○ at rightmost content column
+			// Minimalist handle: ○ at rightmost content column (animated via handleOverride)
 			knobPad := inner - 1
 			if knobPad < 1 {
 				knobPad = 1
 			}
-			knobLine := renderHandleWithHint(inner, knobPad, "○", hint)
+			handleSym := "○"
+			if handleOverride != nil && *handleOverride != "" {
+				handleSym = *handleOverride
+			}
+			knobLine := renderHandleWithHint(inner, knobPad, handleSym, hint)
 			fmt.Fprintf(&b, "%s%s%s", style.Render(hingeV), knobLine, style.Render(openV))
 
 		case row == anatomy.ThresholdRow:

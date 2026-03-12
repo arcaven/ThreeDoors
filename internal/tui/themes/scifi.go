@@ -33,6 +33,8 @@ func NewSciFiTheme() *DoorTheme {
 		},
 		MinWidth:  16,
 		MinHeight: 14,
+		// SciFi uses a multi-character handle (◈──┤) — no turn animation.
+		// HandleFrames left as zero value (no animation configured).
 	}
 }
 

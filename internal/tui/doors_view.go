@@ -439,6 +439,19 @@ func (dv *DoorsView) View() string {
 			hint = renderDoorHint(doorHintKeys[i], true, isSelected, hasSelection)
 		}
 
+		// Set animated handle character before theme render (Story 48.4).
+		// During animation, emphasis drives the handle frame; when settled,
+		// clear the override so the theme uses its static default.
+		if activeTheme != nil && activeTheme.HandleFrames.Rest != "" {
+			if dv.doorAnimation != nil && dv.doorAnimation.Active() {
+				emphasis := dv.doorAnimation.Emphasis(i)
+				deselecting := !isSelected && emphasis > 0
+				activeTheme.HandleCharForAnimation(emphasis, deselecting)
+			} else {
+				activeTheme.SetHandleChar("")
+			}
+		}
+
 		// Use theme Render when a theme is active, otherwise fall back to lipgloss styles
 		if activeTheme != nil {
 			renderedDoors = append(renderedDoors, activeTheme.Render(content, doorWidth, doorHeight, isSelected, hint))

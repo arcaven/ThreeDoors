@@ -16,10 +16,11 @@ func NewShojiTheme() *DoorTheme {
 	frameColor := lipgloss.CompleteColor{TrueColor: "#d7af87", ANSI256: "180", ANSI: "3"}
 	selectedColor := lipgloss.CompleteColor{TrueColor: "#ffd7af", ANSI256: "223", ANSI: "11"}
 
+	handleOverride := new(string)
 	return &DoorTheme{
 		Name:        "shoji",
 		Description: "Japanese shoji — wooden lattice grid with paper panes",
-		Render:      shojiRender(frameColor, selectedColor),
+		Render:      shojiRender(frameColor, selectedColor, handleOverride),
 		Colors: ThemeColors{
 			Frame:    frameColor,
 			Fill:     lipgloss.CompleteColor{TrueColor: "#000000", ANSI256: "0", ANSI: "0"},
@@ -32,6 +33,13 @@ func NewShojiTheme() *DoorTheme {
 		},
 		MinWidth:  19,
 		MinHeight: 14,
+		HandleFrames: HandleFrames{
+			Rest:       "○",
+			Turning:    "◑",
+			Turned:     "●",
+			SpringBack: "◐",
+		},
+		handleOverride: handleOverride,
 	}
 }
 
@@ -46,14 +54,14 @@ type shojiChars struct {
 	tRght string // right T-junction
 }
 
-func shojiRender(frameColor, selectedColor lipgloss.TerminalColor) func(string, int, int, bool, string) string {
+func shojiRender(frameColor, selectedColor lipgloss.TerminalColor, handleOverride *string) func(string, int, int, bool, string) string {
 	return func(content string, width int, height int, selected bool, hint string) string {
 		// Compact mode: use existing fixed layout
 		if height < 14 {
 			return shojiCompactRender(content, width, selected, frameColor, selectedColor, hint)
 		}
 
-		return shojiDoorRender(content, width, height, selected, frameColor, selectedColor, hint)
+		return shojiDoorRender(content, width, height, selected, frameColor, selectedColor, hint, handleOverride)
 	}
 }
 
@@ -115,7 +123,7 @@ func shojiCompactRender(content string, width int, selected bool, frameColor, se
 // shojiDoorRender renders the Shoji theme with door-like proportions using DoorAnatomy.
 // Hinge asymmetry: left uses heavier junctions (double-vert unselected, heavy selected),
 // right uses standard-weight junctions.
-func shojiDoorRender(content string, width, height int, selected bool, frameColor, selectedColor lipgloss.TerminalColor, hint string) string {
+func shojiDoorRender(content string, width, height int, selected bool, frameColor, selectedColor lipgloss.TerminalColor, hint string, handleOverride *string) string {
 	anatomy := NewDoorAnatomy(height)
 
 	color := frameColor
@@ -224,12 +232,16 @@ func shojiDoorRender(content string, width, height int, selected bool, frameColo
 			fmt.Fprintf(&b, "%s", crossBar())
 
 		case row == anatomy.HandleRow:
-			// Handle row: ○ at rightmost content column
+			// Handle row: ○ at rightmost content column (animated via handleOverride)
 			knobPad := innerW - 1
 			if knobPad < 1 {
 				knobPad = 1
 			}
-			knobLine := renderHandleWithHint(innerW, knobPad, "○", hint)
+			handleSym := "○"
+			if handleOverride != nil && *handleOverride != "" {
+				handleSym = *handleOverride
+			}
+			knobLine := renderHandleWithHint(innerW, knobPad, handleSym, hint)
 			fmt.Fprintf(&b, "%s%s%s", style.Render(hingeV), knobLine, style.Render(openV))
 
 		case row == latticeBar2Row:

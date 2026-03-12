@@ -15,10 +15,11 @@ func NewWinterTheme() *DoorTheme {
 	frameColor := lipgloss.CompleteColor{TrueColor: "#87ceeb", ANSI256: "117", ANSI: "14"}
 	selectedColor := lipgloss.CompleteColor{TrueColor: "#e0f0ff", ANSI256: "195", ANSI: "15"}
 
+	handleOverride := new(string)
 	return &DoorTheme{
 		Name:        "winter",
 		Description: "Winter crystalline — angular frames, dense dot patterns",
-		Render:      winterRender(frameColor, selectedColor),
+		Render:      winterRender(frameColor, selectedColor, handleOverride),
 		Colors: ThemeColors{
 			Frame:    frameColor,
 			Fill:     lipgloss.CompleteColor{TrueColor: "#1a1a2e", ANSI256: "17", ANSI: "0"},
@@ -35,10 +36,17 @@ func NewWinterTheme() *DoorTheme {
 		Season:      "winter",
 		SeasonStart: MonthDay{12, 1},
 		SeasonEnd:   MonthDay{2, 29},
+		HandleFrames: HandleFrames{
+			Rest:       "◆",
+			Turning:    "◇",
+			Turned:     "○",
+			SpringBack: "◑",
+		},
+		handleOverride: handleOverride,
 	}
 }
 
-func winterRender(frameColor, selectedColor lipgloss.TerminalColor) func(string, int, int, bool, string) string {
+func winterRender(frameColor, selectedColor lipgloss.TerminalColor, handleOverride *string) func(string, int, int, bool, string) string {
 	return func(content string, width int, height int, selected bool, hint string) string {
 		color := frameColor
 		hChar := "─"
@@ -63,7 +71,7 @@ func winterRender(frameColor, selectedColor lipgloss.TerminalColor) func(string,
 			return winterCompact(content, inner, hChar, vChar, cornerTL, cornerTR, cornerBL, cornerBR, style, hint)
 		}
 
-		return winterDoor(content, width, height, inner, hChar, vChar, cornerTL, cornerTR, cornerBL, cornerBR, style, selected, hint)
+		return winterDoor(content, width, height, inner, hChar, vChar, cornerTL, cornerTR, cornerBL, cornerBR, style, selected, hint, handleOverride)
 	}
 }
 
@@ -124,7 +132,7 @@ func winterCompact(content string, inner int, hChar, vChar, tl, tr, bl, br strin
 	return b.String()
 }
 
-func winterDoor(content string, width, height, inner int, hChar, vChar, tl, tr, bl, br string, style lipgloss.Style, selected bool, hint string) string {
+func winterDoor(content string, width, height, inner int, hChar, vChar, tl, tr, bl, br string, style lipgloss.Style, selected bool, hint string, handleOverride *string) string {
 	anatomy := NewDoorAnatomy(height)
 
 	contentWidth := inner - 6
@@ -197,7 +205,11 @@ func winterDoor(content string, width, height, inner int, hChar, vChar, tl, tr, 
 			if knobPad < 1 {
 				knobPad = 1
 			}
-			knobLine := renderHandleWithHint(inner, knobPad, "◆", hint)
+			handleSym := "◆"
+			if handleOverride != nil && *handleOverride != "" {
+				handleSym = *handleOverride
+			}
+			knobLine := renderHandleWithHint(inner, knobPad, handleSym, hint)
 			fmt.Fprintf(&b, "%s%s%s", style.Render(hingeV), knobLine, style.Render(openV))
 
 		case row == frostBotRow:

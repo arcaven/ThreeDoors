@@ -25,10 +25,11 @@ func NewClassicTheme() *DoorTheme {
 		BorderForeground(selectedColor).
 		Padding(1, 2)
 
+	handleOverride := new(string)
 	return &DoorTheme{
 		Name:        "classic",
 		Description: "Classic rounded border — the original ThreeDoors look",
-		Render:      classicRender(frameColor, selectedColor, unselectedStyle, selectedStyle),
+		Render:      classicRender(frameColor, selectedColor, unselectedStyle, selectedStyle, handleOverride),
 		Colors: ThemeColors{
 			Frame:    frameColor,
 			Fill:     lipgloss.CompleteColor{TrueColor: "#000000", ANSI256: "0", ANSI: "0"},
@@ -41,10 +42,17 @@ func NewClassicTheme() *DoorTheme {
 		},
 		MinWidth:  15,
 		MinHeight: 10,
+		HandleFrames: HandleFrames{
+			Rest:       "●",
+			Turning:    "◐",
+			Turned:     "○",
+			SpringBack: "◑",
+		},
+		handleOverride: handleOverride,
 	}
 }
 
-func classicRender(frameColor, selectedColor lipgloss.TerminalColor, unselectedStyle, selectedStyle lipgloss.Style) func(string, int, int, bool, string) string {
+func classicRender(frameColor, selectedColor lipgloss.TerminalColor, unselectedStyle, selectedStyle lipgloss.Style, handleOverride *string) func(string, int, int, bool, string) string {
 	return func(content string, width int, height int, selected bool, hint string) string {
 		// Compact mode: use original Lipgloss card style
 		if height < 10 {
@@ -116,7 +124,11 @@ func classicRender(frameColor, selectedColor lipgloss.TerminalColor, unselectedS
 				if knobPad < 1 {
 					knobPad = 1
 				}
-				knobLine := renderHandleWithHint(inner, knobPad, "●", hint)
+				handleSym := "●"
+				if handleOverride != nil && *handleOverride != "" {
+					handleSym = *handleOverride
+				}
+				knobLine := renderHandleWithHint(inner, knobPad, handleSym, hint)
 				fmt.Fprintf(&b, "%s%s%s", style.Render(hingeTee), knobLine, style.Render(openV))
 
 			case row == anatomy.ThresholdRow:

@@ -43,6 +43,35 @@ type DoorTheme struct {
 	Season      string
 	SeasonStart MonthDay
 	SeasonEnd   MonthDay
+
+	// HandleFrames defines the 4-character rotation for the handle turn
+	// micro-animation (Story 48.4). Zero value means no animation.
+	HandleFrames HandleFrames
+
+	// handleOverride is shared with the Render closure via pointer. When
+	// non-empty, the render closure uses this character instead of its
+	// static default. Set via SetHandleChar before each Render call.
+	handleOverride *string
+}
+
+// SetHandleChar overrides the handle character for the next Render call.
+// Pass "" to revert to the theme's static default.
+func (dt *DoorTheme) SetHandleChar(char string) {
+	if dt.handleOverride != nil {
+		*dt.handleOverride = char
+	}
+}
+
+// HandleCharForAnimation computes the animated handle character based on
+// the current spring emphasis and selection direction, then sets it for
+// the next Render call. Returns the computed character.
+func (dt *DoorTheme) HandleCharForAnimation(emphasis float64, deselecting bool) string {
+	if dt.HandleFrames.Rest == "" {
+		return ""
+	}
+	char := HandleCharForEmphasis(dt.HandleFrames, emphasis, deselecting)
+	dt.SetHandleChar(char)
+	return char
 }
 
 // DefaultThemeName is the theme used when no theme is specified.

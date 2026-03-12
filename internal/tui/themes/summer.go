@@ -14,10 +14,11 @@ func NewSummerTheme() *DoorTheme {
 	frameColor := lipgloss.CompleteColor{TrueColor: "#ffaa00", ANSI256: "214", ANSI: "11"}
 	selectedColor := lipgloss.CompleteColor{TrueColor: "#ffdd55", ANSI256: "221", ANSI: "11"}
 
+	handleOverride := new(string)
 	return &DoorTheme{
 		Name:        "summer",
 		Description: "Summer radiance — bold geometric shapes, radiating lines",
-		Render:      summerRender(frameColor, selectedColor),
+		Render:      summerRender(frameColor, selectedColor, handleOverride),
 		Colors: ThemeColors{
 			Frame:    frameColor,
 			Fill:     lipgloss.CompleteColor{TrueColor: "#1a1000", ANSI256: "58", ANSI: "0"},
@@ -34,10 +35,17 @@ func NewSummerTheme() *DoorTheme {
 		Season:      "summer",
 		SeasonStart: MonthDay{6, 1},
 		SeasonEnd:   MonthDay{8, 31},
+		HandleFrames: HandleFrames{
+			Rest:       "■",
+			Turning:    "◐",
+			Turned:     "□",
+			SpringBack: "◑",
+		},
+		handleOverride: handleOverride,
 	}
 }
 
-func summerRender(frameColor, selectedColor lipgloss.TerminalColor) func(string, int, int, bool, string) string {
+func summerRender(frameColor, selectedColor lipgloss.TerminalColor, handleOverride *string) func(string, int, int, bool, string) string {
 	return func(content string, width int, height int, selected bool, hint string) string {
 		color := frameColor
 		hChar := "═"
@@ -62,7 +70,7 @@ func summerRender(frameColor, selectedColor lipgloss.TerminalColor) func(string,
 			return summerCompact(content, inner, hChar, vChar, tl, tr, bl, br, style, hint)
 		}
 
-		return summerDoor(content, width, height, inner, hChar, vChar, tl, tr, bl, br, style, selected, hint)
+		return summerDoor(content, width, height, inner, hChar, vChar, tl, tr, bl, br, style, selected, hint, handleOverride)
 	}
 }
 
@@ -118,7 +126,7 @@ func summerCompact(content string, inner int, hChar, vChar, tl, tr, bl, br strin
 	return b.String()
 }
 
-func summerDoor(content string, width, height, inner int, hChar, vChar, tl, tr, bl, br string, style lipgloss.Style, selected bool, hint string) string {
+func summerDoor(content string, width, height, inner int, hChar, vChar, tl, tr, bl, br string, style lipgloss.Style, selected bool, hint string, handleOverride *string) string {
 	anatomy := NewDoorAnatomy(height)
 
 	contentWidth := inner - 6
@@ -172,12 +180,16 @@ func summerDoor(content string, width, height, inner int, hChar, vChar, tl, tr, 
 			fmt.Fprintf(&b, "%s", style.Render(hingeTee+strings.Repeat(divH, inner)+openTee))
 
 		case row == anatomy.HandleRow:
-			// Bold square handle at rightmost content column
+			// Bold square handle at rightmost content column (animated via handleOverride)
 			knobPad := inner - 1
 			if knobPad < 1 {
 				knobPad = 1
 			}
-			knobLine := renderHandleWithHint(inner, knobPad, "■", hint)
+			handleSym := "■"
+			if handleOverride != nil && *handleOverride != "" {
+				handleSym = *handleOverride
+			}
+			knobLine := renderHandleWithHint(inner, knobPad, handleSym, hint)
 			fmt.Fprintf(&b, "%s%s%s", style.Render(hingeV), knobLine, style.Render(openV))
 
 		case row == anatomy.ThresholdRow:

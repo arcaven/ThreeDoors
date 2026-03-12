@@ -14,10 +14,11 @@ func NewSpringTheme() *DoorTheme {
 	frameColor := lipgloss.CompleteColor{TrueColor: "#77dd77", ANSI256: "114", ANSI: "10"}
 	selectedColor := lipgloss.CompleteColor{TrueColor: "#c1f0c1", ANSI256: "157", ANSI: "10"}
 
+	handleOverride := new(string)
 	return &DoorTheme{
 		Name:        "spring",
 		Description: "Spring bloom — flowing curves, light open patterns",
-		Render:      springRender(frameColor, selectedColor),
+		Render:      springRender(frameColor, selectedColor, handleOverride),
 		Colors: ThemeColors{
 			Frame:    frameColor,
 			Fill:     lipgloss.CompleteColor{TrueColor: "#0a1f0a", ANSI256: "22", ANSI: "0"},
@@ -34,10 +35,17 @@ func NewSpringTheme() *DoorTheme {
 		Season:      "spring",
 		SeasonStart: MonthDay{3, 1},
 		SeasonEnd:   MonthDay{5, 31},
+		HandleFrames: HandleFrames{
+			Rest:       "○",
+			Turning:    "◑",
+			Turned:     "●",
+			SpringBack: "◐",
+		},
+		handleOverride: handleOverride,
 	}
 }
 
-func springRender(frameColor, selectedColor lipgloss.TerminalColor) func(string, int, int, bool, string) string {
+func springRender(frameColor, selectedColor lipgloss.TerminalColor, handleOverride *string) func(string, int, int, bool, string) string {
 	return func(content string, width int, height int, selected bool, hint string) string {
 		color := frameColor
 		hChar := "─"
@@ -62,7 +70,7 @@ func springRender(frameColor, selectedColor lipgloss.TerminalColor) func(string,
 			return springCompact(content, inner, hChar, vChar, tl, tr, bl, br, style, hint)
 		}
 
-		return springDoor(content, width, height, inner, hChar, vChar, tl, tr, bl, br, style, selected, hint)
+		return springDoor(content, width, height, inner, hChar, vChar, tl, tr, bl, br, style, selected, hint, handleOverride)
 	}
 }
 
@@ -118,7 +126,7 @@ func springCompact(content string, inner int, hChar, vChar, tl, tr, bl, br strin
 	return b.String()
 }
 
-func springDoor(content string, width, height, inner int, hChar, vChar, tl, tr, bl, br string, style lipgloss.Style, selected bool, hint string) string {
+func springDoor(content string, width, height, inner int, hChar, vChar, tl, tr, bl, br string, style lipgloss.Style, selected bool, hint string, handleOverride *string) string {
 	anatomy := NewDoorAnatomy(height)
 
 	contentWidth := inner - 6
@@ -162,12 +170,16 @@ func springDoor(content string, width, height, inner int, hChar, vChar, tl, tr, 
 			fmt.Fprintf(&b, "%s", style.Render(hingeTee+strings.Repeat(divH, inner)+openTee))
 
 		case row == anatomy.HandleRow:
-			// Open circle handle at rightmost content column
+			// Open circle handle at rightmost content column (animated via handleOverride)
 			knobPad := inner - 1
 			if knobPad < 1 {
 				knobPad = 1
 			}
-			knobLine := renderHandleWithHint(inner, knobPad, "○", hint)
+			handleSym := "○"
+			if handleOverride != nil && *handleOverride != "" {
+				handleSym = *handleOverride
+			}
+			knobLine := renderHandleWithHint(inner, knobPad, handleSym, hint)
 			fmt.Fprintf(&b, "%s%s%s", style.Render(hingeV), knobLine, style.Render(openV))
 
 		case row == anatomy.ThresholdRow:
