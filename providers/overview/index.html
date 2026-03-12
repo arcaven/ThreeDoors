@@ -884,6 +884,19 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -895,6 +908,94 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#multi-source-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multi-Source Architecture
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Multi-Source Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-providers-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      How Providers Work
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connection-manager" class="md-nav__link">
+    <span class="md-ellipsis">
+      Connection Manager
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#available-providers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Available Providers
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mixing-sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mixing Sources
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#offline-sync" class="md-nav__link">
+    <span class="md-ellipsis">
+      Offline &amp; Sync
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      Health Check
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1450,6 +1551,83 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#multi-source-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multi-Source Architecture
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Multi-Source Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-providers-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      How Providers Work
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connection-manager" class="md-nav__link">
+    <span class="md-ellipsis">
+      Connection Manager
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#available-providers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Available Providers
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mixing-sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mixing Sources
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#offline-sync" class="md-nav__link">
+    <span class="md-ellipsis">
+      Offline &amp; Sync
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      Health Check
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1468,7 +1646,153 @@
 
 
 <h1 id="task-sources-overview">Task Sources Overview<a class="headerlink" href="#task-sources-overview" title="Permanent link">&para;</a></h1>
-<p><em>Coming soon — multi-source architecture and provider pattern.</em></p>
+<p>ThreeDoors supports multiple task storage backends called <strong>providers</strong>. You can use one or several simultaneously — tasks are aggregated and deduplicated across all sources.</p>
+<h2 id="multi-source-architecture">Multi-Source Architecture<a class="headerlink" href="#multi-source-architecture" title="Permanent link">&para;</a></h2>
+<p>At the core, ThreeDoors uses the <strong>TaskProvider</strong> interface to abstract storage backends. Each provider implements a common contract for loading, saving, and completing tasks. This means you can mix local files with cloud services seamlessly.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────┐   ┌─────────────┐   ┌─────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│  Local YAML  │   │ Apple Notes  │   │    Jira     │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>└──────┬───────┘   └──────┬───────┘   └──────┬──────┘
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>       │                  │                  │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>       └──────────┬───────┴──────────────────┘
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>                  │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>          ┌───────▼────────┐
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>          │  Connection     │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>          │  Manager        │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>          │  (aggregation,  │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>          │   dedup, WAL)   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>          └───────┬─────────┘
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>                  │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>          ┌───────▼─────────┐
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>          │   ThreeDoors    │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>          │   Task Pool     │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>          └─────────────────┘
+</code></pre></div>
+<h3 id="how-providers-work">How Providers Work<a class="headerlink" href="#how-providers-work" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Registration</strong> — Each provider registers with the adapter registry at startup</li>
+<li><strong>Configuration</strong> — You declare active providers in <code>~/.threedoors/config.yaml</code></li>
+<li><strong>Loading</strong> — On launch, ThreeDoors calls <code>LoadTasks()</code> on each configured provider</li>
+<li><strong>Aggregation</strong> — Tasks from all providers merge into a single pool for door selection</li>
+<li><strong>Write-back</strong> — Changes (completions, status updates) route back to the originating provider</li>
+</ol>
+<h3 id="connection-manager">Connection Manager<a class="headerlink" href="#connection-manager" title="Permanent link">&para;</a></h3>
+<p>The connection manager handles:</p>
+<ul>
+<li><strong>Aggregation</strong> — Merges tasks from all configured providers into one pool</li>
+<li><strong>Deduplication</strong> — Prevents the same task from appearing twice if it exists in multiple sources</li>
+<li><strong>Fallback</strong> — If a provider fails (e.g., API timeout), ThreeDoors falls back gracefully to the next available provider</li>
+<li><strong>Write-Ahead Log (WAL)</strong> — All writes go through a crash-safe queue (<code>sync-queue.jsonl</code>) before being applied to the provider</li>
+</ul>
+<h2 id="available-providers">Available Providers<a class="headerlink" href="#available-providers" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Provider</th>
+<th>Platform</th>
+<th>Direction</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../local-files/">Local Files</a></td>
+<td>Any</td>
+<td>Read/Write</td>
+<td>YAML task file (default)</td>
+</tr>
+<tr>
+<td><a href="../apple-notes/">Apple Notes</a></td>
+<td>macOS</td>
+<td>Bidirectional</td>
+<td>Sync with Apple Notes checkboxes</td>
+</tr>
+<tr>
+<td><a href="../apple-reminders/">Apple Reminders</a></td>
+<td>macOS</td>
+<td>Read/Write</td>
+<td>Import from Reminders lists</td>
+</tr>
+<tr>
+<td><a href="../jira/">Jira</a></td>
+<td>Any</td>
+<td>Read</td>
+<td>Pull issues via JQL filtering</td>
+</tr>
+<tr>
+<td><a href="../github-issues/">GitHub Issues</a></td>
+<td>Any</td>
+<td>Read</td>
+<td>Import repository issues</td>
+</tr>
+<tr>
+<td><a href="../todoist/">Todoist</a></td>
+<td>Any</td>
+<td>Read</td>
+<td>Sync via REST API</td>
+</tr>
+<tr>
+<td><a href="../obsidian/">Obsidian</a></td>
+<td>Any</td>
+<td>Bidirectional</td>
+<td>Read/write Markdown checkboxes in vaults</td>
+</tr>
+</tbody>
+</table>
+<h2 id="mixing-sources">Mixing Sources<a class="headerlink" href="#mixing-sources" title="Permanent link">&para;</a></h2>
+<p>Configure multiple providers in <code>config.yaml</code> to pull tasks from several sources at once:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">providers</span><span class="p">:</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">applenotes</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nt">settings</span><span class="p">:</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">      </span><span class="nt">note_title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ThreeDoors Tasks</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">textfile</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="nt">settings</span><span class="p">:</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">      </span><span class="nt">task_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">~/.threedoors/tasks.yaml</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jira</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="nt">settings</span><span class="p">:</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">      </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://company.atlassian.net</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">      </span><span class="nt">auth_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">basic</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">      </span><span class="nt">email</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">user@example.com</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">      </span><span class="nt">api_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">your-api-token</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">      </span><span class="nt">jql</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;assignee</span><span class="nv"> </span><span class="s">=</span><span class="nv"> </span><span class="s">currentUser()</span><span class="nv"> </span><span class="s">AND</span><span class="nv"> </span><span class="s">statusCategory</span><span class="nv"> </span><span class="s">!=</span><span class="nv"> </span><span class="s">Done&quot;</span>
+</code></pre></div>
+<p>Tasks from all providers appear together in your three doors. Each task remembers which provider it came from, so completions and status changes route back to the correct source.</p>
+<h2 id="offline-sync">Offline &amp; Sync<a class="headerlink" href="#offline-sync" title="Permanent link">&para;</a></h2>
+<p>All providers are wrapped with a <strong>Write-Ahead Log (WAL)</strong> for crash-safe, offline-first operation:</p>
+<ul>
+<li>Operations queue locally in <code>sync-queue.jsonl</code> when a provider is unavailable</li>
+<li>Automatic replay with exponential backoff when the provider reconnects</li>
+<li>Maximum 10,000 queued operations (oldest evicted first)</li>
+</ul>
+<p>The footer shows sync status for each provider:</p>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Synced</strong></td>
+<td>Up to date</td>
+</tr>
+<tr>
+<td><strong>Syncing</strong></td>
+<td>Sync in progress</td>
+</tr>
+<tr>
+<td><strong>Pending (N)</strong></td>
+<td>N operations waiting to sync</td>
+</tr>
+<tr>
+<td><strong>Error</strong></td>
+<td>Last sync failed — run <code>:health</code> for details</td>
+</tr>
+</tbody>
+</table>
+<p>For bidirectional providers (Apple Notes, Obsidian), ThreeDoors uses a three-way sync engine. When conflicts occur (same task edited in both places), the most recent change wins.</p>
+<h2 id="health-check">Health Check<a class="headerlink" href="#health-check" title="Permanent link">&para;</a></h2>
+<p>Run <code>:health</code> in the TUI or <code>threedoors health</code> from the CLI to verify provider connectivity and diagnose issues.</p>
 
 
 
