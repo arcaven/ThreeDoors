@@ -6,21 +6,6 @@ import (
 	"testing"
 )
 
-// mockBackend implements llm.LLMBackend for testing.
-type mockBackend struct {
-	name     string
-	response string
-	err      error
-}
-
-func (m *mockBackend) Name() string { return m.name }
-
-func (m *mockBackend) Complete(_ context.Context, _ string) (string, error) {
-	return m.response, m.err
-}
-
-func (m *mockBackend) Available(_ context.Context) bool { return true }
-
 func TestBreakdownServiceEmptyDescription(t *testing.T) {
 	t.Parallel()
 	svc := NewBreakdownService(&mockBackend{name: "test"})
@@ -51,11 +36,11 @@ func TestBreakdownServiceSuccess(t *testing.T) {
 	t.Parallel()
 	svc := NewBreakdownService(&mockBackend{
 		name: "test-llm",
-		response: `[
+		responses: []string{`[
 			{"text": "Set up project structure", "effort_estimate": "small"},
 			{"text": "Implement core logic", "effort_estimate": "medium"},
 			{"text": "Write tests", "effort_estimate": "small"}
-		]`,
+		]`},
 	})
 
 	result, err := svc.Breakdown(context.Background(), "task-42", "Build the feature")
@@ -86,9 +71,9 @@ func TestBreakdownServiceMarkdownWrapped(t *testing.T) {
 	t.Parallel()
 	svc := NewBreakdownService(&mockBackend{
 		name: "test",
-		response: "Here are the subtasks:\n```json\n" +
+		responses: []string{"Here are the subtasks:\n```json\n" +
 			`[{"text": "Step 1", "effort_estimate": "small"}]` +
-			"\n```\n",
+			"\n```\n"},
 	})
 
 	result, err := svc.Breakdown(context.Background(), "t1", "Do something")
@@ -106,8 +91,8 @@ func TestBreakdownServiceMarkdownWrapped(t *testing.T) {
 func TestBreakdownServiceNoSubtasks(t *testing.T) {
 	t.Parallel()
 	svc := NewBreakdownService(&mockBackend{
-		name:     "test",
-		response: "[]",
+		name:      "test",
+		responses: []string{"[]"},
 	})
 
 	_, err := svc.Breakdown(context.Background(), "t1", "Do something")
@@ -119,8 +104,8 @@ func TestBreakdownServiceNoSubtasks(t *testing.T) {
 func TestBreakdownServiceInvalidJSON(t *testing.T) {
 	t.Parallel()
 	svc := NewBreakdownService(&mockBackend{
-		name:     "test",
-		response: "not json at all",
+		name:      "test",
+		responses: []string{"not json at all"},
 	})
 
 	_, err := svc.Breakdown(context.Background(), "t1", "Do something")
@@ -132,8 +117,8 @@ func TestBreakdownServiceInvalidJSON(t *testing.T) {
 func TestBreakdownServiceEmptySubtaskText(t *testing.T) {
 	t.Parallel()
 	svc := NewBreakdownService(&mockBackend{
-		name:     "test",
-		response: `[{"text": "", "effort_estimate": "small"}]`,
+		name:      "test",
+		responses: []string{`[{"text": "", "effort_estimate": "small"}]`},
 	})
 
 	_, err := svc.Breakdown(context.Background(), "t1", "Do something")
