@@ -763,6 +763,19 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Themes
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -774,6 +787,100 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#available-themes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Available Themes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Available Themes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#seasonal-variants" class="md-nav__link">
+    <span class="md-ellipsis">
+      Seasonal Variants
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#switching-themes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Switching Themes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Switching Themes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#in-the-tui" class="md-nav__link">
+    <span class="md-ellipsis">
+      In the TUI
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#in-configyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      In config.yaml
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#via-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      Via CLI
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#theme-selection-during-onboarding" class="md-nav__link">
+    <span class="md-ellipsis">
+      Theme Selection During Onboarding
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1450,6 +1557,89 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#available-themes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Available Themes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Available Themes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#seasonal-variants" class="md-nav__link">
+    <span class="md-ellipsis">
+      Seasonal Variants
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#switching-themes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Switching Themes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Switching Themes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#in-the-tui" class="md-nav__link">
+    <span class="md-ellipsis">
+      In the TUI
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#in-configyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      In config.yaml
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#via-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      Via CLI
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#theme-selection-during-onboarding" class="md-nav__link">
+    <span class="md-ellipsis">
+      Theme Selection During Onboarding
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1468,7 +1658,58 @@
 
 
 <h1 id="themes">Themes<a class="headerlink" href="#themes" title="Permanent link">&para;</a></h1>
-<p><em>Coming soon — theme system and available themes.</em></p>
+<p>ThreeDoors includes multiple door themes that change the visual appearance of the doors view. Each theme has a distinct aesthetic that affects door frames, borders, and text styling.</p>
+<hr />
+<h2 id="available-themes">Available Themes<a class="headerlink" href="#available-themes" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Theme</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>classic</code></td>
+<td>Traditional door styling with standard box-drawing characters</td>
+</tr>
+<tr>
+<td><code>modern</code></td>
+<td>Contemporary, clean design with improved contrast</td>
+</tr>
+<tr>
+<td><code>scifi</code></td>
+<td>Sci-fi / cyberpunk aesthetic with angular frames</td>
+</tr>
+<tr>
+<td><code>shoji</code></td>
+<td>Japanese minimalist sliding doors with large panes and thin frames</td>
+</tr>
+</tbody>
+</table>
+<h3 id="seasonal-variants">Seasonal Variants<a class="headerlink" href="#seasonal-variants" title="Permanent link">&para;</a></h3>
+<p>Each theme has seasonal variants that activate automatically based on the date:</p>
+<ul>
+<li><strong>Spring</strong> — Fresh, lighter color palette</li>
+<li><strong>Summer</strong> — Warm, vibrant tones</li>
+<li><strong>Autumn</strong> — Rich, earthy colors</li>
+<li><strong>Winter</strong> — Cool, muted palette</li>
+</ul>
+<p>Seasonal auto-switching happens transparently. The base theme determines the overall frame structure; the season modifies the color palette.</p>
+<hr />
+<h2 id="switching-themes">Switching Themes<a class="headerlink" href="#switching-themes" title="Permanent link">&para;</a></h2>
+<h3 id="in-the-tui">In the TUI<a class="headerlink" href="#in-the-tui" title="Permanent link">&para;</a></h3>
+<p>Run the <code>:theme</code> command to open the theme picker. Navigate through available themes and press Enter to select.</p>
+<h3 id="in-configyaml">In config.yaml<a class="headerlink" href="#in-configyaml" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">theme</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">modern</span>
+</code></pre></div>
+<h3 id="via-cli">Via CLI<a class="headerlink" href="#via-cli" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>threedoors<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>theme<span class="w"> </span>scifi
+</code></pre></div>
+<p>Your choice is saved to <code>config.yaml</code> and persists across sessions.</p>
+<hr />
+<h2 id="theme-selection-during-onboarding">Theme Selection During Onboarding<a class="headerlink" href="#theme-selection-during-onboarding" title="Permanent link">&para;</a></h2>
+<p>The onboarding wizard includes a theme picker step where you can preview and select your preferred theme before using ThreeDoors for the first time. You can always change it later.</p>
 
 
 

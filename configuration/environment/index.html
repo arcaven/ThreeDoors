@@ -1241,6 +1241,19 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Environment Variables
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1252,6 +1265,52 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#provider-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      Provider Credentials
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#standard-go-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      Standard Go Variables
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ci-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      CI / Testing
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1450,6 +1509,41 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#provider-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      Provider Credentials
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#standard-go-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      Standard Go Variables
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ci-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      CI / Testing
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1468,7 +1562,71 @@
 
 
 <h1 id="environment-variables">Environment Variables<a class="headerlink" href="#environment-variables" title="Permanent link">&para;</a></h1>
-<p><em>Coming soon — environment variables that affect behavior.</em></p>
+<p>ThreeDoors reads the following environment variables. Environment variables take precedence over <code>config.yaml</code> values where applicable.</p>
+<hr />
+<h2 id="provider-credentials">Provider Credentials<a class="headerlink" href="#provider-credentials" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TODOIST_API_TOKEN</code></td>
+<td>Todoist API token. Takes precedence over <code>api_token</code> in the Todoist provider config.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Store API tokens in environment variables rather than config files to avoid accidentally committing credentials. ThreeDoors checks environment variables first, falling back to config file values.</p>
+</div>
+<hr />
+<h2 id="standard-go-variables">Standard Go Variables<a class="headerlink" href="#standard-go-variables" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HOME</code></td>
+<td>User home directory. ThreeDoors stores data in <code>$HOME/.threedoors/</code>.</td>
+</tr>
+<tr>
+<td><code>XDG_DATA_HOME</code></td>
+<td>Not currently used — ThreeDoors always uses <code>~/.threedoors/</code>.</td>
+</tr>
+<tr>
+<td><code>NO_COLOR</code></td>
+<td>When set (any value), disables color output in CLI commands. Respected per the <a href="https://no-color.org">no-color.org</a> convention.</td>
+</tr>
+<tr>
+<td><code>TERM</code></td>
+<td>Terminal type. ThreeDoors uses adaptive color profiles — it detects your terminal's color capabilities automatically via Lipgloss.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="ci-testing">CI / Testing<a class="headerlink" href="#ci-testing" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CI</code></td>
+<td>When set to <code>true</code>, adjusts behavior for CI environments (e.g., disables interactive prompts, adjusts timeouts for flaky filesystem watchers).</td>
+</tr>
+</tbody>
+</table>
 
 
 
