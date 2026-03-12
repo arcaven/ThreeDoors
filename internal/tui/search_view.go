@@ -28,6 +28,7 @@ var commandRegistry = []commandDef{
 	{"devqueue", "View dev dispatch queue"},
 	{"dispatch", "Dev dispatch info"},
 	{"enrich", "Enrich current task with LLM"},
+	{"extract", "Extract tasks from text/file/clipboard"},
 	{"goals", "View or edit values/goals"},
 	{"health", "Run health check"},
 	{"help", "Show help screen"},
@@ -334,6 +335,9 @@ func (sv *SearchView) executeCommand() tea.Cmd {
 
 	case "llm-status":
 		return func() tea.Msg { return ShowLLMStatusMsg{} }
+
+	case "extract":
+		return func() tea.Msg { return ShowExtractMsg{} }
 
 	case "bug":
 		return func() tea.Msg { return ShowBugReportMsg{} }
