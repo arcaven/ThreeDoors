@@ -739,7 +739,23 @@
 - **Research:** See `_bmad-output/planning-artifacts/door-visual-redesign/party-mode-door-redesign.md` (5-round party mode, 6 agents)
 - **Decisions:** D-172 (three-layer depth system), X-109 through X-112 (4 rejected alternatives)
 
-**Epic 59+: Advanced Features** (Voice interface, web interface, Apple Watch, iPad, trading mechanic, gamification)
+**Epic 59: GitHub Pages User Guide** (P2)
+- **Goal:** Publish the ThreeDoors user guide as a searchable, mobile-responsive website on GitHub Pages using MkDocs + Material for MkDocs
+- **Prerequisites:** None
+- **Status:** Not Started
+- **Deliverables:**
+  - MkDocs infrastructure with Material theme, dark/light mode, client-side search
+  - GitHub Actions workflow for auto-deploy on push to main (path-filtered to `docs-site/`)
+  - Getting Started pages (installation, quickstart, concepts)
+  - Core Guide pages (task management, search/commands, doors interaction, keybindings, sessions)
+  - Integration pages (overview + 7 provider-specific: local files, Apple Notes, Apple Reminders, Jira, GitHub Issues, Todoist, Obsidian)
+  - CLI reference, MCP server docs, configuration reference, themes, task dependencies, custom providers
+  - Troubleshooting and changelog
+- **Stories:** 59.1-59.4 (4 stories: infrastructure, then 3 parallelizable content splits)
+- **Research:** See `_bmad-output/planning-artifacts/gh-pages-user-guide-plan.md`, PRs #481, #500
+- **Decisions:** MkDocs Material over Hugo/Jekyll/Docusaurus/mdBook (GoReleaser precedent), `docs-site/` separate from internal `docs/`
+
+**Epic 60+: Advanced Features** (Voice interface, web interface, Apple Watch, iPad, trading mechanic, gamification)
 
 **Guiding Principle:** Each epic must deliver tangible user value and be informed by real usage patterns from previous phases. No speculation-driven development.
 
@@ -809,5 +825,6 @@
 | Epic 56: Door Visual Redesign | 5 | Not Started |
 | Epic 57: LLM CLI Services | 8 | Not Started |
 | Epic 58: Supervisor Shift Handover | 7 | Not Started |
+| Epic 59: GitHub Pages User Guide | 4 | Not Started |
 | **Total** | **312** | **152 complete, 9 epics in progress, 152 not started** |
 ---

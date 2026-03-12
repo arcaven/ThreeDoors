@@ -374,6 +374,21 @@ Detect supervisor context window degradation via daemon monitoring, serialize op
 
 **Dependency graph:** Stories 58.1 & 58.2 can parallelize. Story 58.3 depends on both. Story 58.4 depends on 58.2 & 58.3. Phase 2 stories (58.5-58.7) can parallelize after Phase 1 completes.
 
+### Epic 59: GitHub Pages User Guide (P2) — 0/4 stories done
+
+Publish the ThreeDoors user guide as a searchable, mobile-responsive website on GitHub Pages using MkDocs + Material for MkDocs. Makes documentation discoverable via search engines and accessible without cloning the repo. Content split from monolithic `docs/user-guide.md` (1,173 lines) into ~25 structured pages.
+
+| Story | Title | Status | Priority | Depends On |
+|-------|-------|--------|----------|------------|
+| 59.1 | MkDocs Infrastructure & GitHub Pages Deployment | Not Started | P2 | None |
+| 59.2 | Content Split — Getting Started & Core Guide | Not Started | P2 | 59.1 |
+| 59.3 | Content Split — Integrations / Task Sources | Not Started | P2 | 59.1 |
+| 59.4 | Content Split — CLI, MCP, Configuration & Advanced | Not Started | P2 | 59.1 |
+
+**Dependency graph:** 59.1 is the prerequisite. 59.2, 59.3, and 59.4 can be parallelized after 59.1 merges (they touch different files within `docs-site/`).
+
+**Note:** Story 59.1 PR adds `.github/workflows/docs.yml` which requires manual merge by project owner (merge-queue OAuth token lacks `workflow` scope).
+
 ## Icebox (Deferred Indefinitely)
 
 | Epic | Title | Stories | Decision Date | Rationale |

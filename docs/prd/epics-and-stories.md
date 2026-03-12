@@ -14,7 +14,7 @@ regeneratedFrom: "PRD v2.0 + Architecture v2.0 (post-party-mode-recommendations)
 
 This document provides the complete epic and story breakdown for ThreeDoors, decomposing the requirements from the PRD v2.0, UX Design, and Architecture v2.0 into implementable stories. This is a regeneration reflecting the 9 party mode recommendations integrated into the PRD and architecture.
 
-**Implementation Status:** Epics 1-15, 3.5, 17-28, 32-41, 43, 45, 48-49, 52, 55 are COMPLETE. Epic 29 is 3/4 (29.3 In Review). Epic 0 is partial (12/19). Epic 16 is ICEBOX. Epic 42 (4/5), Epic 44 (6/7), Epic 46 (1/4), Epic 51 (5/11), Epic 54 (2/5) IN PROGRESS. Epics 30-31, 47, 50, 53, 58 NOT STARTED or IN PROGRESS. 590+ merged PRs total. Last audit: 2026-03-12.
+**Implementation Status:** Epics 1-15, 3.5, 17-28, 32-41, 43, 45, 48-49, 52, 55 are COMPLETE. Epic 29 is 3/4 (29.3 In Review). Epic 0 is partial (12/19). Epic 16 is ICEBOX. Epic 42 (4/5), Epic 44 (6/7), Epic 46 (1/4), Epic 51 (5/11), Epic 54 (2/5) IN PROGRESS. Epics 30-31, 47, 50, 53, 58-59 NOT STARTED or IN PROGRESS. 590+ merged PRs total. Last audit: 2026-03-12.
 
 ## Requirements Inventory
 
@@ -5739,6 +5739,120 @@ Stories 56.1 & 56.2 can parallelize. Stories 56.3 & 56.4 can parallelize after 5
 - S3-D5: 32KB input size limit for MVP — YAGNI on chunking
 - S4-D1: Explicit commands for MVP; contextual suggestions P1; ambient P2
 - S5-D6: Streaming, conversation, tool use deferred — P0 is request-response only
+
+## Epic 59: GitHub Pages User Guide (P2)
+
+**Goal:** Publish the ThreeDoors user guide as a searchable, mobile-responsive website on GitHub Pages using MkDocs + Material for MkDocs. Makes documentation discoverable via search engines and accessible without cloning the repo.
+
+**Prerequisites:** None
+
+**Status:** Not Started (0/4 stories)
+
+**Research:** `_bmad-output/planning-artifacts/gh-pages-user-guide-plan.md`, PRs #481, #500
+
+**Key Decisions:**
+- MkDocs Material over Hugo/Jekyll/Docusaurus/mdBook — GoReleaser precedent, markdown-native, best docs theme, built-in search, dark mode
+- `docs-site/` directory separate from internal `docs/` — avoids mixing 262 story files and 33 ADRs with user-facing content
+- Start with `arcaven.github.io/ThreeDoors` — custom domain deferred
+- No versioning initially — add mike when stable releases begin
+
+### Story 59.1: MkDocs Infrastructure & GitHub Pages Deployment ⬜
+
+**As** a potential user discovering ThreeDoors,
+**I want** the user guide published as a searchable website on GitHub Pages,
+**So that** I can read documentation without cloning the repo, and find it via search engines.
+
+**Acceptance Criteria:**
+- `docs-site/mkdocs.yml` with Material theme, dark/light toggle, search, navigation tabs, code copy
+- `docs-site/requirements-docs.txt` with pinned MkDocs + Material versions
+- `docs-site/docs/index.md` landing page with branding, feature highlights, install reference, "Get Started" link
+- `docs-site/docs/philosophy.md` extracted from SOUL.md
+- `.github/workflows/docs.yml` deploys on push to main (path-filtered to `docs-site/**`)
+- Site deploys to `https://arcaven.github.io/ThreeDoors/`
+- Dark/light mode toggle works, client-side search works
+- `make docs` and `make docs-serve` Makefile targets added
+- Existing `docs/user-guide.md` NOT modified or moved
+
+**Priority:** P2 | **Depends On:** None
+
+**Note:** `.github/workflows/docs.yml` requires manual merge by project owner (merge-queue OAuth token lacks `workflow` scope).
+
+### Story 59.2: Content Split — Getting Started & Core Guide ⬜
+
+**As** a new ThreeDoors user,
+**I want** structured getting-started and core guide pages on the docs site,
+**So that** I can learn how to use ThreeDoors through a well-organized, searchable guide.
+
+**Acceptance Criteria:**
+- `getting-started/installation.md` — all install methods with prerequisites
+- `getting-started/quickstart.md` — first launch, onboarding wizard, first completed task in 5 minutes
+- `getting-started/concepts.md` — Three Doors philosophy, selection algorithm, behavioral science
+- `guide/task-management.md` — statuses, transitions, quick add, categorization, undo
+- `guide/search-and-commands.md` — search (`/`), command palette (`:`), commands
+- `guide/doors-interaction.md` — door selection, refresh, feedback options, mood logging
+- `guide/keybindings.md` — complete key binding tables for all views
+- `guide/sessions.md` — session metrics, mood correlation, pattern insights
+- All content accurately reflects current implementation
+- Navigation updated in `mkdocs.yml`, no broken links (`mkdocs build --strict`)
+
+**Priority:** P2 | **Depends On:** 59.1
+
+### Story 59.3: Content Split — Integrations / Task Sources ⬜
+
+**As** a user setting up a new task source,
+**I want** dedicated per-integration pages with setup instructions, configuration, and troubleshooting,
+**So that** I can quickly find exactly how to connect my preferred task source.
+
+**Acceptance Criteria:**
+- `providers/overview.md` — multi-source architecture, connection manager, mixing sources
+- `providers/local-files.md` — YAML format, file location, examples
+- `providers/apple-notes.md` — prerequisites, setup, sync, limitations, troubleshooting
+- `providers/apple-reminders.md` — prerequisites, setup, sync, limitations
+- `providers/jira.md` — OAuth setup, field mapping, JQL filtering, config examples
+- `providers/github-issues.md` — token setup, repo filtering, label mapping
+- `providers/todoist.md` — API key setup, project mapping, sync behavior
+- `providers/obsidian.md` — vault path, task format, frontmatter mapping
+- Each page follows consistent structure: Overview → Prerequisites → Setup → Configuration → Usage → Troubleshooting
+- Navigation updated, no broken links
+
+**Priority:** P2 | **Depends On:** 59.1
+
+### Story 59.4: Content Split — CLI, MCP, Configuration & Advanced ⬜
+
+**As** a power user or developer,
+**I want** complete CLI reference, MCP server docs, configuration reference, and advanced feature pages,
+**So that** I can find detailed reference material without digging through the monolithic user guide.
+
+**Acceptance Criteria:**
+- `cli/commands.md` — full CLI command reference with subcommands, flags, examples
+- `cli/mcp-server.md` — MCP server setup, tools list, usage with LLM agents
+- `configuration/config-file.md` — complete config.yaml schema with defaults
+- `configuration/environment.md` — environment variables
+- `configuration/data-directory.md` — data directory layout, log/session files
+- `guide/themes.md` — available themes with descriptions (screenshots out of scope)
+- `advanced/task-dependencies.md` — dependency types, linking, blocking behavior
+- `advanced/extending.md` — writing custom TaskProvider implementations
+- `troubleshooting.md` — common issues, diagnostics, FAQ
+- `changelog.md` — formatted from CHANGELOG.md
+- All navigation finalized, full site builds without warnings (`mkdocs build --strict`)
+
+**Priority:** P2 | **Depends On:** 59.1
+
+### Dependency Graph
+
+```
+59.1 (Infrastructure) ──▶ 59.2 (Getting Started + Core Guide)
+                       ├──▶ 59.3 (Integrations / Task Sources)
+                       └──▶ 59.4 (CLI, Config, Advanced)
+```
+
+59.1 is the prerequisite. 59.2, 59.3, and 59.4 can be parallelized after 59.1 merges (different files within `docs-site/`).
+
+### Decisions
+
+- MkDocs Material chosen over Hugo (complex Docsy theme), Jekyll (slow, dated), Docusaurus (React overkill), mdBook (too minimal). GoReleaser precedent as strongest signal.
+- `docs-site/` directory avoids mixing with internal `docs/` (262 story files, 33 ADRs, 17 PRD files)
+- Existing `docs/user-guide.md` preserved during migration; deletion/deprecation decision deferred to after 59.4 completes
 
 ### Research
 
