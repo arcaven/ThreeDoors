@@ -403,6 +403,31 @@ type LLMStatusResultMsg struct {
 	Text string
 }
 
+// ShowExtractMsg is sent when the :extract command is executed.
+type ShowExtractMsg struct{}
+
+// ExtractStartMsg is sent when a source is selected and extraction should begin.
+type ExtractStartMsg struct {
+	Source string // "text", "file", "clipboard"
+	Input  string // file path or pasted text (empty for clipboard)
+}
+
+// ExtractResultMsg is sent when extraction completes (success or failure).
+type ExtractResultMsg struct {
+	Tasks       []services.ExtractedTask
+	BackendName string
+	Err         error
+}
+
+// ExtractImportMsg is sent when the user confirms importing selected tasks.
+type ExtractImportMsg struct {
+	Tasks  []services.ExtractedTask
+	Source string
+}
+
+// ExtractCancelMsg is sent when the user cancels the extraction flow.
+type ExtractCancelMsg struct{}
+
 // ClearFlashCmd returns a command that clears the flash after a delay.
 func ClearFlashCmd() tea.Cmd {
 	return tea.Tick(flashDuration, func(_ time.Time) tea.Msg {
