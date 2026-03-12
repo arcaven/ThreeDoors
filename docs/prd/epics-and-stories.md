@@ -14,7 +14,7 @@ regeneratedFrom: "PRD v2.0 + Architecture v2.0 (post-party-mode-recommendations)
 
 This document provides the complete epic and story breakdown for ThreeDoors, decomposing the requirements from the PRD v2.0, UX Design, and Architecture v2.0 into implementable stories. This is a regeneration reflecting the 9 party mode recommendations integrated into the PRD and architecture.
 
-**Implementation Status:** Epics 1-15, 3.5, 17-28, 32-41, 43, 45, 48-49, 52, 55 are COMPLETE. Epic 29 is 3/4 (29.3 In Review). Epic 0 is partial (12/19). Epic 16 is ICEBOX. Epic 42 (4/5), Epic 44 (6/7), Epic 46 (1/4), Epic 51 (5/11), Epic 54 (2/5) IN PROGRESS. Epics 30-31, 47, 50, 53, 58-59 NOT STARTED or IN PROGRESS. 590+ merged PRs total. Last audit: 2026-03-12.
+**Implementation Status:** Epics 1-15, 3.5, 17-28, 32-41, 43, 45, 48-49, 52, 55 are COMPLETE. Epic 29 is 3/4 (29.3 In Review). Epic 0 is partial (12/19). Epic 16 is ICEBOX. Epic 42 (4/5), Epic 44 (6/7), Epic 46 (1/4), Epic 51 (5/11), Epic 54 (2/5) IN PROGRESS. Epics 30-31, 47, 50, 53, 58-59, 61 NOT STARTED or IN PROGRESS. 590+ merged PRs total. Last audit: 2026-03-12.
 
 ## Requirements Inventory
 
@@ -5902,3 +5902,115 @@ Phase 2 (Hardening):  58.5, 58.6, 58.7 can parallelize after Phase 1
 
 - Full research: `_bmad-output/planning-artifacts/full-terminal-layout-research.md`
 - Party mode: `_bmad-output/planning-artifacts/full-terminal-layout-party-mode.md`
+
+## Epic 61: GitHub Pages User Guide (P2)
+
+**Goal:** Publish ThreeDoors documentation as a professional GitHub Pages site using MkDocs + Material for MkDocs, making the user guide discoverable via search engines and accessible without cloning the repo.
+
+**Prerequisites:** None
+
+**Status:** Not Started (0/4 stories)
+
+**Phasing:**
+- Story A (Infrastructure): MkDocs setup, GitHub Actions, landing page, philosophy page
+- Stories B-D (Content): Can parallelize after A merges — getting started + core guide, integrations, CLI/config/advanced
+
+### Story 61.1: MkDocs Infrastructure & GitHub Pages Deployment
+
+**As a** potential user discovering ThreeDoors, **I want** a professional documentation site hosted on GitHub Pages, **so that** I can learn about the project without cloning the repository.
+
+**Acceptance Criteria:**
+- `docs-site/mkdocs.yml` with Material theme, site metadata, and full navigation stub
+- `docs-site/requirements-docs.txt` pinning MkDocs + Material versions
+- `docs-site/docs/index.md` landing page with project branding, feature highlights, install quick-reference
+- `docs-site/docs/philosophy.md` extracted from SOUL.md
+- `.github/workflows/docs.yml` builds and deploys on push to `main` (path-filtered to `docs-site/**`)
+- Dark/light mode toggle and client-side search work
+- `make docs` and `make docs-serve` Makefile targets for local preview
+- Existing `docs/user-guide.md` NOT modified
+
+**Technical Notes:**
+- Separate `docs-site/` directory (not in existing `docs/`)
+- `.github/workflows/docs.yml` requires manual merge (OAuth workflow scope limitation)
+- See planning artifact for starter mkdocs.yml and workflow configuration
+
+**Priority:** P2 | **Depends On:** None
+
+### Story 61.2: Content Split — Getting Started & Core Guide
+
+**As a** new ThreeDoors user, **I want** getting-started guides and core usage documentation on the docs site, **so that** I can learn to use the app through well-organized, searchable pages.
+
+**Acceptance Criteria:**
+- `getting-started/installation.md` — all install methods with prerequisites
+- `getting-started/quickstart.md` — first launch to first completed task in 5 minutes
+- `getting-started/concepts.md` — Three Doors philosophy, selection algorithm, behavioral science
+- `guide/task-management.md` — statuses, transitions, quick add, categorization, undo
+- `guide/search-and-commands.md` — search (`/`), command palette (`:`), commands
+- `guide/doors-interaction.md` — door selection, refresh, feedback, mood logging
+- `guide/keybindings.md` — complete key binding tables for all views
+- `guide/sessions.md` — session metrics, mood correlation, pattern insights
+- All content verified against current implementation
+- Navigation updated, `mkdocs build --strict` passes
+
+**Priority:** P2 | **Depends On:** 61.1
+
+### Story 61.3: Content Split — Integrations / Task Sources
+
+**As a** user connecting ThreeDoors to existing task sources, **I want** dedicated per-integration setup guides, **so that** I can configure each provider with clear, consistent instructions.
+
+**Acceptance Criteria:**
+- `providers/overview.md` — multi-source architecture, connection manager, mixing sources
+- `providers/local-files.md` — YAML format, file location, examples
+- `providers/apple-notes.md` — prerequisites, setup, sync, limitations, troubleshooting
+- `providers/apple-reminders.md` — prerequisites, setup, sync, limitations
+- `providers/jira.md` — OAuth setup, field mapping, JQL filtering, config examples
+- `providers/github-issues.md` — token setup, repo filtering, label mapping
+- `providers/todoist.md` — API key setup, project mapping, sync behavior
+- `providers/obsidian.md` — vault path, task format, frontmatter mapping
+- Each page follows: Overview → Prerequisites → Setup → Configuration → Usage → Troubleshooting
+- Navigation updated, `mkdocs build --strict` passes
+
+**Priority:** P2 | **Depends On:** 61.1
+
+### Story 61.4: Content Split — CLI, MCP, Configuration & Advanced
+
+**As a** power user or developer, **I want** complete CLI reference, MCP docs, configuration reference, and advanced guides, **so that** I can find detailed technical information.
+
+**Acceptance Criteria:**
+- `cli/commands.md` — full CLI command reference with subcommands, flags, examples
+- `cli/mcp-server.md` — MCP server setup, tools list, LLM agent usage
+- `configuration/config-file.md` — complete config.yaml schema reference
+- `configuration/environment.md` — environment variables
+- `configuration/data-directory.md` — data directory layout, log/session files
+- `guide/themes.md` — available themes (screenshots out of scope)
+- `advanced/task-dependencies.md` — dependency types, linking, blocking
+- `advanced/extending.md` — writing custom TaskProvider implementations
+- `troubleshooting.md` — common issues, diagnostics, FAQ
+- `changelog.md` — from CHANGELOG.md
+- All navigation finalized, `mkdocs build --strict` passes with zero warnings
+
+**Priority:** P2 | **Depends On:** 61.1
+
+### Dependency Graph
+
+```
+61.1 (Infrastructure) ──→ 61.2 (Getting Started + Core Guide)
+                     ├──→ 61.3 (Integrations / Task Sources)
+                     └──→ 61.4 (CLI, Config, Advanced)
+```
+
+61.1 is the prerequisite. 61.2, 61.3, and 61.4 can be parallelized after 61.1 merges.
+
+### Decisions
+
+- D-174: MkDocs + Material for MkDocs for docs site (Markdown-native, best docs theme, GoReleaser precedent)
+- X-113: Hugo rejected (complex docs themes despite Go-native)
+- X-114: Jekyll rejected (slow, dated, not for technical docs)
+- X-115: Docusaurus rejected (React/Node overkill)
+- X-116: GitHub Wiki rejected (no version control with repo)
+- X-117: Mix into existing `docs/` rejected (262 story files would create confusion)
+
+### Research
+
+- Planning artifact: `_bmad-output/planning-artifacts/gh-pages-user-guide-plan.md`
+- Research PRs: #481 and #500
