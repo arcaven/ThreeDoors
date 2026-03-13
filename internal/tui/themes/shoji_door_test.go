@@ -4,10 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/x/ansi"
 	"github.com/charmbracelet/x/exp/golden"
-	"github.com/muesli/termenv"
 )
 
 // TestShojiDoorProportions verifies the Shoji theme renders door-like
@@ -203,9 +201,9 @@ func TestShojiDoorConsistentLineWidths(t *testing.T) {
 }
 
 // TestShojiDoorGolden tests golden file output for door-proportioned Shoji.
+// Not parallel: golden tests depend on deterministic lipgloss color profile.
 func TestShojiDoorGolden(t *testing.T) {
-	t.Parallel()
-	lipgloss.SetColorProfile(termenv.Ascii)
+	setAsciiProfile(t)
 
 	tests := []struct {
 		name     string
@@ -225,7 +223,6 @@ func TestShojiDoorGolden(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
 			output := theme.Render(tt.content, tt.width, tt.height, tt.selected, "", 0.0)
 			golden.RequireEqual(t, []byte(output))
 		})
