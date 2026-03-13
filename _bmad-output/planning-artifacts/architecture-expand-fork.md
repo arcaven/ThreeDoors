@@ -1,8 +1,9 @@
 # Architecture: Expand/Fork Key Implementations (Epic 31)
 
 **Date:** 2026-03-08
-**Status:** Proposed
+**Status:** Implemented
 **Decision Source:** Design Decision H9, Party Mode 2026-03-08
+**Implementation PRs:** #698 (31.1 — ParentID), #708 (31.2 — Sequential Expand), #714 (31.3 — Subtask Rendering), #701 (31.4 — Fork Factory)
 
 ---
 
@@ -251,3 +252,38 @@ This keeps `internal/core` free of enrichment DB awareness.
 - No schema version bump needed — field is additive with `omitempty`
 - No migration script required
 - Existing `ExpandTaskMsg` handling remains compatible (ParentID set in handler, not in message)
+
+---
+
+## 8. Implementation Record (Epic 31 Complete)
+
+**Implemented:** 2026-03-13 (Stories 31.1-31.4)
+
+### PR References
+
+| Story | PR | Title |
+|-------|------|-------|
+| 31.1 | #698 | Task Model ParentID Extension |
+| 31.2 | #708 | Enhanced Expand — Sequential Subtask Creation |
+| 31.3 | #714 | Subtask List Rendering in Detail View |
+| 31.4 | #701 | Enhanced Fork — Variant Creation with ForkTask Factory |
+
+### v1 Design Constraints (Implemented As Specified)
+
+All five original design constraints from Section 6 were implemented as proposed:
+
+1. **Single-level nesting only** — enforced; subtasks cannot have their own subtasks
+2. **No property inheritance** — subtasks are independent work items (D-083)
+3. **No auto-completion** — parent never auto-completes when all children finish; completion ratio displayed instead (D-084)
+4. **Completion ratio is display-only** — no enforcement of "complete all subtasks first"
+5. **ParentID is immutable** — once set, a subtask cannot be re-parented
+
+### Deviations from Original H9 Spec
+
+No significant deviations from the proposed architecture. All decisions from the party mode session (D-043, D-082 through D-085) were implemented as designed:
+
+- **ParentID as native `core.Task` field** (D-043) — implemented exactly as proposed with `*string` type and `omitempty` YAML tag
+- **Fork as variant creation with ForkTask factory** (D-082) — preserves text/context/effort/tags, resets status/timestamps, adds enrichment cross-reference
+- **No property inheritance** (D-083) — subtasks are fully independent
+- **No auto-completion of parent** (D-084) — completion ratio shown in detail view; parents excluded from door rotation
+- **Sequential expand mode** (D-085) — stay in expand input after Enter, Esc exits; running count displayed
