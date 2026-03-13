@@ -389,7 +389,7 @@
 **Epic 31: Expand/Fork Key Implementations** (P2)
 - **Goal:** Complete Expand (manual sub-task creation) and Fork (variant creation) TUI features per Design Decision H9
 - **Prerequisites:** None
-- **Status:** In Progress (4/5 done — PRs #698, #701, #708, #714)
+- **Status:** COMPLETE — All 5 stories done (PRs #698, #701, #708, #714, #718)
 - **Stories:** 31.1-31.5 (5 stories)
 
 **Epic 32: Undo Task Completion** (P1)
@@ -804,7 +804,7 @@
 **Epic 63: ClickUp Integration** (P2)
 - **Goal:** Integrate ClickUp as a task source following the established adapter pattern (Jira, Todoist, GitHub Issues, Linear)
 - **Prerequisites:** Epic 7 (Adapter SDK — complete), Epic 43 (Connection Manager — complete)
-- **Status:** In Progress (1/4 done — PR #706)
+- **Status:** In Progress (2/4 done — PRs #706, #719)
 - **Deliverables:**
   - ClickUp REST API v2 client with token auth
   - Read-only provider with field mapping (status, priority, due date, tags)
@@ -828,7 +828,18 @@
 - **PRD Reference:** product-scope.md Phase 5 ("Cross-computer sync")
 - **Note:** Stories 64.2-64.6 will be refined after the research spike completes
 
-**Epic 65+: Advanced Features** (Voice interface, web interface, Apple Watch, iPad, trading mechanic, gamification)
+**Epic 65: CLI Test Coverage Hardening** (P0)
+- **Goal:** Increase `internal/cli` package test coverage from 34.8% to ≥70%, addressing the only critical coverage gap identified by the TEA audit (state-of-testing-report.md, 2026-03-09)
+- **Prerequisites:** None
+- **Status:** Not Started (0/3 done)
+- **Deliverables:**
+  - Core CLI path tests (bootstrap, root, doors, loadTaskPool, output)
+  - Subcommand tests (config, mood, health, stats, plan, version)
+  - Remaining command tests (task, sources, connect, extract, interactive)
+- **Stories:** 65.1-65.3 (3 stories)
+- **Research:** `_bmad-output/planning-artifacts/state-of-testing-report.md`
+
+**Epic 66+: Advanced Features** (Voice interface, web interface, Apple Watch, iPad, trading mechanic, gamification)
 
 **Guiding Principle:** Each epic must deliver tangible user value and be informed by real usage patterns from previous phases. No speculation-driven development.
 
@@ -870,7 +881,7 @@
 | Epic 28: Snooze/Defer | 4 | Complete |
 | Epic 29: Task Dependencies | 4 | In Progress (3/4) |
 | Epic 30: Linear Integration | 4 | Complete (4/4 done) |
-| Epic 31: Expand/Fork Key | 5 | In Progress (4/5 done) |
+| Epic 31: Expand/Fork Key | 5 | Complete (5/5 done) |
 | Epic 32: Undo Task Completion | 3 | Complete |
 | Epic 33: Seasonal Theme Variants | 4 | Complete |
 | Epic 34: SOUL.md + Custom Dev Skills | 4 | Complete |
@@ -902,7 +913,8 @@
 | Epic 60: README Overhaul | 5 | Complete (5/5 done) |
 | Epic 61: GitHub Pages User Guide | 4 | Complete (4/4 done) |
 | Epic 62: Retrospector Agent Reliability | 3 | Complete (3/3 done) |
-| Epic 63: ClickUp Integration | 4 | In Progress (1/4 done) |
+| Epic 63: ClickUp Integration | 4 | In Progress (2/4 done) |
 | Epic 64: Cross-Computer Sync | 6 | In Progress (1/6 done) |
-| **Total** | **335** | **Audit 2026-03-13: see epics-and-stories.md for authoritative status** |
+| Epic 65: CLI Test Coverage Hardening | 3 | Not Started (0/3) |
+| **Total** | **339** | **Audit 2026-03-13: see epics-and-stories.md for authoritative status** |
 ---
