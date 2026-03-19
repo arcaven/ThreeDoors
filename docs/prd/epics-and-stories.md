@@ -6632,7 +6632,7 @@ So that the board guide, sweep process, and agent behaviors are consistent with 
 
 **Priority:** P1
 **Prerequisites:** None
-**Status:** In Progress (1/3 stories done)
+**Status:** In Progress (2/3 stories done)
 **Reference:** Issue #803
 
 ### Story 71.1: Remove darwin/amd64 from CI Build and Alpha Release Pipeline
@@ -6672,7 +6672,7 @@ As a project maintainer,
 I want documentation, tests, and agent definitions to reflect that darwin/amd64 is no longer built,
 So that users and agents have accurate information about supported platforms.
 
-**Status:** Not Started | **Priority:** P1
+**Status:** Done (PR #817) | **Priority:** P1
 **Depends On:** 71.1, 71.2
 
 **Acceptance Criteria:**
