@@ -1,28 +1,28 @@
 # CODEOWNERS — ThreeDoors Golden Repo
 # Gate files that control project direction, AI behavior, and infrastructure.
-# Files WITH entries here require @skippy approval to merge.
+# Files WITH entries here require @arcaven approval to merge.
 # Files WITHOUT entries can merge with CI-only gates (0 required approvals).
 #
 # Syntax: later rules override earlier ones for the same path.
 # Reference: https://docs.github.com/articles/about-code-owners
 
 # Project philosophy
-SOUL.md                         @skippy
+SOUL.md                         @arcaven
 
 # Agent instructions and rules
-CLAUDE.md                       @skippy
-/.claude/                       @skippy
+CLAUDE.md                       @arcaven
+/.claude/                       @arcaven
 
 # Scope control — planning docs
-ROADMAP.md                      @skippy
-/docs/prd/epic-list.md          @skippy
-/docs/prd/epics-and-stories.md  @skippy
+ROADMAP.md                      @arcaven
+/docs/prd/epic-list.md          @arcaven
+/docs/prd/epics-and-stories.md  @arcaven
 
 # Architectural decisions
-/docs/decisions/BOARD.md        @skippy
+/docs/decisions/BOARD.md        @arcaven
 
 # CI/CD and infrastructure (includes this file)
-/.github/                       @skippy
+/.github/                       @arcaven
 
 # Agent behavior definitions
-/agents/                        @skippy
+/agents/                        @arcaven
