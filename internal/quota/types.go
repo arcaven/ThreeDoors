@@ -19,10 +19,12 @@ func (tc TokenCount) Total() int64 {
 
 // Interaction represents a single assistant response with token usage.
 type Interaction struct {
-	SessionID string     `json:"session_id"`
-	Timestamp time.Time  `json:"timestamp"`
-	Model     string     `json:"model"`
-	Tokens    TokenCount `json:"tokens"`
+	SessionID  string     `json:"session_id"`
+	Timestamp  time.Time  `json:"timestamp"`
+	Model      string     `json:"model"`
+	Tokens     TokenCount `json:"tokens"`
+	HasToolUse bool       `json:"has_tool_use"`
+	SourcePath string     `json:"source_path"`
 }
 
 // SessionUsage aggregates token usage for a single session.

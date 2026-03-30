@@ -17,14 +17,20 @@ type jsonlEntry struct {
 	SessionID string    `json:"sessionId"`
 	Timestamp time.Time `json:"timestamp"`
 	Message   *struct {
-		Model string `json:"model"`
-		Usage *struct {
+		Model   string          `json:"model"`
+		Content json.RawMessage `json:"content"`
+		Usage   *struct {
 			InputTokens              int64 `json:"input_tokens"`
 			OutputTokens             int64 `json:"output_tokens"`
 			CacheCreationInputTokens int64 `json:"cache_creation_input_tokens"`
 			CacheReadInputTokens     int64 `json:"cache_read_input_tokens"`
 		} `json:"usage"`
 	} `json:"message"`
+}
+
+// contentBlock is used to inspect the type field of content array elements.
+type contentBlock struct {
+	Type string `json:"type"`
 }
 
 // ParseFile reads a single JSONL file and extracts interactions with token
@@ -75,10 +81,13 @@ func parseReader(r io.Reader, source string) ([]Interaction, error) {
 		}
 
 		u := entry.Message.Usage
+		hasToolUse := containsToolUse(entry.Message.Content)
 		interactions = append(interactions, Interaction{
-			SessionID: entry.SessionID,
-			Timestamp: entry.Timestamp,
-			Model:     entry.Message.Model,
+			SessionID:  entry.SessionID,
+			Timestamp:  entry.Timestamp,
+			Model:      entry.Message.Model,
+			HasToolUse: hasToolUse,
+			SourcePath: source,
 			Tokens: TokenCount{
 				InputTokens:              u.InputTokens,
 				OutputTokens:             u.OutputTokens,
@@ -92,6 +101,24 @@ func parseReader(r io.Reader, source string) ([]Interaction, error) {
 		return interactions, fmt.Errorf("scan session file %s: %w", source, err)
 	}
 	return interactions, nil
+}
+
+// containsToolUse checks if a raw JSON content field contains any tool_use blocks.
+// Content may be a string (user messages) or an array of objects (assistant messages).
+func containsToolUse(raw json.RawMessage) bool {
+	if len(raw) == 0 || raw[0] != '[' {
+		return false
+	}
+	var blocks []contentBlock
+	if err := json.Unmarshal(raw, &blocks); err != nil {
+		return false
+	}
+	for _, b := range blocks {
+		if b.Type == "tool_use" {
+			return true
+		}
+	}
+	return false
 }
 
 // ParseFiles reads multiple JSONL files and returns all interactions.
