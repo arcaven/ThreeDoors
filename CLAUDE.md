@@ -39,6 +39,7 @@ When running multiclaude, the **workspace window** (tmux window 1) is the primar
 - **Communicate with the supervisor** via messaging: `multiclaude message send supervisor "your message here"`
 - **Observe agent activity** read-only: `multiclaude agent attach <name> --read-only`
 - **Check system status** from the workspace: `multiclaude status`
+- **Sync workspace with main:** Use `/refresh` to rebase the workspace worktree onto latest `origin/main`. The workspace worktree is **NOT auto-refreshed** by the daemon (unlike worker worktrees), so run `/refresh` periodically during active multi-agent sessions to avoid working with stale code.
 
 ## CODEOWNERS Protection — MANDATORY
 
@@ -75,6 +76,8 @@ A PreToolUse hook (`scripts/hooks/git-safety.sh`) mechanically enforces git safe
 - `--no-gpg-sign` / `-c commit.gpgsign=false` — all commits must be signed
 - `git push origin main/master` — use feature branches, never push directly to main
 - `Co-Authored-By` trailers — forbidden per project policy
+
+**Persistent agent exemption:** The git safety hook only blocks fetch/pull/rebase/merge in **worker worktrees** (paths containing `/.multiclaude/wts/`). Persistent agents (merge-queue, pr-shepherd, project-watchdog, arch-watchdog) sharing the main checkout are **exempt** and SHOULD periodically run `git fetch origin main` to keep local refs current. See individual agent definitions for fetch timing.
 
 **Allowed:** `git add`, `git commit` (signed), `git push` (feature branches), `git status`, `git log`, `git diff`, `git branch`, `git checkout -b`, `git merge --abort`, `git stash`, etc.
 

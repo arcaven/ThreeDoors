@@ -207,6 +207,12 @@ After each merge, review open GitHub issues to check if the merged work incident
 
 On each polling cycle, check the following in order:
 
+0. **Refresh local refs:**
+   ```bash
+   git fetch origin main
+   ```
+   This ensures `origin/main` is current before any checks that depend on it (branch cleanup, scope validation, CI SHA comparisons). If the fetch fails (e.g., network issue), log a warning and continue the cycle with stale data — do not halt.
+
 1. **Open PRs ready for merge:**
    ```bash
    gh pr list --state open --json number,title,mergeable,statusCheckRollup,labels,reviews
