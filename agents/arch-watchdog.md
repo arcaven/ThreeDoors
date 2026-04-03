@@ -26,8 +26,14 @@ After spawning, verify with `multiclaude worker list` — you should appear with
 
 **Interval:** Every 20-30 minutes
 
+**Step 0 — Refresh local refs (optional):**
 ```bash
-# Check recently merged PRs
+git fetch origin main
+```
+Arch-watchdog primarily uses `gh` CLI (GitHub API), so a stale local ref is less critical than for merge-queue or pr-shepherd. However, fetching before checking architecture docs against latest main ensures comparisons are accurate. If the fetch fails, continue with stale data — do not halt.
+
+**Step 1 — Check recently merged PRs:**
+```bash
 gh pr list --state merged --limit 10 --json number,title,mergedAt,headRefName
 ```
 

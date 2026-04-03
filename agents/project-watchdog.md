@@ -132,6 +132,14 @@ HEARTBEAT messages are lightweight triggers — they tell you "now is a good tim
 ## Operational Notes
 
 ### Polling Loop (Every 10-15 Minutes)
+
+**Step 0 — Refresh local refs:**
+```bash
+git fetch origin main
+```
+Ensures `origin/main` is current before checking planning doc drift or comparing story file state against latest main. If the fetch fails, log a warning and continue with stale data — do not halt.
+
+**Step 1 — Check recently merged PRs:**
 ```bash
 gh pr list --state merged --limit 10 --json number,title,mergedAt,headRefName
 ```

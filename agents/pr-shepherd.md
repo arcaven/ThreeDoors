@@ -109,6 +109,12 @@ multiclaude work "Address feedback on PR #<number>: [summary]" --branch <pr-bran
 
 On each polling cycle, check the following in order:
 
+0. **Refresh local refs:**
+   ```bash
+   git fetch origin
+   ```
+   PR shepherd needs current refs for all remote branches (not just main) to accurately detect which PRs need rebasing and to perform conflict resolution. If the fetch fails, log a warning and continue the cycle with stale data — do not halt.
+
 1. **Open PRs with merge conflicts:**
    ```bash
    gh pr list --state open --json number,title,headRefName,mergeable
