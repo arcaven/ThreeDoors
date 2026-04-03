@@ -35,7 +35,7 @@ See individual agent files in `agents/` for specific authority definitions.
 |-------|--------|---------------|
 | merge-queue | PR merging | Merge when CI green + no blockers; halt on roadmap violations |
 | pr-shepherd | Fork PR management | Rebase and fix CI; cannot merge |
-| envoy | Community triage | Welcome, triage, create stories; cannot make scope decisions |
+| envoy | Community triage | Welcome, triage, label, relay; cannot make scope decisions or create stories |
 | arch-watchdog | Architecture compliance | Flag violations; cannot override human decisions |
 | project-watchdog | Planning doc health | Detect drift; allocate epic/story numbers (sole authority, INC-003); update story status and planning docs |
 

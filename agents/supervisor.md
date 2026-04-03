@@ -66,7 +66,7 @@ A multi-agent system without coordination devolves into chaos: duplicate work, s
 
 ### With Envoy
 - Dispatch envoy for issue triage
-- Envoy runs the BMAD pipeline — you provide scope decisions
+- Envoy runs three-layer triage screening — you decide triage approach
 
 ### With Project Watchdog
 - Watchdog reports story completions and PRD drift
