@@ -23,6 +23,11 @@ Key interfaces: `TaskProvider` (internal/tasks/provider.go) — implement for ne
 
 ## Development Workflow
 
+**Git workflow:** Gitflow. `develop` is the default branch. Branch from and
+PR into `develop`. Alpha releases are cut automatically from `develop`.
+Stable releases are cut from `main` via version tags (`v*`). Do not push
+directly to `main`.
+
 ```bash
 just fmt              # gofumpt formatting (run before every commit)
 just lint             # golangci-lint — must pass with zero warnings
