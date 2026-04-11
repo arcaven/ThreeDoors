@@ -13,7 +13,7 @@
 | R-003 | Dark Factory Core | L0-L4 autonomy spectrum; separate-repo architecture; gallery model (3-5 variants x 3-5 generations); dispose-and-rebuild with immutable specs; two-tier AI judges; Green/Yellow/Red governance | 6-phase roadmap starting with provenance tagging | 5 (OQ-1 to OQ-5: repo visibility, trigger authority, disposal preservation, budget caps, provenance mandate) |
 | R-004 | Quota Throttling | Max plan has NO programmatic quota API; JSONL file heuristics only; dynamic heartbeat throttling; CLAUDE_CONFIG_DIR for multi-plan; time-of-day awareness | 4-phase: passive monitoring → adaptive heartbeats → multi-plan → full budget | 4 (QT-Q1 to QT-Q4: TOS multi-account, window reset detection, API key mode, actual token budget) |
 | R-005 | DFCP Permissions | GitHub App for prod tokens, PAT for PoC; CODEOWNERS + `require_code_owner_review`; 4-tier gate taxonomy; `.dfcp.yaml` config file; CI-based scope/design checks | 7 decisions (D-DFCP-1 to D-DFCP-7) | 5 (OQ-DFCP-1 to OQ-DFCP-5: story CODEOWNERS, scope-check blocking, org rulesets, timing, agents/ gating) |
-| R-006 | aclaude Personas | Layered Overlay (Option B) recommended; per-agent opt-in with immersion levels; protocol-critical agents (merge-queue, pr-shepherd, project-watchdog) NEVER get personas; manual prototype first | 4 options evaluated, Option B adopted | 5 (theme selection, comedic themes, aclaude dependency, immersion floor, persona in PR artifacts) |
+| R-006 | forestage Personas | Layered Overlay (Option B) recommended; per-agent opt-in with immersion levels; protocol-critical agents (merge-queue, pr-shepherd, project-watchdog) NEVER get personas; manual prototype first | 4 options evaluated, Option B adopted | 5 (theme selection, comedic themes, forestage dependency, immersion floor, persona in PR artifacts) |
 | R-007 | Operator UX | Root cause: tmux paste-buffer injection; workspace window is explicitly injection-free; CronCreate heartbeats are redundant (daemon wake loop already exists); double-injection per heartbeat round-trip | 3 short-term, 4 medium-term, 3 long-term fixes | 4 (OQ-1 to OQ-4: per-agent wake interval, append-system-prompt-file, human operator agent type, wake interval too aggressive) |
 | R-008 | Perplexity/Research Supervisor | Official MCP server with 4 tools; project-level config; persistent research-supervisor as soft gatekeeper; complementary with Gemini (Perplexity for web/citations, Gemini for deep research); 5-phase rollout | 7 decisions; MCP as integration path | 6 (OQ-1 to OQ-6: daily budget, cache commit policy, deep research routing, Pro subscription, MCP scope, heartbeat cron) |
 | R-009 | Slack Bot Control Plane | Bot-per-machine with shared Slack app; Python (Slack Bolt) recommended; Socket Mode (no public URL); RBAC via YAML + channel gates; JSONL audit trail; "ourbot" NOT found on GitHub | Language: Python Bolt; architecture: bot-per-machine | 7 (OQ-SB-1 to OQ-SB-7: ourbot location, repo location, Socket Mode, workspace, Switchboard, tracking scope, NL commands) |
@@ -106,7 +106,7 @@
 
 **Shared prerequisite:** Slack workspace setup, Slack App creation. Can proceed in parallel with everything else.
 
-### Group G: Experience & Polish (aclaude Personas)
+### Group G: Experience & Polish (forestage Personas)
 
 **Why together:** Nice-to-have that enhances agent personality without affecting functionality.
 
@@ -114,7 +114,7 @@
 |----------|---------------|-----------|
 | R-006 (Phase 1) | Manual persona prototype (append to worker.md, test) | ~1 hour validation |
 | R-006 (Phase 2) | multiclaude persona config support | Code change to spawn pipeline |
-| R-006 (Phase 3) | Theme sharing between aclaude and multiclaude | Future integration |
+| R-006 (Phase 3) | Theme sharing between forestage and multiclaude | Future integration |
 
 **Shared prerequisite:** None, but low priority. Should follow Group A.
 

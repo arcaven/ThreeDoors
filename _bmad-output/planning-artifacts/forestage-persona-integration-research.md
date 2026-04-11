@@ -1,4 +1,4 @@
-# aclaude Persona Integration with multiclaude Agents
+# forestage Persona Integration with multiclaude Agents
 
 **Date:** 2026-03-29
 **Type:** Research Spike
@@ -6,7 +6,7 @@
 
 ---
 
-## 1. How aclaude Personas Work
+## 1. How forestage Personas Work
 
 ### Persona Definition Format
 
@@ -47,7 +47,7 @@ agents:                       # Keyed by role name
 
 ### How Personas Are Applied
 
-aclaude uses the **Claude Agent SDK** (`@anthropic-ai/claude-agent-sdk`) to launch Claude Code as a subprocess. The persona is injected via the SDK's system prompt mechanism:
+forestage uses the **Claude Agent SDK** (`@anthropic-ai/claude-agent-sdk`) to launch Claude Code as a subprocess. The persona is injected via the SDK's system prompt mechanism:
 
 ```typescript
 const systemPrompt = personaPrompt
@@ -72,24 +72,24 @@ The `buildSystemPrompt()` function generates persona text at four levels:
 
 5-layer TOML config with last-wins merge:
 1. Built-in defaults
-2. Global (`~/.config/aclaude/config.toml`)
-3. Local (`.aclaude/config.toml`)
+2. Global (`~/.config/forestage/config.toml`)
+3. Local (`.forestage/config.toml`)
 4. Environment variables (`ACLAUDE_PERSONA__THEME=dune`)
 5. CLI flags (`-t dune -r dev -i medium`)
 
 ### tmux Integration
 
-aclaude has its own tmux session launcher (`tmux/start-session.sh`) using a separate socket (`ac`). It manages a single session per project directory. multiclaude uses its own tmux session (`mc-<repo>`). These are independent.
+forestage has its own tmux session launcher (`tmux/start-session.sh`) using a separate socket (`ac`). It manages a single session per project directory. multiclaude uses its own tmux session (`mc-<repo>`). These are independent.
 
 ### Portrait System
 
-Character portraits stored in `~/.local/share/aclaude/portraits/<theme>/<size>/`. Displayed via Kitty graphics protocol (Ghostty/Kitty terminals only). Not relevant to multiclaude integration.
+Character portraits stored in `~/.local/share/forestage/portraits/<theme>/<size>/`. Displayed via Kitty graphics protocol (Ghostty/Kitty terminals only). Not relevant to multiclaude integration.
 
 ---
 
-## 2. multiclaude Agent Roles vs aclaude Roles
+## 2. multiclaude Agent Roles vs forestage Roles
 
-| multiclaude Agent | Primary Duty | aclaude Role Equivalent | Mapping Quality |
+| multiclaude Agent | Primary Duty | forestage Role Equivalent | Mapping Quality |
 |-------------------|-------------|------------------------|-----------------|
 | supervisor | Coordination, delegation, monitoring | orchestrator | Strong |
 | merge-queue | PR validation, merge integrity | reviewer (partial) | Weak — merge-queue is more mechanical |
@@ -152,31 +152,31 @@ Could work via:
 
 **Verdict: RECOMMENDED** — Best balance of safety and capability.
 
-### Option C: aclaude as Launcher (Use aclaude to Launch multiclaude Agents)
+### Option C: forestage as Launcher (Use forestage to Launch multiclaude Agents)
 
-**Mechanism:** Use `aclaude` to start each agent session instead of `claude` directly. aclaude handles persona injection via the SDK's `systemPrompt.append` mechanism.
+**Mechanism:** Use `forestage` to start each agent session instead of `claude` directly. forestage handles persona injection via the SDK's `systemPrompt.append` mechanism.
 
 **Pros:**
-- Leverages aclaude's existing persona injection code (tested, working)
-- aclaude's `preset: "claude_code", append: personaPrompt` pattern is clean
-- aclaude handles config resolution, theme loading, portrait display
-- Would work with aclaude's immersion levels out of the box
+- Leverages forestage's existing persona injection code (tested, working)
+- forestage's `preset: "claude_code", append: personaPrompt` pattern is clean
+- forestage handles config resolution, theme loading, portrait display
+- Would work with forestage's immersion levels out of the box
 
 **Cons:**
-- **Two tools managing the same Claude session** — multiclaude manages the tmux session and agent lifecycle; aclaude manages the Claude SDK session and persona. Coordination complexity is high.
-- aclaude currently uses `query()` from the Agent SDK which runs an interactive REPL loop. multiclaude agents are non-interactive — they receive a system prompt and a task. These are fundamentally different session models.
-- aclaude adds ~15s startup latency (noted in their own design-questions.md as F14). Multiplied by 6+ persistent agents = significant spawn delay.
-- aclaude's tmux integration (`socket: "ac"`) conflicts with multiclaude's (`mc-<repo>`).
-- Binary dependency — requires aclaude installed alongside multiclaude.
-- aclaude is TypeScript/bun; multiclaude agents are Claude Code sessions. The abstraction layers don't align.
+- **Two tools managing the same Claude session** — multiclaude manages the tmux session and agent lifecycle; forestage manages the Claude SDK session and persona. Coordination complexity is high.
+- forestage currently uses `query()` from the Agent SDK which runs an interactive REPL loop. multiclaude agents are non-interactive — they receive a system prompt and a task. These are fundamentally different session models.
+- forestage adds ~15s startup latency (noted in their own design-questions.md as F14). Multiplied by 6+ persistent agents = significant spawn delay.
+- forestage's tmux integration (`socket: "ac"`) conflicts with multiclaude's (`mc-<repo>`).
+- Binary dependency — requires forestage installed alongside multiclaude.
+- forestage is TypeScript/bun; multiclaude agents are Claude Code sessions. The abstraction layers don't align.
 
 **Risk Level:** HIGH — architectural mismatch between interactive REPL and autonomous agent models
 
-**Verdict: REJECTED** — Session model mismatch makes this impractical without major aclaude refactoring.
+**Verdict: REJECTED** — Session model mismatch makes this impractical without major forestage refactoring.
 
 ### Option D: Shared Persona Registry (Common Definitions for Both Tools)
 
-**Mechanism:** Extract persona YAML definitions to a shared location (org-level repo, multiclaude-enhancements, or `~/.local/share/personas/`). Both aclaude and multiclaude read from the same source.
+**Mechanism:** Extract persona YAML definitions to a shared location (org-level repo, multiclaude-enhancements, or `~/.local/share/personas/`). Both forestage and multiclaude read from the same source.
 
 **Pros:**
 - Single source of truth for persona definitions
@@ -187,7 +187,7 @@ Could work via:
 - Solves the wrong problem — the challenge isn't where personas are stored, it's how they interact with agent protocols
 - Requires both tools to agree on YAML schema (they use different field sets)
 - Additional dependency management (which version of which theme?)
-- Premature optimization — start with Option B using aclaude's themes directly; extract later if needed
+- Premature optimization — start with Option B using forestage's themes directly; extract later if needed
 
 **Risk Level:** LOW (just a storage concern) but doesn't address the core integration question
 
@@ -265,7 +265,7 @@ Add persona support to multiclaude's agent spawn pipeline:
    [persona]
    theme = "dune"
    immersion = "low"
-   personas_dir = "~/.local/share/aclaude/themes"  # or bundled
+   personas_dir = "~/.local/share/forestage/themes"  # or bundled
 
    [persona.agents]
    supervisor = { role = "orchestrator", immersion = "medium" }
@@ -281,13 +281,13 @@ Add persona support to multiclaude's agent spawn pipeline:
 
 ### Phase 3: Theme Sharing (Future)
 
-If both aclaude and multiclaude use personas, extract theme YAMLs to a shared location (multiclaude-enhancements or a dedicated `arcavenae/personas` repo).
+If both forestage and multiclaude use personas, extract theme YAMLs to a shared location (multiclaude-enhancements or a dedicated `arcavenae/personas` repo).
 
 ### Suggested Persona-to-Agent Mappings
 
 Using Dune as the example theme (since it's rated S-tier and has `tone: serious`):
 
-| multiclaude Agent | aclaude Role | Character | Why |
+| multiclaude Agent | forestage Role | Character | Why |
 |-------------------|-------------|-----------|-----|
 | supervisor | orchestrator | Duncan Idaho | "Orchestrates with honor and peerless coordination" — maps to supervisor's coordination role |
 | worker | dev | Rev. Mother Mohiam | "Implements with the precision of a breeding program" — maps to disciplined implementation |
@@ -306,7 +306,7 @@ Using Dune as the example theme (since it's rated S-tier and has `tone: serious`
 
 2. **Theme appropriateness for work:** Some themes (The Office, Monty Python) are inherently comedic. Should comedic themes be blocked for production work, or is that the user's choice?
 
-3. **aclaude dependency:** Should multiclaude bundle its own copy of persona YAMLs, or require aclaude to be installed? Bundling is self-contained; requiring aclaude keeps themes in sync but adds a dependency.
+3. **forestage dependency:** Should multiclaude bundle its own copy of persona YAMLs, or require forestage to be installed? Bundling is self-contained; requiring forestage keeps themes in sync but adds a dependency.
 
 4. **Immersion floor for critical agents:** Even if the user sets `immersion = high` globally, should merge-queue/pr-shepherd/project-watchdog be hard-capped at `none`? Or should the user be trusted to configure responsibly?
 
@@ -320,7 +320,7 @@ Using Dune as the example theme (since it's rated S-tier and has `tone: serious`
 |--------|---------|------|--------|
 | A: Direct Import | REJECTED | HIGH — protocol corruption | Low |
 | B: Layered Overlay | **RECOMMENDED** | MEDIUM — controllable | Medium |
-| C: aclaude as Launcher | REJECTED | HIGH — session model mismatch | High |
+| C: forestage as Launcher | REJECTED | HIGH — session model mismatch | High |
 | D: Shared Registry | DEFERRED | LOW | Medium |
 
 **Bottom line:** Persona integration is feasible and desirable for flavor agents (supervisor, worker, envoy) but dangerous for protocol agents (merge-queue, pr-shepherd). The layered overlay approach (Option B) with per-agent opt-in and immersion levels provides the right safety controls. Start with a manual prototype to validate that persona overlay doesn't break agent behavior, then build the config support into multiclaude.
