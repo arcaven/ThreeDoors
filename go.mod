@@ -15,7 +15,7 @@ require (
 	github.com/fsnotify/fsnotify v1.9.0
 	github.com/google/go-github/v68 v68.0.0
 	github.com/google/uuid v1.6.0
-	github.com/lucasb-eyer/go-colorful v1.3.0
+	github.com/lucasb-eyer/go-colorful v1.4.0
 	github.com/mattn/go-isatty v0.0.20
 	github.com/muesli/termenv v0.16.0
 	github.com/oklog/ulid/v2 v2.1.1
