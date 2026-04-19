@@ -9,14 +9,21 @@ updates:
         patterns:
           - "*"
     labels:
-      - "dependencies"
+      - "type.deps"
+      - "agent.bot"
 
   - package-ecosystem: gomod
     directory: /
     schedule:
       interval: daily
+    labels:
+      - "type.deps"
+      - "agent.bot"
 
   - package-ecosystem: gomod
     directory: /scripts/spike
     schedule:
       interval: daily
+    labels:
+      - "type.deps"
+      - "agent.bot"
