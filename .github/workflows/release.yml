@@ -30,7 +30,7 @@ jobs:
         with:
           go-version-file: 'go.mod'
 
-      - uses: goreleaser/goreleaser-action@9a127d869fb706213d29cdf8eef3a4ea2b869415 # v7
+      - uses: step-security/goreleaser-action@1472c46ac6e641f2b929f1a893354288b3a6b6b6 # v7.2.1
         with:
           version: '~> v2'
           args: release --clean
